@@ -1,5 +1,5 @@
 {
-  "name": "UdeS-node-orchestrator",
+  "name": "udes-node-orchestrator",
   "version": "0.1.0",
   "description": "Orchestrator server. Handles routes and HTTP traffic.",
   "main": "distribution/index.js",

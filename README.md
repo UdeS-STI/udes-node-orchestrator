@@ -35,7 +35,6 @@ Since it uses a socket you cannot run it on a local machine.
 
 # Documentation
 [JSDocs documentation](http://UdeS-STI.github.io/udes-node-orchestrator)
-No documentation is available at the moment.
 
 # Example
 A minimalist usage example is available in `/boilerplate`
