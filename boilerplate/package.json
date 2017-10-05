@@ -1,0 +1,20 @@
+{
+  "name": "orchestrateur-nodejs-boilerplate",
+  "version": "1.0.0",
+  "description": "A reusable boilerplate to demonstrate how to create an Orchestrator.",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint ./src",
+    "start": "babel-node src/index.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-eslint": "8.0.0",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-stage-2": "6.24.1",
+    "eslint": "4.7.2",
+    "eslint-config-airbnb-base": "12.0.0",
+    "eslint-plugin-import": "2.7.0"
+  }
+}
