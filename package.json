@@ -18,7 +18,7 @@
     "compression": "1.7.0",
     "connect-couchbase": "0.2.10",
     "cookie-parser": "1.4.3",
-    "couchbase": "2.4.1",
+    "couchbase": "2.3.0",
     "debug": "3.0.1",
     "dotenv": "4.0.0",
     "express": "4.15.4",

@@ -10,7 +10,6 @@ compliated infrastructure.
 # Prerequisites
 * [Node](https://nodejs.org) 6.10.1 (it is recommended to install it via
 [NVM](https://github.com/creationix/nvm))
-* [Yarn](https://yarnpkg.com)
 * Ensure you have a development environment setup to use the orchestrator.
 Since it uses a socket you cannot run it on a local machine.
 
@@ -18,21 +17,21 @@ Since it uses a socket you cannot run it on a local machine.
 ## Setup development machine
 1. `git clone git@github.com:UdeS-STI/udes-node-orchestrator`
 2. `cd udes-node-orchestrator`
-3. `yarn`
+3. `npm install`
 
 # Usage
 * Start app
-  * `yarn start`
+  * `npm start`
 * Run eslint
-  * `yarn run lint`
+  * `npm run lint`
 * Run unit tests
-  * `yarn run test`
+  * `npm run test`
 * Run code coverage
-  * `yarn run coverage`
+  * `npm run coverage`
 * Build library for distribution
-  * `yarn run build`
+  * `npm run build`
 * Generate documentation for public API
-  * `yarn run documentation`
+  * `npm run documentation`
 
 # Documentation
 [JSDocs documentation](http://UdeS-STI.github.io/udes-node-orchestrator)
