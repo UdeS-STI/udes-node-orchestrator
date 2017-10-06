@@ -1,8 +1,8 @@
 UdeS Node Orchestrator
 ======================
 
-![Node](https://img.shields.io/badge/node-6.10.1-brightgreen.svg)
 [![CircleCI](https://circleci.com/gh/UdeS-STI/udes-node-orchestrator/tree/master.svg?style=svg&circle-token=2bf1290ed52937519d0b7e67dccd4ad10a002a74)](https://circleci.com/gh/UdeS-STI/udes-node-orchestrator/tree/master)
+![Node](https://img.shields.io/badge/node-6.10.1-brightgreen.svg)
 
 # Introduction
 This node server acts as an API to simplify calls made to a server that has a
