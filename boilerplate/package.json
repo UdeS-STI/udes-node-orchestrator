@@ -7,7 +7,9 @@
     "lint": "eslint ./src",
     "start": "babel-node src/index.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "udes-node-orchestrator": "git+https://git@github.com/UdeS-STI/udes-node-orchestrator.git"
+  },
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-eslint": "8.0.0",
