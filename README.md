@@ -6,7 +6,7 @@ UdeS Node Orchestrator
 
 # Introduction
 This node server acts as an API to simplify calls made to a server that has a
-compliated infrastructure.
+complicated infrastructure.
 
 # Prerequisites
 * [Node](https://nodejs.org) 6.10.1 (it is recommended to install it via
@@ -21,6 +21,7 @@ Since it uses a socket you cannot run it on a local machine.
 3. `npm install`
 
 # Usage
+## Scripts
 * Start app
   * `npm start`
 * Run eslint
@@ -33,6 +34,8 @@ Since it uses a socket you cannot run it on a local machine.
   * `npm run build`
 * Generate documentation for public API
   * `npm run documentation`
+## API
+TODO
 
 # Documentation
 [JSDocs documentation](http://UdeS-STI.github.io/udes-node-orchestrator)
