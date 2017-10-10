@@ -92,7 +92,7 @@ export class ResponseHelper {
    * @param {Object} [options.headers=getHeaders()] - Request headers.
    * @returns {Promise} Promise object represents server response.
    */
-  fetch = options => new Promise((resolve, reject) => {
+  fetch = options => new Promise(async (resolve, reject) => {
     const { body, headers = getHeaders() } = options;
     const opt = {
       ...options,
@@ -103,55 +103,49 @@ export class ResponseHelper {
       headers,
     };
 
-    const getPT = async (cb) => {
-      try {
-        opt.auth.pass = await getProxyTicket(this.req, this.config);
-        const time = +(new Date());
+    try {
+      opt.auth.pass = await getProxyTicket(this.req, this.config);
+      const time = +(new Date());
 
-        request(opt, async (error, response) => {
-          const callDuration = +(new Date()) - time;
+      request(opt, async (error, response) => {
+        const callDuration = +(new Date()) - time;
 
-          if (error) {
-            return cb(error);
-          }
-
-          if (response.statusCode === 401) {
-            return cb(null, await getProxyTicket(this.req, this.config, true));
-          }
-
-          const meta = {
-            count: response.headers[`${this.config.customHeaderPrefix}-count`] || 0,
-            debug: {
-              'x-TempsMs': callDuration,
-            },
-            messages: response.headers[`${this.config.customHeaderPrefix}-messages`],
-            status: response.statusCode,
-          };
-
-          return cb(null, { ...response, meta });
-        });
-      } catch (err) {
-        this.req.log.error('Error when requesting PT, Authentication failed! ', err);
-        cb(err);
-      }
-    };
-
-    getPT((err, res) => {
-      if (err) {
-        reject(new RequestError(err, 500));
-      } else if (res.statusCode >= 200 && res.statusCode < 300) {
-        try {
-          resolve({
-            ...JSON.parse(res.body),
-            meta: res.meta,
-          });
-        } catch (error) {
-          resolve({ data: res.body, meta: res.meta });
+        if (error) {
+          reject(new RequestError(error, 500));
+          return;
         }
-      } else {
-        reject(new RequestError(res.body || res, res.statusCode || 500));
-      }
-    });
+
+        if (response.statusCode === 401) {
+          resolve(await getProxyTicket(this.req, this.config, true));
+          return;
+        }
+
+        const meta = {
+          count: response.headers[`${this.config.customHeaderPrefix}-count`] || 0,
+          debug: {
+            'x-TempsMs': callDuration,
+          },
+          messages: response.headers[`${this.config.customHeaderPrefix}-messages`],
+          status: response.statusCode,
+        };
+
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          try {
+            resolve({
+              ...JSON.parse(response.body),
+              meta,
+            });
+          } catch (err) {
+            resolve({ data: response.body, meta });
+          }
+        } else {
+          reject(new RequestError(response.body || response, response.statusCode || 500));
+        }
+      });
+    } catch (err) {
+      this.req.log.error('Error when requesting PT, Authentication failed! ', err);
+      reject(new RequestError(err, 500));
+    }
   })
 
   /**
