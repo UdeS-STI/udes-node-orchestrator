@@ -58,6 +58,17 @@ export const getRange = (req, query) => {
   };
 };
 
+const getProxyTicket = (req, config, renew = false) => new Promise((resolve, reject) => {
+  const { targetService } = config.cas;
+  req.getProxyTicket(targetService, { renew }, (err, pt) => {
+    if (err) {
+      return reject(err);
+    }
+
+    return resolve(pt);
+  });
+});
+
 /**
  * Handles response standardisation as well as http responses and requests.
  * @class
@@ -87,47 +98,42 @@ export class ResponseHelper {
       ...options,
       auth: {
         user: this.req.session.cas.user,
-        pass: this.req.session.cas.pt,
       },
       body: body && typeof body === 'object' ? JSON.stringify(body) : body,
       headers,
     };
 
-    const getPT = (cb) => {
-      const { targetService } = this.config.cas;
+    const getPT = async (cb) => {
+      try {
+        opt.auth.pass = await getProxyTicket(this.req, this.config);
+        const time = +(new Date());
 
-      this.req.getProxyTicket(targetService, { renew: false }, (err, pt) => {
-        if (err) {
-          this.req.log.error('Error when requesting PT, Authentication failed! ', err);
-          cb(err);
-        } else {
-          opt.auth.pass = pt;
-          const time = +(new Date());
+        request(opt, async (error, response) => {
+          const callDuration = +(new Date()) - time;
 
-          request(opt, (error, response) => {
-            const callDuration = +(new Date()) - time;
+          if (error) {
+            return cb(error);
+          }
 
-            if (error) {
-              return cb(error);
-            }
+          if (response.statusCode === 401) {
+            return cb(null, await getProxyTicket(this.req, this.config, true));
+          }
 
-            if (response.statusCode === 401) {
-              return this.req.getProxyTicket(targetService, { renew: true }, cb);
-            }
+          const meta = {
+            count: response.headers[`${this.config.customHeaderPrefix}-count`] || 0,
+            debug: {
+              'x-TempsMs': callDuration,
+            },
+            messages: response.headers[`${this.config.customHeaderPrefix}-messages`],
+            status: response.statusCode,
+          };
 
-            const meta = {
-              count: response.headers[`${this.config.customHeaderPrefix}-count`] || 0,
-              debug: {
-                'x-TempsMs': callDuration,
-              },
-              messages: response.headers[`${this.config.customHeaderPrefix}-messages`],
-              status: response.statusCode,
-            };
-
-            return cb(null, { ...response, meta });
-          });
-        }
-      });
+          return cb(null, { ...response, meta });
+        });
+      } catch (err) {
+        this.req.log.error('Error when requesting PT, Authentication failed! ', err);
+        cb(err);
+      }
     };
 
     getPT((err, res) => {
@@ -154,26 +160,23 @@ export class ResponseHelper {
    * @param {String} options.url - URL to access the file.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
    */
-  getFile = (options) => {
+  getFile = async (options) => {
     const { headers = getHeaders() } = options;
     const opt = {
       ...options,
       auth: {
         user: this.req.session.cas.user,
-        pass: this.req.session.cas.pt,
       },
       headers,
     };
 
-    this.req.getProxyTicket(this.config.cas.targetService, { renew: false }, (err, pt) => {
-      if (err) {
-        this.req.log.error('Error when requesting PT, Authentication failed! ', err);
-      } else {
-        opt.auth.pass = pt;
-        Object.keys(headers).forEach(key => this.res.set(key, headers[key]));
-        request.get(opt).pipe(this.res);
-      }
-    });
+    try {
+      opt.auth.pass = await getProxyTicket(this.req, this.config);
+      Object.keys(headers).forEach(key => this.res.set(key, headers[key]));
+      request.get(opt).pipe(this.res);
+    } catch (err) {
+      this.req.log.error('Error when requesting PT, Authentication failed! ', err);
+    }
   }
 
   /**
