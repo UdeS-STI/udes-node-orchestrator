@@ -23,6 +23,10 @@ https.globalAgent.maxSockets = 25;
  */
 export default class Orchestrator {
   constructor(config, routes) {
+    if (!config) {
+      throw new Error('new Orchestrator() - Missing argument `config`');
+    }
+
     this.env = process.env.NODE_ENV || 'development';
     this.app = express();
     this.config = config;

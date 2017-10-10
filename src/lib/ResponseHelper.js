@@ -59,6 +59,16 @@ export const getRange = (req, query) => {
 };
 
 /**
+ * @private
+ * @param args
+ */
+const checkArgs = args => Object.keys(args).forEach((key) => {
+  if (!args[key]) {
+    throw new Error(`new ResponseHelper() - Missing argument ${key}`);
+  }
+});
+
+/**
  * Handles response standardisation as well as http responses and requests.
  * @class
  * @param {Object} req - {@link https://expressjs.com/en/4x/api.html#req HTTP request}.
@@ -67,6 +77,7 @@ export const getRange = (req, query) => {
  */
 export class ResponseHelper {
   constructor(req, res, config) {
+    checkArgs({ req, res, config });
     this.req = req;
     this.res = res;
     this.config = config;
