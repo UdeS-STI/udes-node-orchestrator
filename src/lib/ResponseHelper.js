@@ -73,6 +73,7 @@ const checkArgs = args => Object.keys(args).forEach((key) => {
  * @param {Object} req - {@link https://expressjs.com/en/4x/api.html#req HTTP request}.
  * @param {Object} res - {@link https://expressjs.com/en/4x/api.html#res HTTP response}.
  * @param {Object} config - Orchestrator configuration.
+ * @throws {Error} If `req`, `res` or `config` argument is null.
  */
 export class ResponseHelper {
   constructor(req, res, config) {
