@@ -1,6 +1,5 @@
 /* eslint-env mocha */
-/* eslint no-unused-expressions: 0, import/no-extraneous-dependencies: 0 */
-
+/* eslint no-unused-expressions: 0 */
 import 'babel-polyfill';
 import { expect } from 'chai';
 import sinon from 'sinon';

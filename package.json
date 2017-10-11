@@ -5,11 +5,11 @@
   "main": "distribution/index.js",
   "scripts": {
     "build": "babel ./src --out-dir distribution --ignore '**/*Test.js'",
-    "coverage": "NODE_ENV=test node_modules/.bin/nyc --require babel-core/register -x '**/config/**' -x '**/**Test.js' -x '**/dependencies/**' node_modules/.bin/mocha --opts ../mocha.opts \\ **/**Test.js",
+    "coverage": "NODE_ENV=test node_modules/.bin/nyc --require babel-core/register -x '**/config/**' -x '**/**Test.js' -x '**/dependencies/**' node_modules/.bin/mocha --opts ../mocha.opts \\ ./src/**/**Test.js",
     "documentation": "documentation build src/index.js -f html -o docs",
     "lint": "eslint ./src",
     "start": "babel-node boilerplate/src/index.js | pino",
-    "test": "NODE_ENV=test mocha --compilers js:babel-core/register --opts ../mocha.opts **/**Test.js"
+    "test": "NODE_ENV=test mocha --compilers js:babel-core/register --opts ../mocha.opts ./src/**/**Test.js"
   },
   "license": "MIT",
   "dependencies": {
