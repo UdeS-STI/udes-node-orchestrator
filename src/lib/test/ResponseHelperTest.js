@@ -63,6 +63,42 @@ describe('server/lib/ResponseHelper', () => {
   });
 
   describe('constructor', () => {
+    it('should throw error if `req` argument is missing', () => {
+      let error = null;
+
+      try {
+        new ResponseHelper(); // eslint-disable-line no-new
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.not.null;
+    });
+
+    it('should throw error if `res` argument is missing', () => {
+      let error = null;
+
+      try {
+        new ResponseHelper(req); // eslint-disable-line no-new
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.not.null;
+    });
+
+    it('should throw error if `config` argument is missing', () => {
+      let error = null;
+
+      try {
+        new ResponseHelper(req, res); // eslint-disable-line no-new
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.not.null;
+    });
+
     it('should set it\'s req property correctly', () => {
       const responseHelper = new ResponseHelper(req, res, config);
       expect(responseHelper.req).to.be.equal(req);

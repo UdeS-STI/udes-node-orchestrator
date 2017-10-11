@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+/* eslint no-unused-expressions: 0 */
 import 'babel-polyfill';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
@@ -26,5 +27,35 @@ describe('server/Orchestrator', () => {
     const orchestrator = new Orchestrator({});
     const properties = ['setRoutes', 'env', 'app', 'config', 'server'];
     expect(Object.keys(orchestrator)).to.be.deep.equal(properties);
+  });
+
+  describe('constructor', () => {
+    it('should throw error if `config` argument is missing', () => {
+      let error = null;
+
+      try {
+        new Orchestrator(); // eslint-disable-line no-new
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.not.null;
+    });
+  });
+
+  describe('setRoutes', () => {
+    it('should throw error if `setRoutes` has already been called', () => {
+      let error = null;
+      const orchestrator = new Orchestrator({});
+      orchestrator.setRoutes([]);
+
+      try {
+        orchestrator.setRoutes([]);
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.not.null;
+    });
   });
 });

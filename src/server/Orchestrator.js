@@ -20,9 +20,14 @@ https.globalAgent.maxSockets = 25;
  * @param {('DELETE'|'GET'|'POST'|'PUT')} routes[].method - The HTTP method of the route.
  * @param {String} routes[].url - The path from the base url.
  * @param {Function} routes[].fn - the function to be called when route is accessed.
+ * @throws {Error} If `config` argument is null.
  */
 export default class Orchestrator {
   constructor(config, routes) {
+    if (!config) {
+      throw new Error('new Orchestrator() - Missing argument `config`');
+    }
+
     this.env = process.env.NODE_ENV || 'development';
     this.app = express();
     this.config = config;
@@ -44,6 +49,7 @@ export default class Orchestrator {
    * @param {Function} routes[].fn - the function to be called when route is accessed.
    * @param {Object} [options] - Additional options for route configuration.
    * @param {Boolean} [options.handle404=true] - Whether to handle 404 routes automatically or not.
+   * @throws {Error} If routes are already set.
    */
   setRoutes = (routes, options = {}) => {
     if (this.router) {
