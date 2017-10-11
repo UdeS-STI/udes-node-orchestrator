@@ -284,12 +284,12 @@ describe('server/lib/ResponseHelper', () => {
   });
 
   describe('getFile', () => {
-    it('should call `req.getProxyTicket`', () => {
+    it('should call `req.getProxyTicket`', async () => {
       (new ResponseHelper(req, res, config)).getFile({});
       expect(getProxyTicket).to.be.called;
     });
 
-    it('should call `request.get` if there is no error', () => {
+    it('should call `request.get` if there is no error', async () => {
       const opt = {
         auth: { pass: 'pt', user: 'user' },
         headers: {
@@ -299,22 +299,22 @@ describe('server/lib/ResponseHelper', () => {
       };
       getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'));
       HTTP.request.get = sinon.spy(() => ({ pipe() {} }));
-      (new ResponseHelper(req, res, config)).getFile({});
+      await (new ResponseHelper(req, res, config)).getFile({});
       expect(HTTP.request.get).to.be.calledWith(opt);
     });
 
-    it('should call `pipe` if there is no error', () => {
+    it('should call `pipe` if there is no error', async () => {
       getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'));
       const pipe = sinon.spy();
       HTTP.request.get = () => ({ pipe });
-      (new ResponseHelper(req, res, config)).getFile({});
+      await (new ResponseHelper(req, res, config)).getFile({});
       expect(pipe).to.be.calledWith(res);
     });
 
-    it('should not call `request.get` if there is an error', () => {
+    it('should not call `request.get` if there is an error', async () => {
       getProxyTicket.callsFake((targetService, options, cb) => cb('error', null));
       HTTP.request.get = sinon.spy(() => ({ pipe() {} }));
-      (new ResponseHelper(req, res, config)).getFile({});
+      await (new ResponseHelper(req, res, config)).getFile({});
       expect(HTTP.request.get).not.to.be.called;
     });
   });
@@ -342,6 +342,9 @@ describe('server/lib/ResponseHelper', () => {
       const response = {
         statusCode: 200,
         body: '{}',
+        headers: {
+          'foo-messages': '',
+        },
       };
       getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'));
       HTTP.request.callsFake((options, cb) => cb(null, response));

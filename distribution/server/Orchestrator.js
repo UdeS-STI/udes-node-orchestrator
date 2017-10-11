@@ -42,12 +42,17 @@ _https2.default.globalAgent.maxSockets = 25;
  * @param {('DELETE'|'GET'|'POST'|'PUT')} routes[].method - The HTTP method of the route.
  * @param {String} routes[].url - The path from the base url.
  * @param {Function} routes[].fn - the function to be called when route is accessed.
+ * @throws {Error} If `config` argument is null.
  */
 
 var Orchestrator = function Orchestrator(config, routes) {
   _classCallCheck(this, Orchestrator);
 
   _initialiseProps.call(this);
+
+  if (!config) {
+    throw new Error('new Orchestrator() - Missing argument `config`');
+  }
 
   this.env = process.env.NODE_ENV || 'development';
   this.app = (0, _express2.default)();
@@ -70,6 +75,7 @@ var Orchestrator = function Orchestrator(config, routes) {
  * @param {Function} routes[].fn - the function to be called when route is accessed.
  * @param {Object} [options] - Additional options for route configuration.
  * @param {Boolean} [options.handle404=true] - Whether to handle 404 routes automatically or not.
+ * @throws {Error} If routes are already set.
  */
 ;
 

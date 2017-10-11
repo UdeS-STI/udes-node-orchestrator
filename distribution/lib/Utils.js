@@ -74,7 +74,7 @@ Utils.getHeaders = function () {
     case 'PDF':
       return {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="' + options.filename + '.pdf'
+        'Content-Disposition': 'attachment; filename=' + options.filename + '.pdf'
       };
     case 'JSON':
     default:
