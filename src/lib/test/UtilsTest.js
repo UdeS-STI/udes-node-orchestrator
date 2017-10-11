@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-/* eslint no-unused-expressions: 0, import/no-extraneous-dependencies: 0 */
+/* eslint no-unused-expressions: 0 */
 import 'babel-polyfill';
 import chai, { expect } from 'chai';
 import chainInteger from 'chai-integer';
@@ -10,12 +10,18 @@ const {
   base64Decode,
   base64Encode,
   buildUrl,
+  getHeaders,
   getUid,
 } = Utils;
 
 chai.use(chainInteger);
 
 describe('server/lib/utils', () => {
+  it('should match property list', () => {
+    const properties = ['base64Decode', 'base64Encode', 'buildUrl', 'getHeaders', 'getUid'];
+    expect(Object.keys(Utils)).to.be.deep.equal(properties);
+  });
+
   describe('base64Decode', () => {
     it('should decode given base64 encoded string', () => {
       const stringToDecode = 'R29kJ3Mgb2YgZGVhdGggbG92ZSBhcHBsZXM=';
@@ -60,6 +66,36 @@ describe('server/lib/utils', () => {
       };
 
       expect(buildUrl(url, params, false)).to.be.equal('http://exemple.com?param1=value1&param2=42&param3=[email, phone, lang, name, sex]');
+    });
+  });
+
+  describe('getHeaders', () => {
+    it('should return JSON headers if no type is specified', () => {
+      expect(getHeaders()).to.be.deep.equal({
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json; charset=utf-8',
+      });
+    });
+
+    it('should return JSON headers if JSON type is specified', () => {
+      expect(getHeaders('JSON')).to.be.deep.equal({
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json; charset=utf-8',
+      });
+    });
+
+    it('should return CSV headers if CSV type is specified', () => {
+      expect(getHeaders('CSV')).to.be.deep.equal({
+        'Content-Type': 'text/csv; charset=utf-8',
+        Accept: 'application/json; charset=utf-8',
+      });
+    });
+
+    it('should return PDF headers if PDF type is specified', () => {
+      expect(getHeaders('PDF', { filename: 'myFilename' })).to.be.deep.equal({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename=myFilename.pdf',
+      });
     });
   });
 });
