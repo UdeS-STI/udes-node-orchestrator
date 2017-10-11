@@ -7,8 +7,7 @@ exports.ResponseHelper = exports.getRange = exports.formatResponse = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /* eslint import/prefer-default-export: 0 */
-
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _url = require('url');
 
@@ -104,11 +103,24 @@ var getProxyTicket = function getProxyTicket(req, config) {
 };
 
 /**
+ * @private
+ * @param args
+ */
+var checkArgs = function checkArgs(args) {
+  return Object.keys(args).forEach(function (key) {
+    if (!args[key]) {
+      throw new Error('new ResponseHelper() - Missing argument ' + key);
+    }
+  });
+};
+
+/**
  * Handles response standardisation as well as http responses and requests.
  * @class
  * @param {Object} req - {@link https://expressjs.com/en/4x/api.html#req HTTP request}.
  * @param {Object} res - {@link https://expressjs.com/en/4x/api.html#res HTTP response}.
  * @param {Object} config - Orchestrator configuration.
+ * @throws {Error} If `req`, `res` or `config` argument is null.
  */
 
 var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, config) {
@@ -332,6 +344,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
     return _this.res.status(200).send(formatData ? formatResponse(_this.req, data) : data);
   };
 
+  checkArgs({ req: req, res: res, config: config });
   this.req = req;
   this.res = res;
   this.config = config;
