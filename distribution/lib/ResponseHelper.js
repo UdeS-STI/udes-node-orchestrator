@@ -156,7 +156,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
                 (0, _request.request)(opt, function () {
                   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(error, response) {
-                    var callDuration, meta;
+                    var callDuration, meta, data;
                     return regeneratorRuntime.wrap(function _callee$(_context) {
                       while (1) {
                         switch (_context.prev = _context.next) {
@@ -199,9 +199,14 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
                             if (response.statusCode >= 200 && response.statusCode < 300) {
                               try {
-                                resolve(_extends({}, JSON.parse(response.body), {
-                                  meta: meta
-                                }));
+                                data = JSON.parse(response.body);
+
+
+                                if (Array.isArray(data)) {
+                                  resolve({ body: data, meta: meta });
+                                } else {
+                                  resolve(_extends({}, data, { meta: meta }));
+                                }
                               } catch (err) {
                                 resolve({ data: response.body, meta: meta });
                               }
