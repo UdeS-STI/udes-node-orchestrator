@@ -8,7 +8,7 @@
     "start": "babel-node src/index.js"
   },
   "dependencies": {
-    "udes-node-orchestrator": "git+https://git@github.com/UdeS-STI/udes-node-orchestrator.git"
+    "udes-node-orchestrator": "^0.1.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",

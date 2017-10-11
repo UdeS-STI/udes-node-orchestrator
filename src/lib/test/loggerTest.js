@@ -1,5 +1,4 @@
 /* eslint-env mocha */
-/* eslint import/no-extraneous-dependencies: 0 */
 import 'babel-polyfill';
 import { expect } from 'chai';
 

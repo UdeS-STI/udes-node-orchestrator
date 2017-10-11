@@ -1,8 +1,5 @@
 /* eslint-env mocha */
 /* eslint no-unused-expressions: 0 */
-/* eslint import/no-extraneous-dependencies: 0 */
-/* eslint no-underscore-dangle: 0 */
-/* eslint standard/no-callback-literal: 0 */
 import 'babel-polyfill';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
@@ -66,6 +63,42 @@ describe('server/lib/ResponseHelper', () => {
   });
 
   describe('constructor', () => {
+    it('should throw error if `req` argument is missing', () => {
+      let error = null;
+
+      try {
+        new ResponseHelper(); // eslint-disable-line no-new
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.not.null;
+    });
+
+    it('should throw error if `res` argument is missing', () => {
+      let error = null;
+
+      try {
+        new ResponseHelper(req); // eslint-disable-line no-new
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.not.null;
+    });
+
+    it('should throw error if `config` argument is missing', () => {
+      let error = null;
+
+      try {
+        new ResponseHelper(req, res); // eslint-disable-line no-new
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.not.null;
+    });
+
     it('should set it\'s req property correctly', () => {
       const responseHelper = new ResponseHelper(req, res, config);
       expect(responseHelper.req).to.be.equal(req);
@@ -149,9 +182,78 @@ describe('server/lib/ResponseHelper', () => {
     });
   });
 
+  describe('getQueryParamters', () => {
+    it('should return query string parameters from url', () => {
+      req.url += '?param1=value1&param2=value2';
+      const responseHelper = new ResponseHelper(req, res, config);
+      const params = responseHelper.getQueryParameters();
+      expect(params).to.be.deep.equal({
+        param1: 'value1',
+        param2: 'value2',
+      });
+    });
+  });
+
+  describe('getRequestParameters', () => {
+    it('should return query string parameters from url and data from request body', () => {
+      req.url += '?param1=value1&param2=value2';
+      req.body = { param3: 'value3' };
+      const responseHelper = new ResponseHelper(req, res, config);
+      const params = responseHelper.getRequestParameters();
+      expect(params).to.be.deep.equal({
+        param1: 'value1',
+        param2: 'value2',
+        param3: 'value3',
+      });
+    });
+  });
+
   describe('handleResponse', () => {
     it('should call `res.send` with response data and a 200 status code', () => {
       const data = { hello: { jp: 'おはよう' } };
+      const responseHelper = new ResponseHelper(req, res, config);
+      responseHelper.handleResponse(data);
+      expect(res.status).to.be.calledWith(200);
+      expect(res.send).to.be.calledWith(formatResponse(req, data));
+    });
+
+    it('should call `res.send` with unformatted response data and a 200 status code when the formatData flag is false', () => {
+      const data = { hello: { jp: 'おはよう' } };
+      const responseHelper = new ResponseHelper(req, res, config);
+      responseHelper.handleResponse(data, { formatData: false });
+      expect(res.status).to.be.calledWith(200);
+      expect(res.send).to.be.calledWith(data);
+    });
+
+    it('should call `res.send` with partial response data and a 206 status code when a valid range is sent', () => {
+      req.headers.range = 'index=1-2';
+      const data = { data: ['おはよう', '世界', 'フ', 'バ'] };
+      const responseHelper = new ResponseHelper(req, res, config);
+      responseHelper.handleResponse(data);
+      expect(res.status).to.be.calledWith(206);
+      expect(res.send).to.be.calledWith(formatResponse(req, { data: ['世界', 'フ'] }));
+    });
+
+    it('should call `res.send` with partial unformatted response data and a 206 status code when a valid range is sent and the formatData flag is false', () => {
+      req.headers.range = 'index=1-2';
+      const data = { data: ['おはよう', '世界', 'フ', 'バ'] };
+      const responseHelper = new ResponseHelper(req, res, config);
+      responseHelper.handleResponse(data, { formatData: false });
+      expect(res.status).to.be.calledWith(206);
+      expect(res.send).to.be.calledWith({ data: ['世界', 'フ'] });
+    });
+
+    it('should call `res.send` with error and a 416 status code when a invalid range is sent', () => {
+      req.headers.range = 'index=1-6';
+      const data = { data: ['おはよう', '世界', 'フ', 'バ'] };
+      const responseHelper = new ResponseHelper(req, res, config);
+      responseHelper.handleResponse(data);
+      expect(res.status).to.be.calledWith(416);
+    });
+
+    it('should call `res.send` with data and a 200 status code when range represents entire response data', () => {
+      req.headers.range = 'index=0-3';
+      const data = { data: ['おはよう', '世界', 'フ', 'バ'] };
       const responseHelper = new ResponseHelper(req, res, config);
       responseHelper.handleResponse(data);
       expect(res.status).to.be.calledWith(200);
