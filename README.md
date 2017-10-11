@@ -1,11 +1,12 @@
 UdeS Node Orchestrator
 ======================
 
+[![CircleCI](https://circleci.com/gh/UdeS-STI/udes-node-orchestrator/tree/master.svg?style=svg&circle-token=2bf1290ed52937519d0b7e67dccd4ad10a002a74)](https://circleci.com/gh/UdeS-STI/udes-node-orchestrator/tree/master)
 ![Node](https://img.shields.io/badge/node-6.10.1-brightgreen.svg)
 
 # Introduction
 This node server acts as an API to simplify calls made to a server that has a
-compliated infrastructure.
+complicated infrastructure.
 
 # Prerequisites
 * [Node](https://nodejs.org) 6.10.1 (it is recommended to install it via
@@ -20,6 +21,7 @@ Since it uses a socket you cannot run it on a local machine.
 3. `npm install`
 
 # Usage
+## Scripts
 * Start app
   * `npm start`
 * Run eslint
@@ -32,6 +34,8 @@ Since it uses a socket you cannot run it on a local machine.
   * `npm run build`
 * Generate documentation for public API
   * `npm run documentation`
+## API
+TODO
 
 # Documentation
 [JSDocs documentation](http://UdeS-STI.github.io/udes-node-orchestrator)
