@@ -142,10 +142,13 @@ export class ResponseHelper {
 
         if (response.statusCode >= 200 && response.statusCode < 300) {
           try {
-            resolve({
-              ...JSON.parse(response.body),
-              meta,
-            });
+            const data = JSON.parse(response.body);
+
+            if (Array.isArray(data)) {
+              resolve({ body: data, meta });
+            } else {
+              resolve({ ...data, meta });
+            }
           } catch (err) {
             resolve({ data: response.body, meta });
           }
