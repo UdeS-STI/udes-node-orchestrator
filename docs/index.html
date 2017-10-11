@@ -234,24 +234,24 @@
       
         <div class='space-bottom0'>
           <span class='code bold'>cas</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-          : -
+          : CAS configuration.
 
           
             <ul>
               
                 <li><code>cas.cache</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
                   
-                  <p>-</p>
+                  <p>CAS cache configuration.</p>
 </li>
               
                 <li><code>cas.debug</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
                   
-                  <p>-</p>
+                  <p>Whether to activate CAS debugging or not.</p>
 </li>
               
                 <li><code>cas.fromAjax</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
                   
-                  <p>-</p>
+                  <p>CAS from AJAX configuration.</p>
 </li>
               
                 <li><code>cas.gateway</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
@@ -261,12 +261,12 @@
               
                 <li><code>cas.ignore</code> [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]
                   
-                  <p>-</p>
+                  <p>Ignore CAS validation on these routes.</p>
 </li>
               
                 <li><code>cas.logger</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>
                   
-                  <p>-</p>
+                  <p>Logger function for CAS.</p>
 </li>
               
                 <li><code>cas.match</code> [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]
@@ -276,27 +276,27 @@
               
                 <li><code>cas.paths</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
                   
-                  <p>-</p>
+                  <p>CAS path configuration.</p>
 </li>
               
                 <li><code>cas.redirect</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
                   
-                  <p>-</p>
+                  <p>-Whether to automatically redirect or not.</p>
 </li>
               
                 <li><code>cas.renew</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
                   
-                  <p>-</p>
+                  <p>Whether to renew CAS authentication by default or not.</p>
 </li>
               
                 <li><code>cas.serverPath</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>URL to CAS server.</p>
 </li>
               
                 <li><code>cas.servicePrefix</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>URL of the orchestrator endpoint.</p>
 </li>
               
                 <li><code>cas.slo</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
@@ -306,7 +306,7 @@
               
                 <li><code>cas.targetService</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>URI to CAS service.</p>
 </li>
               
             </ul>
@@ -315,7 +315,7 @@
       
         <div class='space-bottom0'>
           <span class='code bold'>cookies</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-          : -
+          : Cookie configuration.
 
           
             <ul>
@@ -399,14 +399,14 @@
       
         <div class='space-bottom0'>
           <span class='code bold'>enableAuth</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
-          : -
+          : Whether to enable CAS authentication or not.
 
           
         </div>
       
         <div class='space-bottom0'>
           <span class='code bold'>enableCORS</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
-          : -
+          : Whether to enable CORS or not.
 
           
         </div>
@@ -439,21 +439,25 @@
       
         <div class='space-bottom0'>
           <span class='code bold'>nocasPwd</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : -
+          : CAS default password when 
+<code>enableAuth</code>
+ is false.
 
           
         </div>
       
         <div class='space-bottom0'>
           <span class='code bold'>nocasUser</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : -
+          : CAS default username when 
+<code>enableAuth</code>
+ is false.
 
           
         </div>
       
         <div class='space-bottom0'>
           <span class='code bold'>socket</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : -
+          : Relative path to socket.
 
           
         </div>

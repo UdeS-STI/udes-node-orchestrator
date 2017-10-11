@@ -57,6 +57,13 @@ export const getRange = (req, query) => {
   };
 };
 
+/**
+ * @private
+ * @param req
+ * @param config
+ * @param renew
+ * @returns {Promise} Promise object represents proxy ticket.
+ */
 const getProxyTicket = (req, config, renew = false) => new Promise((resolve, reject) => {
   const { targetService } = config.cas;
   req.getProxyTicket(targetService, { renew }, (err, pt) => {
@@ -161,6 +168,7 @@ export class ResponseHelper {
 
   /**
    * Get file from server and send it as response.
+   * @async
    * @param {Object} options - Request options.
    * @param {String} options.url - URL to access the file.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
