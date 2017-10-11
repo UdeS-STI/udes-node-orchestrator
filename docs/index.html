@@ -220,7 +220,7 @@
       
         <div class='space-bottom0'>
           <span class='code bold'>allowedMethods</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : -
+          : List of allowed HTTP methods, separated by comas.
 
           
         </div>
@@ -234,7 +234,8 @@
       
         <div class='space-bottom0'>
           <span class='code bold'>cas</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-          : CAS configuration.
+          : <a href="https://github.com/UdeS-STI/connect-cas">CAS configuration</a>
+.
 
           
             <ul>
@@ -256,7 +257,7 @@
               
                 <li><code>cas.gateway</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
                   
-                  <p>-</p>
+                  <p>Send all validation requests through the CAS gateway feature.</p>
 </li>
               
                 <li><code>cas.ignore</code> [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]
@@ -271,7 +272,7 @@
               
                 <li><code>cas.match</code> [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]
                   
-                  <p>-</p>
+                  <p>TODO</p>
 </li>
               
                 <li><code>cas.paths</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
@@ -301,7 +302,7 @@
               
                 <li><code>cas.slo</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
                   
-                  <p>-</p>
+                  <p>TODO</p>
 </li>
               
                 <li><code>cas.targetService</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
@@ -327,27 +328,27 @@
               
                 <li><code>cookies.httpOnly</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
                   
-                  <p>-</p>
+                  <p><a href="https://www.owasp.org/index.php/HttpOnly">HttpOnly flag</a></p>
 </li>
               
                 <li><code>cookies.name</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>Cookie name.</p>
 </li>
               
                 <li><code>cookies.path</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>Path to store cookie.</p>
 </li>
               
                 <li><code>cookies.secret</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>Encryption key for cookie.</p>
 </li>
               
                 <li><code>cookies.secure</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
                   
-                  <p>-</p>
+                  <p>Whether to encrypt cookie or not.</p>
 </li>
               
             </ul>
@@ -356,41 +357,41 @@
       
         <div class='space-bottom0'>
           <span class='code bold'>customHeaderPrefix</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : -
+          : Prefix for retrieving data from custom headers.
 
           
         </div>
       
         <div class='space-bottom0'>
           <span class='code bold'>database</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-          : -
+          : Couchbase configuration.
 
           
             <ul>
               
                 <li><code>database.cacheBucketName</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>Cache bucket name.</p>
 </li>
               
                 <li><code>database.cacheBucketPwd</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>Cache bucket password.</p>
 </li>
               
                 <li><code>database.couchbaseCluster</code> [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]
                   
-                  <p>-</p>
+                  <p>List of Couchbase cluster URLs.</p>
 </li>
               
                 <li><code>database.sessionBucketName</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>Session bucket name.</p>
 </li>
               
                 <li><code>database.sessionBucketPwd</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
                   
-                  <p>-</p>
+                  <p>Session bucket password.</p>
 </li>
               
             </ul>
