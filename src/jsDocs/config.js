@@ -2,7 +2,7 @@
  * @typedef {Object} CasConfig
  * @param {Object} cache - CAS cache configuration.
  * @param {Boolean} cache.enable - Whether to enable CAS caching or not.
- * @param {[String]} cache.filter - TODO
+ * @param {[String]} cache.filter - Filter service url for PT cache
  * @param {Number} cache.ttl - Time to live of cache in ms.
  * @param {Boolean} debug - Whether to activate CAS debugging or not.
  * @param {Object} fromAjax - CAS from AJAX configuration.
@@ -11,7 +11,7 @@
  * @param {Boolean} gateway - Send all validation requests through the CAS gateway feature.
  * @param {[String]} ignore - Ignore CAS validation on these routes.
  * @param {Function} logger - Logger function for CAS.
- * @param {[String]} match - TODO
+ * @param {[String]} match - Filter url for CAS authentication
  * @param {Object} paths - CAS path configuration.
  * @param {String} paths.login - CAS login path.
  * @param {String} paths.logout - CAS logout path.
@@ -23,7 +23,7 @@
  * @param {Boolean} renew - Whether to renew CAS authentication by default or not.
  * @param {String} serverPath - URL to CAS server.
  * @param {String} servicePrefix - URL of the orchestrator endpoint.
- * @param {Boolean} slo - TODO
+ * @param {Boolean} slo - single sign logout feature
  * @param {String} targetService - URI to CAS service.
  */
 
