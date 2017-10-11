@@ -35,6 +35,16 @@
               
                 
                 <li><a
+                  href='#casconfig'
+                  class="">
+                  CasConfig
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
                   href='#orchestrator'
                   class=" toggle-sibling">
                   Orchestrator
@@ -213,257 +223,578 @@
   
 
   
-
-  
-    <div class='py1 quiet mt1 prose-big'>Properties</div>
-    <div>
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
       
         <div class='space-bottom0'>
-          <span class='code bold'>allowedMethods</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : List of allowed HTTP methods, separated by comas.
+          <div>
+            <span class='code bold'>allowedMethods</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    List of allowed HTTP methods, separated by comas.
 
+          </div>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>apiUrl</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : URL of the API instance to call.
+          <div>
+            <span class='code bold'>apiUrl</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    URL of the API instance to call.
 
+          </div>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>cas</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-          : <a href="https://github.com/UdeS-STI/connect-cas">CAS configuration</a>
+          <div>
+            <span class='code bold'>cas</span> <code class='quiet'>(<a href="#casconfig">CasConfig</a>)</code>
+	    <a href="https://github.com/UdeS-STI/connect-cas">CAS configuration</a>
 .
 
-          
-            <ul>
-              
-                <li><code>cas.cache</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
-                  
-                  <p>CAS cache configuration.</p>
-</li>
-              
-                <li><code>cas.debug</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
-                  
-                  <p>Whether to activate CAS debugging or not.</p>
-</li>
-              
-                <li><code>cas.fromAjax</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
-                  
-                  <p>CAS from AJAX configuration.</p>
-</li>
-              
-                <li><code>cas.gateway</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
-                  
-                  <p>Send all validation requests through the CAS gateway feature.</p>
-</li>
-              
-                <li><code>cas.ignore</code> [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]
-                  
-                  <p>Ignore CAS validation on these routes.</p>
-</li>
-              
-                <li><code>cas.logger</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>
-                  
-                  <p>Logger function for CAS.</p>
-</li>
-              
-                <li><code>cas.match</code> [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]
-                  
-                  <p>TODO</p>
-</li>
-              
-                <li><code>cas.paths</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
-                  
-                  <p>CAS path configuration.</p>
-</li>
-              
-                <li><code>cas.redirect</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
-                  
-                  <p>-Whether to automatically redirect or not.</p>
-</li>
-              
-                <li><code>cas.renew</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
-                  
-                  <p>Whether to renew CAS authentication by default or not.</p>
-</li>
-              
-                <li><code>cas.serverPath</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>URL to CAS server.</p>
-</li>
-              
-                <li><code>cas.servicePrefix</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>URL of the orchestrator endpoint.</p>
-</li>
-              
-                <li><code>cas.slo</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
-                  
-                  <p>TODO</p>
-</li>
-              
-                <li><code>cas.targetService</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>URI to CAS service.</p>
-</li>
-              
-            </ul>
+          </div>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>cookies</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-          : Cookie configuration.
+          <div>
+            <span class='code bold'>cookies</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    Cookie configuration.
 
+          </div>
           
-            <ul>
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
               
-                <li><code>cookies.maxAge</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>
-                  
-                  <p>Time to live (TTL) for the cookie in ms.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.maxAge</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>
+                  </td>
+                  <td class='break-word'><span>Time to live (TTL) for the cookie in ms.
+</span></td>
+                </tr>
               
-                <li><code>cookies.httpOnly</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
-                  
-                  <p><a href="https://www.owasp.org/index.php/HttpOnly">HttpOnly flag</a></p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.httpOnly</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+                  </td>
+                  <td class='break-word'><span><a href="https://www.owasp.org/index.php/HttpOnly">HttpOnly flag</a>
+</span></td>
+                </tr>
               
-                <li><code>cookies.name</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>Cookie name.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Cookie name.
+</span></td>
+                </tr>
               
-                <li><code>cookies.path</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>Path to store cookie.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Path to store cookie.
+</span></td>
+                </tr>
               
-                <li><code>cookies.secret</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>Encryption key for cookie.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.secret</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Encryption key for cookie.
+</span></td>
+                </tr>
               
-                <li><code>cookies.secure</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
-                  
-                  <p>Whether to encrypt cookie or not.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.secure</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+                  </td>
+                  <td class='break-word'><span>Whether to encrypt cookie or not.
+</span></td>
+                </tr>
               
-            </ul>
+            </tbody>
+          </table>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>customHeaderPrefix</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : Prefix for retrieving data from custom headers.
+          <div>
+            <span class='code bold'>customHeaderPrefix</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    Prefix for retrieving data from custom headers.
 
+          </div>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>database</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-          : Couchbase configuration.
+          <div>
+            <span class='code bold'>database</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    Couchbase configuration.
 
+          </div>
           
-            <ul>
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
               
-                <li><code>database.cacheBucketName</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>Cache bucket name.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.cacheBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Cache bucket name.
+</span></td>
+                </tr>
               
-                <li><code>database.cacheBucketPwd</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>Cache bucket password.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.cacheBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Cache bucket password.
+</span></td>
+                </tr>
               
-                <li><code>database.couchbaseCluster</code> [<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]
-                  
-                  <p>List of Couchbase cluster URLs.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.couchbaseCluster</span> <code class='quiet'>[<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]</code>
+                  </td>
+                  <td class='break-word'><span>List of Couchbase cluster URLs.
+</span></td>
+                </tr>
               
-                <li><code>database.sessionBucketName</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>Session bucket name.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.sessionBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Session bucket name.
+</span></td>
+                </tr>
               
-                <li><code>database.sessionBucketPwd</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>Session bucket password.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.sessionBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Session bucket password.
+</span></td>
+                </tr>
               
-            </ul>
+            </tbody>
+          </table>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>enableAuth</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
-          : Whether to enable CAS authentication or not.
+          <div>
+            <span class='code bold'>enableAuth</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+	    Whether to enable CAS authentication or not.
 
+          </div>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>enableCORS</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
-          : Whether to enable CORS or not.
+          <div>
+            <span class='code bold'>enableCORS</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+	    Whether to enable CORS or not.
 
+          </div>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>log</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-          : Logger configuration.
+          <div>
+            <span class='code bold'>log</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    Logger configuration.
 
+          </div>
           
-            <ul>
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
               
-                <li><code>log.logLevel</code> (<code>"trace"</code> | <code>"info"</code> | <code>"debug"</code> | <code>"warn"</code> | <code>"error"</code> | <code>"silent"</code>)
-                  
-                  <p>Log level.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>log.logLevel</span> <code class='quiet'>(<code>"trace"</code> | <code>"info"</code> | <code>"debug"</code> | <code>"warn"</code> | <code>"error"</code> | <code>"silent"</code>)</code>
+                  </td>
+                  <td class='break-word'><span>Log level.
+</span></td>
+                </tr>
               
-                <li><code>log.name</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>
-                  
-                  <p>Logger name.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>log.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Logger name.
+</span></td>
+                </tr>
               
-                <li><code>log.prettyPrint</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
-                  
-                  <p>Whether to print pretty or raw.</p>
-</li>
+                <tr>
+                  <td class='break-word'><span class='code bold'>log.prettyPrint</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+                  </td>
+                  <td class='break-word'><span>Whether to print pretty or raw.
+</span></td>
+                </tr>
               
-            </ul>
+            </tbody>
+          </table>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>nocasPwd</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : CAS default password when 
+          <div>
+            <span class='code bold'>nocasPwd</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    CAS default password when 
 <code>enableAuth</code>
  is false.
 
+          </div>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>nocasUser</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : CAS default username when 
+          <div>
+            <span class='code bold'>nocasUser</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    CAS default username when 
 <code>enableAuth</code>
  is false.
 
+          </div>
           
         </div>
       
         <div class='space-bottom0'>
-          <span class='code bold'>socket</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-          : Relative path to socket.
+          <div>
+            <span class='code bold'>socket</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    Relative path to socket.
 
+          </div>
           
         </div>
       
     </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='casconfig'>
+      CasConfig
+    </h3>
+    
+    
+  </div>
+  
+
+  
+
+  <div class='pre p1 fill-light mt0'>CasConfig</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>cache</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    CAS cache configuration.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>cache.enable</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+                  </td>
+                  <td class='break-word'><span>Whether to enable CAS caching or not.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>cache.filter</span> <code class='quiet'>[<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]</code>
+                  </td>
+                  <td class='break-word'><span>TODO
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>cache.ttl</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>
+                  </td>
+                  <td class='break-word'><span>Time to live of cache in ms.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>debug</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+	    Whether to activate CAS debugging or not.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>fromAjax</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    CAS from AJAX configuration.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>fromAjax.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Default response header for AJAX responses.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>fromAjax.status</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>
+                  </td>
+                  <td class='break-word'><span>Default status code for AJAX responses.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>gateway</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+	    Send all validation requests through the CAS gateway feature.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ignore</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>])</code>
+	    Ignore CAS validation on these routes.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>logger</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    Logger function for CAS.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>match</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>])</code>
+	    TODO
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>paths</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    CAS path configuration.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>paths.login</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>CAS login path.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>paths.logout</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>CAS logout path.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>paths.proxy</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Path to obtain proxy ticket.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>paths.proxyCallback</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Path to call once proxy ticket is obtained.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>paths.serviceValidate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Path to validate TGT.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>paths.validate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Validation path.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>redirect</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+	    -Whether to automatically redirect or not.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>renew</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+	    Whether to renew CAS authentication by default or not.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>serverPath</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    URL to CAS server.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>servicePrefix</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    URL of the orchestrator endpoint.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>slo</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+	    TODO
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>targetService</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    URI to CAS service.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
   
 
   
