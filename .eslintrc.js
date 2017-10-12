@@ -4,6 +4,6 @@ module.exports = {
   rules: {
     'comma-dangle': ['error', 'always-multiline'],
     'require-jsdoc': 'error',
-    'valid-jsdoc': 'error',
+    'valid-jsdoc': ['error', { requireReturn: false }],
   },
 };

@@ -10,7 +10,6 @@ const pino = new Pino()
  * @param {Object} req - HTTP request.
  * @param {Object} res - HTTP response.
  * @param {Function} next - Callback function.
- * @returns {null} Returns nothing.
  */
 export const logErrors = (err, req, res, next) => {
   pino.error(new Error(err))
@@ -24,7 +23,6 @@ export const logErrors = (err, req, res, next) => {
  * @param {Object} req - HTTP request.
  * @param {Object} res - HTTP response.
  * @param {Function} next - Callback function.
- * @returns {null} Returns nothing.
  */
 export const clientErrorHandler = (err, req, res, next) => {
   if (req.xhr) {
@@ -40,7 +38,6 @@ export const clientErrorHandler = (err, req, res, next) => {
  * @param {Object} err - Error.
  * @param {Object} req - HTTP request.
  * @param {Object} res - HTTP response.
- * @returns {null} Returns nothing.
  */
 export const errorHandler = (err, req, res) => {
   res.send(boom.badImplementation(`Une erreur serveur c'est produite: ${err}`))

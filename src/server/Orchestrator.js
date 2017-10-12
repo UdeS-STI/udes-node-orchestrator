@@ -50,7 +50,6 @@ export default class Orchestrator {
    * @param {Object} [options] - Additional options for route configuration.
    * @param {Boolean} [options.handle404=true] - Whether to handle 404 routes automatically or not.
    * @throws {Error} If routes are already set.
-   * @returns {null} Returns nothing.
    */
   setRoutes = (routes, options = {}) => {
     if (this.router) {

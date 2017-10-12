@@ -86,13 +86,14 @@ const getProxyTicket = (req, config, renew = false) => new Promise((resolve, rej
  * @private
  * @param {Object} args - Arguments passed to class constructor.
  * @throws {Error} If an argument is null or undefined.
- * @returns {null} Return nothing.
  */
-const checkArgs = args => Object.keys(args).forEach((key) => {
-  if (!args[key]) {
-    throw new Error(`new ResponseHelper() - Missing argument ${key}`)
-  }
-})
+const checkArgs = args => {
+  Object.keys(args).forEach((key) => {
+    if (!args[key]) {
+      throw new Error(`new ResponseHelper() - Missing argument ${key}`)
+    }
+  })
+}
 
 /**
  * Handles response standardisation as well as http responses and requests.
@@ -180,7 +181,6 @@ export class ResponseHelper {
    * @param {Object} options - Request options.
    * @param {String} options.url - URL to access the file.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
-   * @returns {null} Nothing.
    */
   getFile = async (options) => {
     const { headers = getHeaders() } = options
@@ -231,7 +231,6 @@ export class ResponseHelper {
    * @param {Object} [options={}] - Additional options for response.
    * @param {Object} [options.headers={}] - Response headers.
    * @param {Boolean} [options.formatData=true] - True to standardise response format.
-   * @returns {null} Nothing.
    */
   handleResponse = (data, options = {}) => {
     const { formatData = true, headers = {} } = options
@@ -247,17 +246,19 @@ export class ResponseHelper {
 
       if (start > end || start >= size || end >= size) {
         this.res.set('Content-Range', `${unit} */${size}`)
-        return this.handleError({ statusCode: 416, message: `Cannot get range ${start}-${end} of ${size}` })
+        this.handleError({ statusCode: 416, message: `Cannot get range ${start}-${end} of ${size}` })
+        return
       }
 
       if (end - start !== size - 1) {
         this.res.set('Content-Range', `${unit} ${start}-${end}/${size}`)
         const partialData = { [key]: values.splice(start, end) }
         const responseData = formatData ? formatResponse(this.req, partialData) : partialData
-        return this.res.status(206).send(responseData)
+        this.res.status(206).send(responseData)
+        return
       }
     }
 
-    return this.res.status(200).send(formatData ? formatResponse(this.req, data) : data)
+    this.res.status(200).send(formatData ? formatResponse(this.req, data) : data)
   }
 }
