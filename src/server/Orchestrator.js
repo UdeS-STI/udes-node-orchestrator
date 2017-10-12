@@ -1,21 +1,21 @@
-import express from 'express';
-import http from 'http';
-import https from 'https';
+import express from 'express'
+import http from 'http'
+import https from 'https'
 
-import { configureExpress, handleErrors, setListeners } from './serverConfig';
-import { notFound } from '../lib/notFound';
-import { Router } from '../dependencies/express';
+import { configureExpress, handleErrors, setListeners } from './serverConfig'
+import { notFound } from '../lib/notFound'
+import { Router as router } from '../dependencies/express'
 
 // Configure http/https before requiring Request module since Request is also using global config
-http.globalAgent.maxSockets = 25;
-https.globalAgent.options.rejectUnauthorized = false;
-https.globalAgent.options.requestCert = true;
-https.globalAgent.maxSockets = 25;
+http.globalAgent.maxSockets = 25
+https.globalAgent.options.rejectUnauthorized = false
+https.globalAgent.options.requestCert = true
+https.globalAgent.maxSockets = 25
 
 /**
  * Orchestrator server. Handles routes and HTTP traffic.
  * @class
- * @param {Object} config - Configuration file for server instance.
+ * @param {Config} config - Configuration file for server instance.
  * @param {Object[]} [routes] - The server's endpoints.
  * @param {('DELETE'|'GET'|'POST'|'PUT')} routes[].method - The HTTP method of the route.
  * @param {String} routes[].url - The path from the base url.
@@ -23,26 +23,26 @@ https.globalAgent.maxSockets = 25;
  * @throws {Error} If `config` argument is null.
  */
 export default class Orchestrator {
-  constructor(config, routes) {
+  constructor (config, routes) {
     if (!config) {
-      throw new Error('new Orchestrator() - Missing argument `config`');
+      throw new Error('new Orchestrator() - Missing argument `config`')
     }
 
-    this.env = process.env.NODE_ENV || 'development';
-    this.app = express();
-    this.config = config;
+    this.env = process.env.NODE_ENV || 'development'
+    this.app = express()
+    this.config = config
 
-    configureExpress(this.app, this.config, this.env);
-    this.server = http.createServer(this.app);
-    setListeners(this.app, this.server, this.config);
+    configureExpress(this.app, this.config, this.env)
+    this.server = http.createServer(this.app)
+    setListeners(this.app, this.server, this.config)
 
     if (routes) {
-      this.setRoutes(routes);
+      this.setRoutes(routes)
     }
   }
 
   /**
-   *
+   * Set Orchestrator endpoints
    * @param {Object[]} routes - The server's endpoints.
    * @param {('DELETE'|'GET'|'POST'|'PUT')} routes[].method - The HTTP method of the route.
    * @param {String} routes[].url - The path from the base url.
@@ -53,19 +53,19 @@ export default class Orchestrator {
    */
   setRoutes = (routes, options = {}) => {
     if (this.router) {
-      throw new Error('You can only set routes once');
+      throw new Error('You can only set routes once')
     }
 
     if (options.handle404 !== false) {
-      const methods = ['DELETE', 'GET', 'POST', 'PUT'];
-      routes.push(...methods.map(method => ({ method, url: '/*', fn: notFound })));
+      const methods = ['DELETE', 'GET', 'POST', 'PUT']
+      routes.push(...methods.map(method => ({ method, url: '/*', fn: notFound })))
     }
 
-    this.router = Router();
-    routes.forEach(({ method, url, fn }) => this.router[method.toLowerCase()](url, fn));
-    this.app.use(this.router);
+    this.router = router()
+    routes.forEach(({ method, url, fn }) => this.router[method.toLowerCase()](url, fn))
+    this.app.use(this.router)
 
     // Must handle errors after settings routes or express throws an error.
-    handleErrors(this.app);
+    handleErrors(this.app)
   }
 }

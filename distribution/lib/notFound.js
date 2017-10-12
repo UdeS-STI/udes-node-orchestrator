@@ -21,7 +21,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 /* eslint import/prefer-default-export: 0 */
 var notFound = exports.notFound = function notFound(req, res) {
-  return new _ResponseHelper.ResponseHelper(req, res).handleError({
+  var responseHelper = new _ResponseHelper.ResponseHelper(req, res);
+  responseHelper.handleError({
     statusCode: 404,
     message: _boom2.default.notFound('Route non impl\xE9ment\xE9e - ' + req.method + ':' + req.url)
   });

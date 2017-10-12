@@ -6,6 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Instantiate an error object with HTTP status code and message.
+ * @class
+ * @private
+ * @param {String} message - Error message Can be String or JSON String.
+ * @param {Number} statusCode - Error status code.
+ */
 var ResquestError = function ResquestError(message, statusCode) {
   _classCallCheck(this, ResquestError);
 

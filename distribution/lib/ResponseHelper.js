@@ -38,6 +38,9 @@ var getHeaders = _Utils2.default.getHeaders;
 /**
  * Standardize response format.
  * @private
+ * @param {Object} req - HTTP request.
+ * @param {Object} data={} - Response data.
+ * @returns {Object} Formatted response data.
  */
 
 var formatResponse = exports.formatResponse = function formatResponse(req) {
@@ -68,6 +71,9 @@ var formatResponse = exports.formatResponse = function formatResponse(req) {
 /**
  * Get range information from either request headers or query parameters.
  * @private
+ * @param {Object} req - HTTP request.
+ * @param {Object} query - Query string data.
+ * @returns {Object} Range information or null if none.
  */
 var getRange = exports.getRange = function getRange(req, query) {
   var headers = req.headers;
@@ -87,6 +93,13 @@ var getRange = exports.getRange = function getRange(req, query) {
   };
 };
 
+/**
+ * Obtain proxy ticket for CAS authentication.
+ * @param {Object} req - HTTP request.
+ * @param {Config} config - Orchestrator configuration.
+ * @param {Boolean} renew=false - True to renew proxy ticket.
+ * @returns {Promise} Promise object represents proxy ticket.
+ */
 var getProxyTicket = function getProxyTicket(req, config) {
   var renew = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   return new Promise(function (resolve, reject) {
@@ -103,11 +116,13 @@ var getProxyTicket = function getProxyTicket(req, config) {
 };
 
 /**
+ * Validate class constructor arguments.
  * @private
- * @param args
+ * @param {Object} args - Arguments passed to class constructor.
+ * @throws {Error} If an argument is null or undefined.
  */
 var checkArgs = function checkArgs(args) {
-  return Object.keys(args).forEach(function (key) {
+  Object.keys(args).forEach(function (key) {
     if (!args[key]) {
       throw new Error('new ResponseHelper() - Missing argument ' + key);
     }
@@ -119,7 +134,7 @@ var checkArgs = function checkArgs(args) {
  * @class
  * @param {Object} req - {@link https://expressjs.com/en/4x/api.html#req HTTP request}.
  * @param {Object} res - {@link https://expressjs.com/en/4x/api.html#res HTTP response}.
- * @param {Object} config - Orchestrator configuration.
+ * @param {Config} config - Orchestrator configuration.
  * @throws {Error} If `req`, `res` or `config` argument is null.
  */
 
@@ -335,18 +350,20 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
       if (start > end || start >= size || end >= size) {
         _this.res.set('Content-Range', unit + ' */' + size);
-        return _this.handleError({ statusCode: 416, message: 'Cannot get range ' + start + '-' + end + ' of ' + size });
+        _this.handleError({ statusCode: 416, message: 'Cannot get range ' + start + '-' + end + ' of ' + size });
+        return;
       }
 
       if (end - start !== size - 1) {
         _this.res.set('Content-Range', unit + ' ' + start + '-' + end + '/' + size);
         var partialData = _defineProperty({}, key, values.splice(start, end));
         var responseData = formatData ? formatResponse(_this.req, partialData) : partialData;
-        return _this.res.status(206).send(responseData);
+        _this.res.status(206).send(responseData);
+        return;
       }
     }
 
-    return _this.res.status(200).send(formatData ? formatResponse(_this.req, data) : data);
+    _this.res.status(200).send(formatData ? formatResponse(_this.req, data) : data);
   };
 
   checkArgs({ req: req, res: res, config: config });
@@ -368,6 +385,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
 /**
  * Get file from server and send it as response.
+ * @async
  * @param {Object} options - Request options.
  * @param {String} options.url - URL to access the file.
  * @param {Object} [options.headers=getHeaders()] - Request headers.
@@ -391,6 +409,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
  * @param {Object|String} error - Error encountered.
  * @param {Number} [error.statusCode=500] - Error status code (3xx-5xx).
  * @param {String} [error.message=error] - Error message. Value of error if it's a string.
+ * @returns {null} Nothing.
  */
 
 

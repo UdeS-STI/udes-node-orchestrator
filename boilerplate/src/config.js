@@ -60,4 +60,4 @@ export default {
     logLevel: 'debug',
     prettyPrint: true,
   },
-};
+}

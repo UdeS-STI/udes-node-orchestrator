@@ -20,10 +20,10 @@ var pino = new _pino2.default();
 /**
  * Middleware - Error logging.
  * @private
- * @param err
- * @param req
- * @param res
- * @param next
+ * @param {Object} err - Error.
+ * @param {Object} req - HTTP request.
+ * @param {Object} res - HTTP response.
+ * @param {Function} next - Callback function.
  */
 var logErrors = exports.logErrors = function logErrors(err, req, res, next) {
   pino.error(new Error(err));
@@ -33,10 +33,10 @@ var logErrors = exports.logErrors = function logErrors(err, req, res, next) {
 /**
  * Middleware - Client/API error handling.
  * @private
- * @param err
- * @param req
- * @param res
- * @param next
+ * @param {Object} err - Error.
+ * @param {Object} req - HTTP request.
+ * @param {Object} res - HTTP response.
+ * @param {Function} next - Callback function.
  */
 var clientErrorHandler = exports.clientErrorHandler = function clientErrorHandler(err, req, res, next) {
   if (req.xhr) {
@@ -49,9 +49,9 @@ var clientErrorHandler = exports.clientErrorHandler = function clientErrorHandle
 /**
  * Middleware - Server error handling.
  * @private
- * @param err
- * @param req
- * @param res
+ * @param {Object} err - Error.
+ * @param {Object} req - HTTP request.
+ * @param {Object} res - HTTP response.
  */
 var errorHandler = exports.errorHandler = function errorHandler(err, req, res) {
   res.send(_boom2.default.badImplementation('Une erreur serveur c\'est produite: ' + err));
