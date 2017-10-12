@@ -9,7 +9,7 @@ import { ResponseHelper } from './ResponseHelper'
  * @param {Object} res - HTTP response.
  */
 export const notFound = (req, res) => {
-  const responseHelper = new ResponseHelper(req, res)
+  const responseHelper = new ResponseHelper(req, res, {})
   responseHelper.handleError({
     statusCode: 404,
     message: boom.notFound(`Route non implémentée - ${req.method}:${req.url}`),

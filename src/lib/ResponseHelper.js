@@ -26,17 +26,10 @@ export const formatResponse = (req, data = {}) => ({
       ...acc,
       [cur]: {
         ...meta,
-        data: currentData,
+        data: currentData.data || currentData,
       },
     }
-  }, {}) : {
-    count: 0,
-    debug: {
-      'x-tempsMs': 0,
-    },
-    messages: [],
-    status: 200,
-  },
+  }, {}) : {},
 })
 
 /**
@@ -162,7 +155,7 @@ export class ResponseHelper {
             const data = JSON.parse(response.body)
 
             if (Array.isArray(data)) {
-              resolve({ body: data, meta })
+              resolve({ data, meta })
             } else {
               resolve({ ...data, meta })
             }
