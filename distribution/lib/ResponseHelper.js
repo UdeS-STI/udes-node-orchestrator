@@ -55,16 +55,9 @@ var formatResponse = exports.formatResponse = function formatResponse(req) {
       delete currentData.meta;
 
       return _extends({}, acc, _defineProperty({}, cur, _extends({}, meta, {
-        data: currentData
+        data: currentData.data || currentData
       })));
-    }, {}) : {
-      count: 0,
-      debug: {
-        'x-tempsMs': 0
-      },
-      messages: [],
-      status: 200
-    }
+    }, {}) : {}
   };
 };
 
@@ -171,7 +164,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
                 (0, _request.request)(opt, function () {
                   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(error, response) {
-                    var callDuration, meta, data;
+                    var callDuration, customHeaderPrefix, meta, data;
                     return regeneratorRuntime.wrap(function _callee$(_context) {
                       while (1) {
                         switch (_context.prev = _context.next) {
@@ -202,12 +195,13 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                             return _context.abrupt('return');
 
                           case 11:
+                            customHeaderPrefix = _this.config.customHeaderPrefix;
                             meta = {
-                              count: response.headers[_this.config.customHeaderPrefix + '-count'] || 0,
+                              count: response.headers[customHeaderPrefix + '-count'],
                               debug: {
                                 'x-TempsMs': callDuration
                               },
-                              messages: response.headers[_this.config.customHeaderPrefix + '-messages'],
+                              messages: response.headers[customHeaderPrefix + '-messages'] || undefined,
                               status: response.statusCode
                             };
 
@@ -218,7 +212,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
 
                                 if (Array.isArray(data)) {
-                                  resolve({ body: data, meta: meta });
+                                  resolve({ data: data, meta: meta });
                                 } else {
                                   resolve(_extends({}, data, { meta: meta }));
                                 }
@@ -229,7 +223,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                               reject(new _RequestError2.default(response.body || response, response.statusCode || 500));
                             }
 
-                          case 13:
+                          case 14:
                           case 'end':
                             return _context.stop();
                         }
