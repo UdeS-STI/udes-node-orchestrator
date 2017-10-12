@@ -10,6 +10,9 @@ const { getHeaders } = Utils
 /**
  * Standardize response format.
  * @private
+ * @param {Object} req - HTTP request.
+ * @param {Object} data={} - Response data.
+ * @returns {Object} Formatted response data.
  */
 export const formatResponse = (req, data = {}) => ({
   auth: getAttributes(req),
@@ -39,6 +42,9 @@ export const formatResponse = (req, data = {}) => ({
 /**
  * Get range information from either request headers or query parameters.
  * @private
+ * @param {Object} req - HTTP request.
+ * @param {Object} query - Query string data.
+ * @returns {Object} Range information or null if none.
  */
 export const getRange = (req, query) => {
   const { headers } = req
@@ -57,6 +63,13 @@ export const getRange = (req, query) => {
   }
 }
 
+/**
+ * Obtain proxy ticket for CAS authentication.
+ * @param {Object} req - HTTP request.
+ * @param {Config} config - Orchestrator configuration.
+ * @param {Boolean} renew=false - True to renew proxy ticket.
+ * @returns {Promise} Promise object represents proxy ticket.
+ */
 const getProxyTicket = (req, config, renew = false) => new Promise((resolve, reject) => {
   const { targetService } = config.cas
   req.getProxyTicket(targetService, { renew }, (err, pt) => {
@@ -69,8 +82,11 @@ const getProxyTicket = (req, config, renew = false) => new Promise((resolve, rej
 })
 
 /**
+ * Validate class constructor arguments.
  * @private
- * @param args
+ * @param {Object} args - Arguments passed to class constructor.
+ * @throws {Error} If an argument is null or undefined.
+ * @returns {null} Return nothing.
  */
 const checkArgs = args => Object.keys(args).forEach((key) => {
   if (!args[key]) {
@@ -164,6 +180,7 @@ export class ResponseHelper {
    * @param {Object} options - Request options.
    * @param {String} options.url - URL to access the file.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
+   * @returns {null} Nothing.
    */
   getFile = async (options) => {
     const { headers = getHeaders() } = options
@@ -204,6 +221,7 @@ export class ResponseHelper {
    * @param {Object|String} error - Error encountered.
    * @param {Number} [error.statusCode=500] - Error status code (3xx-5xx).
    * @param {String} [error.message=error] - Error message. Value of error if it's a string.
+   * @returns {null} Nothing.
    */
   handleError = error => this.res.status(error.statusCode || 500).send(error.message || error)
 
@@ -213,6 +231,7 @@ export class ResponseHelper {
    * @param {Object} [options={}] - Additional options for response.
    * @param {Object} [options.headers={}] - Response headers.
    * @param {Boolean} [options.formatData=true] - True to standardise response format.
+   * @returns {null} Nothing.
    */
   handleResponse = (data, options = {}) => {
     const { formatData = true, headers = {} } = options

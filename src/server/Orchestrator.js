@@ -42,7 +42,7 @@ export default class Orchestrator {
   }
 
   /**
-   *
+   * Set Orchestrator endpoints
    * @param {Object[]} routes - The server's endpoints.
    * @param {('DELETE'|'GET'|'POST'|'PUT')} routes[].method - The HTTP method of the route.
    * @param {String} routes[].url - The path from the base url.
@@ -50,6 +50,7 @@ export default class Orchestrator {
    * @param {Object} [options] - Additional options for route configuration.
    * @param {Boolean} [options.handle404=true] - Whether to handle 404 routes automatically or not.
    * @throws {Error} If routes are already set.
+   * @returns {null} Returns nothing.
    */
   setRoutes = (routes, options = {}) => {
     if (this.router) {

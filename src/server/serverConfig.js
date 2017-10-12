@@ -94,6 +94,12 @@ export const configureExpress = (app, configuration, env) => {
     app.use((req, res, next) => {
       req.sn = uuidV4()
 
+      /**
+       * Function that returns logger.
+       * @param {String} type - Log type.
+       * @param {...*} args - Arguments to log.
+       * @returns {Object} Logger
+       */
       function getLogger (type = 'log', ...args) {
         let user
         try {

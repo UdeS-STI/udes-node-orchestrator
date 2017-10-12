@@ -7,6 +7,7 @@ import { ResponseHelper } from './ResponseHelper'
  * @private
  * @param {Object} req - HTTP request.
  * @param {Object} res - HTTP response.
+ * @returns {Object} 404 response.
  */
 export const notFound = (req, res) => (new ResponseHelper(req, res)).handleError({
   statusCode: 404,
