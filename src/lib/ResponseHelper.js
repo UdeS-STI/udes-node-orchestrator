@@ -133,10 +133,12 @@ export class ResponseHelper {
 
     try {
       opt.auth.pass = await getProxyTicket(this.req, this.config)
+      this.req.info(opt)
       const time = +(new Date())
 
       request(opt, async (error, response) => {
         const callDuration = +(new Date()) - time
+        this.req.info(error, response)
 
         if (error) {
           reject(new RequestError(error, 500))

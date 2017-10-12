@@ -1,7 +1,4 @@
 import boom from 'boom'
-import Pino from 'pino'
-
-const pino = new Pino()
 
 /**
  * Middleware - Error logging.
@@ -12,7 +9,7 @@ const pino = new Pino()
  * @param {Function} next - Callback function.
  */
 export const logErrors = (err, req, res, next) => {
-  pino.error(new Error(err))
+  req.log.error(new Error(err))
   next(err)
 }
 

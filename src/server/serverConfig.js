@@ -1,5 +1,3 @@
-/* eslint no-console: 0 */
-
 import bodyParser from 'body-parser'
 import Cas from 'udes-connect-cas'
 import compress from 'compression'
@@ -15,27 +13,27 @@ import uuidV4 from 'uuid/v4'
 import { logErrors, clientErrorHandler, errorHandler } from '../lib/errorHandlers'
 
 const CouchbaseStore = new CouchbaseConnector(session)
-const orchestrateurDebug = new Debug('orchestrateur')
+const debug = new Debug('orchestrateur')
 const pino = new Pino()
 
 export const configureExpress = (app, configuration, env) => {
-  const pinoExpress = new ExpressPinoLogger({
+  debug.enabled = configuration.debug
+
+  // Logging
+  debug('Configuration du log manager')
+  app.use(new ExpressPinoLogger({
     logger: pino,
     name: configuration.log.name,
     level: configuration.log.logLevel,
     prettyPrint: configuration.log.prettyPrint,
-  })
-
-  // Logging
-  orchestrateurDebug('Configuration du log manager')
-  app.use(pinoExpress)
+  }))
 
   // Enable compression
   app.use(compress())
 
   if (env === 'production') {
     // Set trust proxy for secure session cookie
-    orchestrateurDebug('Prod: Ajout de trust proxy pour les cookie secure')
+    debug('Prod: Ajout de trust proxy pour les cookie secure')
     app.set('trust proxy', 1)
     app.set('showStackError', false)
   }
@@ -45,7 +43,7 @@ export const configureExpress = (app, configuration, env) => {
 
   // Enable cross-origin resource sharing.
   if (configuration.enableCORS) {
-    orchestrateurDebug('Ajout du support CORS')
+    debug('Ajout du support CORS')
     app.all('*', (req, res, next) => {
       res.header('Access-Control-Allow-Origin', req.headers.origin)
       res.header('Access-Control-Allow-Credentials', 'true')
@@ -56,7 +54,7 @@ export const configureExpress = (app, configuration, env) => {
   }
 
   // Session management
-  orchestrateurDebug('Configuration couchbase pour les sessions')
+  debug('Configuration couchbase pour les sessions')
   const couchbaseStore = new CouchbaseStore({
     bucket: configuration.database.sessionBucketName,
     connectionTimeout: 10000,
@@ -90,31 +88,9 @@ export const configureExpress = (app, configuration, env) => {
 
   // CAS configuration
   if (configuration.enableAuth) {
-    orchestrateurDebug('Configuration et activation du client CAS')
+    debug('Configuration et activation du client CAS')
     app.use((req, res, next) => {
       req.sn = uuidV4()
-
-      /**
-       * Function that returns logger.
-       * @param {String} type - Log type.
-       * @param {...*} args - Arguments to log.
-       * @returns {Object} Logger
-       */
-      function getLogger (type = 'log', ...args) {
-        let user
-        try {
-          ({ user } = req.session.cas)
-        } catch (e) {
-          user = 'unknown'
-        }
-
-        if (console[type] !== undefined) {
-          return console[type].bind(console[type], `${req.sn}|${user}`, ...args)
-        }
-        return console.log.bind(console.log, `${req.sn}|${user}`, ...args)
-      }
-
-      req.getLogger = getLogger
       next()
     })
     const casClient = new Cas(configuration.cas)
@@ -128,12 +104,6 @@ export const configureExpress = (app, configuration, env) => {
   app.use(bodyParser.json({
     limit: '1mb',
   }))
-
-  // Route management
-  orchestrateurDebug('Instantiation du gestionnaire de routes')
-
-  // Error management
-  orchestrateurDebug('Instantiation des gestionnaires d\'erreurs')
 }
 
 export const setListeners = (app, server, config) => {
@@ -148,7 +118,7 @@ export const setListeners = (app, server, config) => {
   process.on('message', (msg) => {
     if (msg === 'shutdown') {
       setTimeout(() => {
-        pino.info('Gracefull reload depuis PM2')
+        pino.info('Graceful reload from PM2')
         process.exit(0)
       }, 3000)
     }
