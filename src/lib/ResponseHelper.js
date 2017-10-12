@@ -57,6 +57,13 @@ export const getRange = (req, query) => {
   };
 };
 
+/**
+ * @private
+ * @param req
+ * @param config
+ * @param renew
+ * @returns {Promise} Promise object represents proxy ticket.
+ */
 const getProxyTicket = (req, config, renew = false) => new Promise((resolve, reject) => {
   const { targetService } = config.cas;
   req.getProxyTicket(targetService, { renew }, (err, pt) => {
@@ -83,7 +90,7 @@ const checkArgs = args => Object.keys(args).forEach((key) => {
  * @class
  * @param {Object} req - {@link https://expressjs.com/en/4x/api.html#req HTTP request}.
  * @param {Object} res - {@link https://expressjs.com/en/4x/api.html#res HTTP response}.
- * @param {Object} config - Orchestrator configuration.
+ * @param {Config} config - Orchestrator configuration.
  * @throws {Error} If `req`, `res` or `config` argument is null.
  */
 export class ResponseHelper {
@@ -161,6 +168,7 @@ export class ResponseHelper {
 
   /**
    * Get file from server and send it as response.
+   * @async
    * @param {Object} options - Request options.
    * @param {String} options.url - URL to access the file.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
