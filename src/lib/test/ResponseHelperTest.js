@@ -364,7 +364,8 @@ describe('server/lib/ResponseHelper', () => {
         statusCode: 200,
         body: JSON.stringify(data),
         headers: {
-          'foo-messages': '',
+          'foo-count': '1',
+          'foo-messages': 'message',
         },
       }))
 
@@ -375,11 +376,11 @@ describe('server/lib/ResponseHelper', () => {
       expect(response).to.be.deep.equal({
         ...data,
         meta: {
-          count: 0,
+          count: '1',
           debug: {
             'x-TempsMs': 0,
           },
-          messages: '',
+          messages: 'message',
           status: 200,
         },
       })
@@ -393,7 +394,8 @@ describe('server/lib/ResponseHelper', () => {
         statusCode: 200,
         body: data,
         headers: {
-          'foo-messages': '',
+          'foo-count': '1',
+          'foo-messages': 'message',
         },
       }))
 
@@ -404,11 +406,11 @@ describe('server/lib/ResponseHelper', () => {
       expect(response).to.be.deep.equal({
         data,
         meta: {
-          count: 0,
+          count: '1',
           debug: {
             'x-TempsMs': 0,
           },
-          messages: '',
+          messages: 'message',
           status: 200,
         },
       })
