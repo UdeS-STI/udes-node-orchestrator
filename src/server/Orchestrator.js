@@ -15,7 +15,7 @@ https.globalAgent.maxSockets = 25
 /**
  * Orchestrator server. Handles routes and HTTP traffic.
  * @class
- * @param {Object} config - Configuration file for server instance.
+ * @param {Config} config - Configuration file for server instance.
  * @param {Object[]} [routes] - The server's endpoints.
  * @param {('DELETE'|'GET'|'POST'|'PUT')} routes[].method - The HTTP method of the route.
  * @param {String} routes[].url - The path from the base url.
