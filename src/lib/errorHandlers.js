@@ -1,7 +1,7 @@
-import boom from 'boom';
-import Pino from 'pino';
+import boom from 'boom'
+import Pino from 'pino'
 
-const pino = new Pino();
+const pino = new Pino()
 
 /**
  * Middleware - Error logging.
@@ -12,9 +12,9 @@ const pino = new Pino();
  * @param next
  */
 export const logErrors = (err, req, res, next) => {
-  pino.error(new Error(err));
-  next(err);
-};
+  pino.error(new Error(err))
+  next(err)
+}
 
 /**
  * Middleware - Client/API error handling.
@@ -26,11 +26,11 @@ export const logErrors = (err, req, res, next) => {
  */
 export const clientErrorHandler = (err, req, res, next) => {
   if (req.xhr) {
-    res.send(boom.badRequest(`Une erreur avec la requête XHR c'est produite: ${err}`));
+    res.send(boom.badRequest(`Une erreur avec la requête XHR c'est produite: ${err}`))
   } else {
-    next(err);
+    next(err)
   }
-};
+}
 
 /**
  * Middleware - Server error handling.
@@ -40,5 +40,5 @@ export const clientErrorHandler = (err, req, res, next) => {
  * @param res
  */
 export const errorHandler = (err, req, res) => {
-  res.send(boom.badImplementation(`Une erreur serveur c'est produite: ${err}`));
-};
+  res.send(boom.badImplementation(`Une erreur serveur c'est produite: ${err}`))
+}

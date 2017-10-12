@@ -1,8 +1,8 @@
 /* eslint-env mocha */
-import 'babel-polyfill';
-import { expect } from 'chai';
+import 'babel-polyfill'
+import { expect } from 'chai'
 
-import { getLogger } from '../logger';
+import { getLogger } from '../logger'
 
 const config = {
   log: {
@@ -10,10 +10,10 @@ const config = {
     logLevel: 'warn',
     prettyPrint: true,
   },
-};
+}
 
 describe('server/lib/logger', () => {
   it('should be an instance of an event emitter', () => {
-    expect(getLogger(config).constructor.name).to.be.equal('EventEmitter');
-  });
-});
+    expect(getLogger(config).constructor.name).to.be.equal('EventEmitter')
+  })
+})

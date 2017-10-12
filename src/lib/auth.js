@@ -6,11 +6,11 @@
  */
 export const getUser = (req) => {
   if (req && req.session && req.session.cas && req.session.cas.user) {
-    return req.session.cas.user;
+    return req.session.cas.user
   }
 
-  return {};
-};
+  return {}
+}
 
 /**
  * Get CAS attributes.
@@ -20,17 +20,17 @@ export const getUser = (req) => {
  */
 export const getAttributes = (req) => {
   if (req && req.session && req.session.cas && req.session.cas.attributes) {
-    const { attributes } = req.session.cas;
+    const { attributes } = req.session.cas
     return Object.keys(attributes).reduce((acc, key) => {
-      const accumulation = acc;
-      const attribute = attributes[key];
-      const getValue = Array.isArray(attribute) && attribute.length === 1;
+      const accumulation = acc
+      const attribute = attributes[key]
+      const getValue = Array.isArray(attribute) && attribute.length === 1
 
-      accumulation[key] = getValue ? attribute[0] : attribute;
+      accumulation[key] = getValue ? attribute[0] : attribute
 
-      return accumulation;
-    }, {});
+      return accumulation
+    }, {})
   }
 
-  return {};
-};
+  return {}
+}
