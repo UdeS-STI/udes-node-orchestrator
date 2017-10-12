@@ -83,4 +83,4 @@ You must use the following guides:
 * [JSdoc](http://usejsdoc.org/)
 
 This project contains a linting config, you should setup `eslint` into your
-editors with `.eslintrc`.
+editors with `.eslintrc.js`.
