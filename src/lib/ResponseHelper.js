@@ -141,12 +141,13 @@ export class ResponseHelper {
           return
         }
 
+        const { customHeaderPrefix } = this.config
         const meta = {
-          count: response.headers[`${this.config.customHeaderPrefix}-count`] || 0,
+          count: response.headers[`${customHeaderPrefix}-count`],
           debug: {
             'x-TempsMs': callDuration,
           },
-          messages: response.headers[`${this.config.customHeaderPrefix}-messages`],
+          messages: response.headers[`${customHeaderPrefix}-messages`] || undefined,
           status: response.statusCode,
         }
 
