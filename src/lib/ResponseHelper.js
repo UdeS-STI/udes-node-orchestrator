@@ -67,7 +67,6 @@ const getProxyTicket = (req, config, renew = false) => new Promise((resolve, rej
   const { targetService } = config.cas
   req.getProxyTicket(targetService, { renew }, (err, pt) => {
     if (err) {
-      console.log('REJECT')
       return reject(err)
     }
 

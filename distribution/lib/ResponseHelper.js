@@ -100,7 +100,6 @@ var getProxyTicket = function getProxyTicket(req, config) {
 
     req.getProxyTicket(targetService, { renew: renew }, function (err, pt) {
       if (err) {
-        console.log('REJECT');
         return reject(err);
       }
 
