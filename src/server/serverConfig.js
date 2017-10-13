@@ -91,6 +91,29 @@ export const configureExpress = (app, configuration, env) => {
     debug('Configuration et activation du client CAS')
     app.use((req, res, next) => {
       req.sn = uuidV4()
+
+      /**
+      * Function that returns logger.
+      * @param {String} type - Log type.
+      * @param {...*} args - Arguments to log.
+      * @returns {Object} Logger
+      */
+      function getLogger (type = 'log', ...args) {
+        let user
+        try {
+          user = req.session.cas.user
+        } catch (e) {
+          user = 'unknown'
+        }
+
+        if (console[type] !== undefined) {
+          return console[type].bind(console[type], `${req.sn}|${user}`, ...args)
+        }
+        return console.log.bind(console.log, `${req.sn}|${user}`, ...args)
+      }
+
+      req.getLogger = getLogger
+
       next()
     })
     const casClient = new Cas(configuration.cas)

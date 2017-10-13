@@ -131,9 +131,9 @@ export class ResponseHelper {
 
       request(opt, async (error, response) => {
         const callDuration = +(new Date()) - time
-        this.req.info(error, response)
 
         if (error) {
+          this.req.info(error)
           reject(new RequestError(error, 500))
           return
         }
@@ -156,6 +156,7 @@ export class ResponseHelper {
         if (response.statusCode >= 200 && response.statusCode < 300) {
           try {
             const data = JSON.parse(response.body)
+            this.req.log.info(data)
 
             if (Array.isArray(data)) {
               resolve({ data, meta })
@@ -163,9 +164,11 @@ export class ResponseHelper {
               resolve({ ...data, meta })
             }
           } catch (err) {
+            this.req.log.info(response.body)
             resolve({ data: response.body, meta })
           }
         } else {
+          this.req.log.error(response.body || response)
           reject(new RequestError(response.body || response, response.statusCode || 500))
         }
       })
