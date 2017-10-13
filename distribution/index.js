@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Utils = exports.ResponseHelper = exports.Orchestrator = undefined;
 
+require('./jsDocs');
+
 var _Orchestrator = require('./server/Orchestrator');
 
 var _Orchestrator2 = _interopRequireDefault(_Orchestrator);
@@ -17,7 +19,8 @@ var _Utils2 = _interopRequireDefault(_Utils);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _Orchestrator2.default;
+exports.default = _Orchestrator2.default; // Import type definitions for jsDoc.
+
 exports.Orchestrator = _Orchestrator2.default;
 exports.ResponseHelper = _ResponseHelper.ResponseHelper;
 exports.Utils = _Utils2.default;

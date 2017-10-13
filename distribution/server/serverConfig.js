@@ -135,6 +135,12 @@ var configureExpress = exports.configureExpress = function configureExpress(app,
     app.use(function (req, res, next) {
       req.sn = (0, _v2.default)();
 
+      /**
+       * Function that returns logger.
+       * @param {String} type - Log type.
+       * @param {...*} args - Arguments to log.
+       * @returns {Object} Logger
+       */
       function getLogger() {
         var _console$log;
 
