@@ -26,17 +26,10 @@ export const formatResponse = (req, data = {}) => ({
       ...acc,
       [cur]: {
         ...meta,
-        data: currentData,
+        data: currentData.data || currentData,
       },
     }
-  }, {}) : {
-    count: 0,
-    debug: {
-      'x-tempsMs': 0,
-    },
-    messages: [],
-    status: 200,
-  },
+  }, {}) : {},
 })
 
 /**
@@ -150,21 +143,25 @@ export class ResponseHelper {
           return
         }
 
+        const { customHeaderPrefix } = this.config
         const meta = {
-          count: response.headers[`${this.config.customHeaderPrefix}-count`] || 0,
+          count: response.headers[`${customHeaderPrefix}-count`],
           debug: {
             'x-TempsMs': callDuration,
           },
-          messages: response.headers[`${this.config.customHeaderPrefix}-messages`],
+          messages: response.headers[`${customHeaderPrefix}-messages`] || undefined,
           status: response.statusCode,
         }
 
         if (response.statusCode >= 200 && response.statusCode < 300) {
           try {
-            resolve({
-              ...JSON.parse(response.body),
-              meta,
-            })
+            const data = JSON.parse(response.body)
+
+            if (Array.isArray(data)) {
+              resolve({ data, meta })
+            } else {
+              resolve({ ...data, meta })
+            }
           } catch (err) {
             resolve({ data: response.body, meta })
           }

@@ -1,6 +1,6 @@
 {
   "name": "udes-node-orchestrator",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Orchestrator server. Handles routes and HTTP traffic.",
   "main": "distribution/index.js",
   "scripts": {
@@ -43,7 +43,7 @@
     "chai-http": "3.0.0",
     "chai-integer": "0.1.0",
     "documentation": "^5.3.2",
-    "eslint-config-udes": "^0.1.4",
+    "eslint-config-udes": "^0.1.5",
     "mocha": "3.5.3",
     "nyc": "11.2.1",
     "sinon": "3.3.0",
