@@ -50,7 +50,6 @@ describe('server/lib/ResponseHelper', () => {
       session: {
         cas: {
           user: 'user',
-          pt: 'pt',
         },
       },
       url: 'http://exemple.com',

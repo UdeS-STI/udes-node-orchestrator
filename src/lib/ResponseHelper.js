@@ -119,58 +119,66 @@ export class ResponseHelper {
       ...options,
       auth: {
         user: this.req.session.cas.user,
+        pass: this.req.session.cas.pt,
       },
       body: body && typeof body === 'object' ? JSON.stringify(body) : body,
       headers,
     }
 
-    try {
-      opt.auth.pass = await getProxyTicket(this.req, this.config)
-      const time = +(new Date())
-
-      request(opt, async (error, response) => {
-        const callDuration = +(new Date()) - time
-
-        if (error) {
-          reject(new RequestError(error, 500))
-          return
-        }
-
-        if (response.statusCode === 401) {
-          resolve(await getProxyTicket(this.req, this.config, true))
-          return
-        }
-
-        const { customHeaderPrefix } = this.config
-        const meta = {
-          count: response.headers[`${customHeaderPrefix}-count`],
-          debug: {
-            'x-TempsMs': callDuration,
-          },
-          messages: response.headers[`${customHeaderPrefix}-messages`] || undefined,
-          status: response.statusCode,
-        }
-
-        if (response.statusCode >= 200 && response.statusCode < 300) {
-          try {
-            const data = JSON.parse(response.body)
-
-            if (Array.isArray(data)) {
-              resolve({ data, meta })
-            } else {
-              resolve({ ...data, meta })
-            }
-          } catch (err) {
-            resolve({ data: response.body, meta })
-          }
-        } else {
-          reject(new RequestError(response.body || response, response.statusCode || 500))
-        }
-      })
-    } catch (err) {
-      this.req.log.error('Error when requesting PT, Authentication failed! ', err)
-      reject(new RequestError(err, 500))
+    if (!opt.auth.pass) {
+      try {
+        this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
+      } catch (err) {
+        this.req.log.error('Error when requesting PT, Authentication failed!', err)
+        reject(new RequestError(err, 500))
+      }
     }
+
+    const time = +(new Date())
+    request(opt, async (error, response) => {
+      const callDuration = +(new Date()) - time
+
+      if (error) {
+        reject(new RequestError(error, 500))
+        return
+      }
+
+      if (response.statusCode === 401) {
+        try {
+          resolve(await getProxyTicket(this.req, this.config, true))
+        } catch (err) {
+          reject(new RequestError(err, 500))
+        }
+
+        return
+      }
+
+      const { customHeaderPrefix } = this.config
+      const meta = {
+        count: response.headers[`${customHeaderPrefix}-count`],
+        debug: {
+          'x-TempsMs': callDuration,
+        },
+        messages: response.headers[`${customHeaderPrefix}-messages`] || undefined,
+        status: response.statusCode,
+      }
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        try {
+          const data = JSON.parse(response.body)
+
+          if (Array.isArray(data)) {
+            resolve({ data, meta })
+          } else {
+            resolve({ ...data, meta })
+          }
+        } catch (err) {
+          resolve({ data: response.body, meta })
+        }
+      } else {
+        reject(new RequestError(response.body || response, response.statusCode || 500))
+      }
+    })
   })
 
   /**
