@@ -13,14 +13,14 @@ import uuidV4 from 'uuid/v4'
 import { logErrors, clientErrorHandler, errorHandler } from '../lib/errorHandlers'
 
 const CouchbaseStore = new CouchbaseConnector(session)
-const debug = new Debug('orchestrateur')
+const debug = new Debug('orchestrator')
 const pino = new Pino()
 
 export const configureExpress = (app, configuration, env) => {
   debug.enabled = configuration.debug
 
   // Logging
-  debug('Configuration du log manager')
+  debug('Log manager configuration')
   app.use(new ExpressPinoLogger({
     logger: pino,
     name: configuration.log.name,
@@ -33,7 +33,7 @@ export const configureExpress = (app, configuration, env) => {
 
   if (env === 'production') {
     // Set trust proxy for secure session cookie
-    debug('Prod: Ajout de trust proxy pour les cookie secure')
+    debug('Prod: Add trust proxy for secure cookies')
     app.set('trust proxy', 1)
     app.set('showStackError', false)
   }
@@ -43,7 +43,7 @@ export const configureExpress = (app, configuration, env) => {
 
   // Enable cross-origin resource sharing.
   if (configuration.enableCORS) {
-    debug('Ajout du support CORS')
+    debug('Add CORS support')
     app.all('*', (req, res, next) => {
       res.header('Access-Control-Allow-Origin', req.headers.origin)
       res.header('Access-Control-Allow-Credentials', 'true')
@@ -54,7 +54,7 @@ export const configureExpress = (app, configuration, env) => {
   }
 
   // Session management
-  debug('Configuration couchbase pour les sessions')
+  debug('Couchbase configuration for sessions')
   const couchbaseStore = new CouchbaseStore({
     bucket: configuration.database.sessionBucketName,
     connectionTimeout: 10000,
@@ -63,10 +63,10 @@ export const configureExpress = (app, configuration, env) => {
     prefix: '',
   })
   couchbaseStore.on('connect', () => {
-    pino.info('Connexion au serveur Couchbase de session établie')
+    pino.info('Connection to couchbase session server established')
   })
   couchbaseStore.on('disconnect', () => {
-    pino.error('La connexion au serveur CouchBase de session a été intérompue')
+    pino.error('Connection to Couchbase session server lost')
     process.kill(process.pid, 'SIGUSR1')
   })
 
@@ -88,35 +88,14 @@ export const configureExpress = (app, configuration, env) => {
 
   // CAS configuration
   if (configuration.enableAuth) {
-    debug('Configuration et activation du client CAS')
+    debug('CAS client configuration and activation')
+    const casConfig = configuration.cas
     app.use((req, res, next) => {
+      casConfig.logger = req.log
       req.sn = uuidV4()
-
-      /**
-      * Function that returns logger.
-      * @param {String} type - Log type.
-      * @param {...*} args - Arguments to log.
-      * @returns {Object} Logger
-      */
-      function getLogger (type = 'log', ...args) {
-        let user
-        try {
-          user = req.session.cas.user
-        } catch (e) {
-          user = 'unknown'
-        }
-
-        if (console[type] !== undefined) {
-          return console[type].bind(console[type], `${req.sn}|${user}`, ...args)
-        }
-        return console.log.bind(console.log, `${req.sn}|${user}`, ...args)
-      }
-
-      req.getLogger = getLogger
-
       next()
     })
-    const casClient = new Cas(configuration.cas)
+    const casClient = new Cas(casConfig)
     app.use(casClient.core())
   }
 
@@ -131,7 +110,7 @@ export const configureExpress = (app, configuration, env) => {
 
 export const setListeners = (app, server, config) => {
   server.listen(config.socket, () => {
-    pino.info('Orchestrateur nodeJS écoute sur le socket %s en mode %s', config.socket, app.settings.env)
+    pino.info('UdeS Node Orchestrator listening on socket %s in %s mode', config.socket, app.settings.env)
   })
 
   // Log errors
@@ -173,7 +152,7 @@ export const setListeners = (app, server, config) => {
         process.exit(1)
       }
     })
-    pino.error('Fermeture du serveur: SIGTERM')
+    pino.error('Server closing: SIGTERM')
     process.exit(0)
   })
 
@@ -185,7 +164,7 @@ export const setListeners = (app, server, config) => {
         process.exit(1)
       }
     })
-    pino.error('Fermeture du serveur: SIGINT')
+    pino.error('Server closing: SIGINT')
     process.exit(0)
   })
 
@@ -198,7 +177,7 @@ export const setListeners = (app, server, config) => {
         process.exit(1)
       }
     })
-    pino.error('Fermeture du serveur: SIGUSR1')
+    pino.error('Server closing: SIGUSR1')
     process.exit(0)
   })
 }

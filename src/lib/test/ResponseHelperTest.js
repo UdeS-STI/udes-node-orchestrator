@@ -23,6 +23,7 @@ const config = {
     targetService: 'targetService',
   },
   customHeaderPrefix: 'foo',
+  log: {},
 }
 
 describe('server/lib/ResponseHelper', () => {
@@ -45,6 +46,7 @@ describe('server/lib/ResponseHelper', () => {
         'Content-Type': 'application/json',
       },
       log: {
+        info () {},
         error () {},
       },
       session: {

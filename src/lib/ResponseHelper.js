@@ -58,6 +58,7 @@ export const getRange = (req, query) => {
 
 /**
  * Obtain proxy ticket for CAS authentication.
+ * @private
  * @param {Object} req - HTTP request.
  * @param {Config} config - Orchestrator configuration.
  * @param {Boolean} renew=false - True to renew proxy ticket.
@@ -73,6 +74,27 @@ const getProxyTicket = (req, config, renew = false) => new Promise((resolve, rej
     return resolve(pt)
   })
 })
+
+/**
+ * Log request options.
+ * @private
+ * @param {Object} req - HTTP request.
+ * @param {Object} config - Orchestrator configuration.
+ * @param {Object} options - Request options.
+ */
+const logOptions = (req, config, options) => {
+  if (config.log.showCredentialsAsClearText) {
+    req.log.info('Request options', options)
+  } else {
+    req.log.info('Request options', {
+      ...options,
+      auth: {
+        user: '********',
+        pass: '********',
+      },
+    })
+  }
+}
 
 /**
  * Validate class constructor arguments.
@@ -126,56 +148,66 @@ export class ResponseHelper {
 
     try {
       opt.auth.pass = await getProxyTicket(this.req, this.config)
-      this.req.info(opt)
-      const time = +(new Date())
-
-      request(opt, async (error, response) => {
-        const callDuration = +(new Date()) - time
-
-        if (error) {
-          this.req.info(error)
-          reject(new RequestError(error, 500))
-          return
-        }
-
-        if (response.statusCode === 401) {
-          resolve(await getProxyTicket(this.req, this.config, true))
-          return
-        }
-
-        const { customHeaderPrefix } = this.config
-        const meta = {
-          count: response.headers[`${customHeaderPrefix}-count`],
-          debug: {
-            'x-TempsMs': callDuration,
-          },
-          messages: response.headers[`${customHeaderPrefix}-messages`] || undefined,
-          status: response.statusCode,
-        }
-
-        if (response.statusCode >= 200 && response.statusCode < 300) {
-          try {
-            const data = JSON.parse(response.body)
-            this.req.log.info(data)
-
-            if (Array.isArray(data)) {
-              resolve({ data, meta })
-            } else {
-              resolve({ ...data, meta })
-            }
-          } catch (err) {
-            this.req.log.info(response.body)
-            resolve({ data: response.body, meta })
-          }
-        } else {
-          this.req.log.error(response.body || response)
-          reject(new RequestError(response.body || response, response.statusCode || 500))
-        }
-      })
     } catch (err) {
-      this.req.log.error('Error when requesting PT, Authentication failed! ', err)
+      this.req.log.error('Error when requesting PT, Authentication failed!', err)
       reject(new RequestError(err, 500))
+      return
     }
+
+    logOptions(this.req, this.config, opt)
+    const time = +(new Date())
+
+    request(opt, async (error, response) => {
+      const callDuration = +(new Date()) - time
+
+      if (error) {
+        this.req.log.error('Error on request', error)
+        reject(new RequestError(error, 500))
+        return
+      }
+
+      if (response.statusCode === 401) {
+        try {
+          const pt = await getProxyTicket(this.req, this.config, true)
+          this.req.log.warn('Authentication failed, requested new PT', pt)
+          resolve(pt)
+        } catch (err) {
+          this.req.log.error('Error when requesting PT, Authentication failed!', err)
+          reject(new RequestError(err, 500))
+        }
+
+        return
+      }
+
+      const { customHeaderPrefix } = this.config
+      const meta = {
+        count: response.headers[`${customHeaderPrefix}-count`],
+        debug: {
+          'x-TempsMs': callDuration,
+        },
+        messages: response.headers[`${customHeaderPrefix}-messages`] || undefined,
+        status: response.statusCode,
+      }
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        try {
+          const data = JSON.parse(response.body)
+          this.req.log.info('Response data', data)
+
+          if (Array.isArray(data)) {
+            resolve({ data, meta })
+          } else {
+            resolve({ ...data, meta })
+          }
+        } catch (err) {
+          this.req.log.info('Response data', response.body)
+          resolve({ data: response.body, meta })
+        }
+      } else {
+        this.req.log.error('Response error', response.body || response)
+        reject(new RequestError(response.body || response, response.statusCode || 500))
+      }
+    })
   })
 
   /**
@@ -197,11 +229,13 @@ export class ResponseHelper {
 
     try {
       opt.auth.pass = await getProxyTicket(this.req, this.config)
-      Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
-      request.get(opt).pipe(this.res)
     } catch (err) {
-      this.req.log.error('Error when requesting PT, Authentication failed! ', err)
+      this.req.log.error('Error when requesting PT, Authentication failed!', err)
     }
+
+    logOptions(this.req, this.config, opt)
+    Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
+    request.get(opt).pipe(this.res)
   }
 
   /**

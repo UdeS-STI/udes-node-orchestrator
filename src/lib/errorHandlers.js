@@ -23,7 +23,7 @@ export const logErrors = (err, req, res, next) => {
  */
 export const clientErrorHandler = (err, req, res, next) => {
   if (req.xhr) {
-    res.send(boom.badRequest(`Une erreur avec la requête XHR c'est produite: ${err}`))
+    res.send(boom.badRequest(`An error occurred with the XHR request: ${err}`))
   } else {
     next(err)
   }
@@ -37,5 +37,5 @@ export const clientErrorHandler = (err, req, res, next) => {
  * @param {Object} res - HTTP response.
  */
 export const errorHandler = (err, req, res) => {
-  res.send(boom.badImplementation(`Une erreur serveur c'est produite: ${err}`))
+  res.send(boom.badImplementation(`A server error occurred: ${err}`))
 }

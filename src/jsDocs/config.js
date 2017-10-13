@@ -10,7 +10,6 @@
  * @param {Number} fromAjax.status - Default status code for AJAX responses.
  * @param {Boolean} gateway - Send all validation requests through the CAS gateway feature.
  * @param {[String]} ignore - Ignore CAS validation on these routes.
- * @param {Function} logger - Logger function for CAS.
  * @param {[String]} match - Filter url for CAS authentication
  * @param {Object} paths - CAS path configuration.
  * @param {String} paths.login - CAS login path.
@@ -52,6 +51,7 @@
  * @param {('trace'|'info'|'debug'|'warn'|'error'|'silent')} log.logLevel - Log level.
  * @param {String} log.name - Logger name.
  * @param {Boolean} log.prettyPrint - Whether to print pretty or raw.
+ * @param {Boolean} log.showCredentialsAsClearText - If true credentials will be displayed as clear text in logs.
  * @param {String} nocasPwd - CAS default password when `enableAuth` is false.
  * @param {String} nocasUser - CAS default username when `enableAuth` is false.
  * @param {String} socket - Relative path to socket.
