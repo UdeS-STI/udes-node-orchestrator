@@ -141,17 +141,20 @@ export class ResponseHelper {
       ...options,
       auth: {
         user: this.req.session.cas.user,
+        pass: this.req.session.cas.pt,
       },
       body: body && typeof body === 'object' ? JSON.stringify(body) : body,
       headers,
     }
 
-    try {
-      opt.auth.pass = await getProxyTicket(this.req, this.config)
-    } catch (err) {
-      this.req.log.error('Error when requesting PT, Authentication failed!', err)
-      reject(new RequestError(err, 500))
-      return
+    if (!opt.auth.pass) {
+      try {
+        this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
+      } catch (err) {
+        this.req.log.error('Error when requesting PT, Authentication failed!', err)
+        reject(new RequestError(err, 500))
+        return
+      }
     }
 
     logOptions(this.req, this.config, opt)
