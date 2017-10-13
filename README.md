@@ -2,6 +2,7 @@ UdeS Node Orchestrator
 ======================
 
 [![CircleCI](https://circleci.com/gh/UdeS-STI/udes-node-orchestrator/tree/master.svg?style=svg&circle-token=2bf1290ed52937519d0b7e67dccd4ad10a002a74)](https://circleci.com/gh/UdeS-STI/udes-node-orchestrator/tree/master)
+[![npm](https://img.shields.io/npm/v/udes-node-orchestrator.svg?style=flat-square)](https://www.npmjs.com/package/udes-node-orchestrator)
 ![Node](https://img.shields.io/badge/node-6.10.1-brightgreen.svg)
 
 # Introduction
@@ -34,8 +35,40 @@ Since it uses a socket you cannot run it on a local machine.
   * `npm run build`
 * Generate documentation for public API
   * `npm run documentation`
+
 ## API
-TODO
+```javascript
+import Orchestrator, { ResponseHelper } from 'udes-node-orchestrator'
+import config from './config'
+
+const getPostInfo = async (req, res) => {
+  const responseHelper = new ResponseHelper(req, res, config)
+  const { post } = responseHelper.getQueryParameters()
+  const options = {
+    method: 'GET',
+    url: `${config.apiUrl}/posts/${post}`,
+  }
+
+  try {
+    const data = await responseHelper.fetch(options)
+    // Send response data back to user.
+    responseHelper.handleResponse({ data })
+  } catch (err) {
+    // Send error back to user.
+    responseHelper.handleError(err)
+  }
+}
+
+// Instantiate an orchestrator with your server configuration.
+const orchestrator = new Orchestrator(config)
+
+// Set routes with an array of objects containing route info.
+orchestrator.setRoutes([
+  { method: 'GET', url: '/post*', fn: getPostInfo },
+])
+
+// Your server is now up and running, listening on set routes.
+```
 
 # Documentation
 [JSDocs documentation](http://UdeS-STI.github.io/udes-node-orchestrator)
@@ -45,7 +78,9 @@ A minimalist usage example is available in `/boilerplate`
 
 # Contributing
 You must use the following guides:
-* [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
+* [UdeS JavaScript Style Guide](https://www.npmjs.com/package/eslint-config-udes)
+* [StandardJS](https://standardjs.com/)
+* [JSdoc](http://usejsdoc.org/)
 
 This project contains a linting config, you should setup `eslint` into your
-editors with `.eslintrc`.
+editors with `.eslintrc.js`.
