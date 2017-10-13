@@ -234,6 +234,7 @@ export class ResponseHelper {
       opt.auth.pass = await getProxyTicket(this.req, this.config)
     } catch (err) {
       this.req.log.error('Error when requesting PT, Authentication failed!', err)
+      return
     }
 
     logOptions(this.req, this.config, opt)
