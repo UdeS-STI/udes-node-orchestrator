@@ -82,17 +82,17 @@ const getProxyTicket = (req, config, renew = false) => new Promise((resolve, rej
  * @param {Object} config - Orchestrator configuration.
  * @param {Object} options - Request options.
  */
-const logOptions = (req, config, options) => {
+const logRequest = (req, config, options) => {
   if (config.log.showCredentialsAsClearText) {
-    req.log.info('Request options', options)
+    req.log.info(options, '\n============== REQUEST ==================\n', '==========================================')
   } else {
-    req.log.info('Request options', {
+    req.log.info({
       ...options,
       auth: {
         user: '********',
         pass: '********',
       },
-    })
+    }, '\n============== REQUEST ==================\n', '==========================================')
   }
 }
 
@@ -157,7 +157,8 @@ export class ResponseHelper {
       }
     }
 
-    logOptions(this.req, this.config, opt)
+    console.log('OPTIONS!!!!!!!!!!!!!!!!!', options)
+    // logRequest(this.req, this.config, opt)
     const time = +(new Date())
 
     request(opt, async (error, response) => {
@@ -171,11 +172,10 @@ export class ResponseHelper {
 
       if (response.statusCode === 401) {
         try {
-          const pt = await getProxyTicket(this.req, this.config, true)
-          this.req.log.warn('Authentication failed, requested new PT', pt)
-          resolve(pt)
+          this.req.log.warn('Authentication failed, requested new PT')
+          resolve(await getProxyTicket(this.req, this.config, true))
         } catch (err) {
-          this.req.log.error('Error when requesting PT, Authentication failed!', err)
+          this.req.log.error(err, 'Error when requesting PT, Authentication failed!')
           reject(new RequestError(err, 500))
         }
 
@@ -195,7 +195,7 @@ export class ResponseHelper {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         try {
           const data = JSON.parse(response.body)
-          this.req.log.info('Response data', data)
+          this.req.log.trace(data, '\n================ RESPONSE =======================\n')
 
           if (Array.isArray(data)) {
             resolve({ data, meta })
@@ -203,7 +203,7 @@ export class ResponseHelper {
             resolve({ ...data, meta })
           }
         } catch (err) {
-          this.req.log.info('Response data', response.body)
+          this.req.log.trace(response.body, '\n================ RESPONSE =======================\n')
           resolve({ data: response.body, meta })
         }
       } else {
@@ -237,7 +237,7 @@ export class ResponseHelper {
       return
     }
 
-    logOptions(this.req, this.config, opt)
+    logRequest(this.req, this.config, opt)
     Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
     request.get(opt).pipe(this.res)
   }
