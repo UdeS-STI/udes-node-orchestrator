@@ -67,6 +67,7 @@ const getProxyTicket = (req, config, renew = false) => new Promise((resolve, rej
   const { targetService } = config.cas
   req.getProxyTicket(targetService, { renew }, (err, pt) => {
     if (err) {
+      console.log('REJECT')
       return reject(err)
     }
 
@@ -130,6 +131,7 @@ export class ResponseHelper {
         this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
       } catch (err) {
         this.req.log.error('Error when requesting PT, Authentication failed!', err)
+        reject(new RequestError(err, 500))
       }
     }
 
