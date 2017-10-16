@@ -46,8 +46,10 @@ describe('server/lib/ResponseHelper', () => {
         'Content-Type': 'application/json',
       },
       log: {
-        info () {},
+        debug () {},
         error () {},
+        info () {},
+        warn () {},
       },
       session: {
         cas: {
