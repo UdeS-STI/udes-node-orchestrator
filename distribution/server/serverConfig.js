@@ -53,30 +53,28 @@ var _errorHandlers = require('../lib/errorHandlers');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* eslint no-console: 0 */
-
 var CouchbaseStore = new _connectCouchbase2.default(_expressSession2.default);
-var orchestrateurDebug = new _debug2.default('orchestrateur');
+var debug = new _debug2.default('orchestrator');
 var pino = new _pino2.default();
 
 var configureExpress = exports.configureExpress = function configureExpress(app, configuration, env) {
-  var pinoExpress = new _expressPinoLogger2.default({
+  debug.enabled = configuration.debug;
+
+  // Logging
+  debug('Log manager configuration');
+  app.use(new _expressPinoLogger2.default({
     logger: pino,
     name: configuration.log.name,
     level: configuration.log.logLevel,
     prettyPrint: configuration.log.prettyPrint
-  });
-
-  // Logging
-  orchestrateurDebug('Configuration du log manager');
-  app.use(pinoExpress);
+  }));
 
   // Enable compression
   app.use((0, _compression2.default)());
 
   if (env === 'production') {
     // Set trust proxy for secure session cookie
-    orchestrateurDebug('Prod: Ajout de trust proxy pour les cookie secure');
+    debug('Prod: Add trust proxy for secure cookies');
     app.set('trust proxy', 1);
     app.set('showStackError', false);
   }
@@ -86,7 +84,7 @@ var configureExpress = exports.configureExpress = function configureExpress(app,
 
   // Enable cross-origin resource sharing.
   if (configuration.enableCORS) {
-    orchestrateurDebug('Ajout du support CORS');
+    debug('Add CORS support');
     app.all('*', function (req, res, next) {
       res.header('Access-Control-Allow-Origin', req.headers.origin);
       res.header('Access-Control-Allow-Credentials', 'true');
@@ -97,7 +95,7 @@ var configureExpress = exports.configureExpress = function configureExpress(app,
   }
 
   // Session management
-  orchestrateurDebug('Configuration couchbase pour les sessions');
+  debug('Couchbase configuration for sessions');
   var couchbaseStore = new CouchbaseStore({
     bucket: configuration.database.sessionBucketName,
     connectionTimeout: 10000,
@@ -106,10 +104,10 @@ var configureExpress = exports.configureExpress = function configureExpress(app,
     prefix: ''
   });
   couchbaseStore.on('connect', function () {
-    pino.info('Connexion au serveur Couchbase de session établie');
+    pino.info('Connection to couchbase session server established');
   });
   couchbaseStore.on('disconnect', function () {
-    pino.error('La connexion au serveur CouchBase de session a été intérompue');
+    pino.error('Connection to Couchbase session server lost');
     process.kill(process.pid, 'SIGUSR1');
   });
 
@@ -131,44 +129,14 @@ var configureExpress = exports.configureExpress = function configureExpress(app,
 
   // CAS configuration
   if (configuration.enableAuth) {
-    orchestrateurDebug('Configuration et activation du client CAS');
+    debug('CAS client configuration and activation');
+    var casConfig = configuration.cas;
     app.use(function (req, res, next) {
+      casConfig.logger = req.log;
       req.sn = (0, _v2.default)();
-
-      /**
-       * Function that returns logger.
-       * @param {String} type - Log type.
-       * @param {...*} args - Arguments to log.
-       * @returns {Object} Logger
-       */
-      function getLogger() {
-        var _console$log;
-
-        var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'log';
-
-        var user = void 0;
-        try {
-          user = req.session.cas.user;
-        } catch (e) {
-          user = 'unknown';
-        }
-
-        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-          args[_key - 1] = arguments[_key];
-        }
-
-        if (console[type] !== undefined) {
-          var _console$type;
-
-          return (_console$type = console[type]).bind.apply(_console$type, [console[type], req.sn + '|' + user].concat(args));
-        }
-        return (_console$log = console.log).bind.apply(_console$log, [console.log, req.sn + '|' + user].concat(args));
-      }
-
-      req.getLogger = getLogger;
       next();
     });
-    var casClient = new _udesConnectCas2.default(configuration.cas);
+    var casClient = new _udesConnectCas2.default(casConfig);
     app.use(casClient.core());
   }
 
@@ -179,17 +147,11 @@ var configureExpress = exports.configureExpress = function configureExpress(app,
   app.use(_bodyParser2.default.json({
     limit: '1mb'
   }));
-
-  // Route management
-  orchestrateurDebug('Instantiation du gestionnaire de routes');
-
-  // Error management
-  orchestrateurDebug('Instantiation des gestionnaires d\'erreurs');
 };
 
 var setListeners = exports.setListeners = function setListeners(app, server, config) {
   server.listen(config.socket, function () {
-    pino.info('Orchestrateur nodeJS écoute sur le socket %s en mode %s', config.socket, app.settings.env);
+    pino.info('UdeS Node Orchestrator listening on socket %s in %s mode', config.socket, app.settings.env);
   });
 
   // Log errors
@@ -201,7 +163,7 @@ var setListeners = exports.setListeners = function setListeners(app, server, con
   process.on('message', function (msg) {
     if (msg === 'shutdown') {
       setTimeout(function () {
-        pino.info('Gracefull reload depuis PM2');
+        pino.info('Graceful reload from PM2');
         process.exit(0);
       }, 3000);
     }
@@ -233,7 +195,7 @@ var setListeners = exports.setListeners = function setListeners(app, server, con
         process.exit(1);
       }
     });
-    pino.error('Fermeture du serveur: SIGTERM');
+    pino.error('Server closing: SIGTERM');
     process.exit(0);
   });
 
@@ -245,7 +207,7 @@ var setListeners = exports.setListeners = function setListeners(app, server, con
         process.exit(1);
       }
     });
-    pino.error('Fermeture du serveur: SIGINT');
+    pino.error('Server closing: SIGINT');
     process.exit(0);
   });
 
@@ -258,7 +220,7 @@ var setListeners = exports.setListeners = function setListeners(app, server, con
         process.exit(1);
       }
     });
-    pino.error('Fermeture du serveur: SIGUSR1');
+    pino.error('Server closing: SIGUSR1');
     process.exit(0);
   });
 };

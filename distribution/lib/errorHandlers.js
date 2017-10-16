@@ -9,13 +9,7 @@ var _boom = require('boom');
 
 var _boom2 = _interopRequireDefault(_boom);
 
-var _pino = require('pino');
-
-var _pino2 = _interopRequireDefault(_pino);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var pino = new _pino2.default();
 
 /**
  * Middleware - Error logging.
@@ -26,7 +20,7 @@ var pino = new _pino2.default();
  * @param {Function} next - Callback function.
  */
 var logErrors = exports.logErrors = function logErrors(err, req, res, next) {
-  pino.error(new Error(err));
+  req.log.error(new Error(err));
   next(err);
 };
 
@@ -40,7 +34,7 @@ var logErrors = exports.logErrors = function logErrors(err, req, res, next) {
  */
 var clientErrorHandler = exports.clientErrorHandler = function clientErrorHandler(err, req, res, next) {
   if (req.xhr) {
-    res.send(_boom2.default.badRequest('Une erreur avec la requ\xEAte XHR c\'est produite: ' + err));
+    res.send(_boom2.default.badRequest('An error occurred with the XHR request: ' + err));
   } else {
     next(err);
   }
@@ -54,5 +48,5 @@ var clientErrorHandler = exports.clientErrorHandler = function clientErrorHandle
  * @param {Object} res - HTTP response.
  */
 var errorHandler = exports.errorHandler = function errorHandler(err, req, res) {
-  res.send(_boom2.default.badImplementation('Une erreur serveur c\'est produite: ' + err));
+  res.send(_boom2.default.badImplementation('A server error occurred: ' + err));
 };

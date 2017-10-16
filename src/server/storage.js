@@ -1,6 +1,5 @@
-// @ts-check
+/* eslint no-console: 0 */
 import { Cluster } from '../dependencies/couchbase'
-import { getlogger } from '../lib/logger'
 
 const config = {
   database: {
@@ -16,11 +15,10 @@ const config = {
 }
 const { cacheBucketName, cacheBucketPwd, couchbaseCluster } = config.database
 const cluster = new Cluster(couchbaseCluster) // Database connection module.
-const logger = getlogger(config)
 
 // Log an error message and kill the process.
 const kill = (...args) => {
-  logger.error(...args)
+  console.error(...args)
   process.kill(process.pid, 'SIGUSR1')
 }
 
@@ -28,10 +26,7 @@ const kill = (...args) => {
 const cacheBucket = cluster.openBucket(cacheBucketName, cacheBucketPwd, (err) => {
   if (err) {
     kill('Une erreur est survenue lors de la connexion au serveur Couchbase de cache: ', err)
-    return
   }
-
-  logger.info('Connexion au serveur Couchbase de cache applicative établie.')
 })
 
 cacheBucket.connectionTimeout = 10000

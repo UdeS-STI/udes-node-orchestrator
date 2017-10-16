@@ -58,6 +58,7 @@ export const getRange = (req, query) => {
 
 /**
  * Obtain proxy ticket for CAS authentication.
+ * @private
  * @param {Object} req - HTTP request.
  * @param {Config} config - Orchestrator configuration.
  * @param {Boolean} renew=false - True to renew proxy ticket.
@@ -73,6 +74,34 @@ const getProxyTicket = (req, config, renew = false) => new Promise((resolve, rej
     return resolve(pt)
   })
 })
+
+/**
+ * @private
+ * @param {String} title - Log section title.
+ * @returns {String} Formatted log header.
+ */
+const getLogHeader = title => `\n=============== ${title.toUpperCase()} ===============\n`
+
+/**
+ * Log request options.
+ * @private
+ * @param {Object} req - HTTP request.
+ * @param {Object} config - Orchestrator configuration.
+ * @param {Object} options - Request options.
+ */
+const logRequest = (req, config, options) => {
+  if (config.log.showCredentialsAsClearText) {
+    req.log.info(options, getLogHeader('request'))
+  } else {
+    req.log.info({
+      ...options,
+      auth: {
+        user: '********',
+        pass: '********',
+      },
+    }, getLogHeader('request'))
+  }
+}
 
 /**
  * Validate class constructor arguments.
@@ -130,16 +159,20 @@ export class ResponseHelper {
       try {
         this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
       } catch (err) {
-        this.req.log.error('Error when requesting PT, Authentication failed!', err)
+        this.req.log.error(err, getLogHeader('error'))
         reject(new RequestError(err, 500))
+        return
       }
     }
 
+    logRequest(this.req, this.config, opt)
     const time = +(new Date())
+
     request(opt, async (error, response) => {
       const callDuration = +(new Date()) - time
 
       if (error) {
+        this.req.log.error(error, getLogHeader('error'))
         reject(new RequestError(error, 500))
         return
       }
@@ -147,12 +180,15 @@ export class ResponseHelper {
       if (response.statusCode === 401) {
         if (retry) {
           try {
+            this.req.log.warn('Authentication failed, requested new PT')
             this.req.session.cas.pt = await getProxyTicket(this.req, this.config, true)
             resolve(await this.fetch(options), false)
           } catch (err) {
+            this.req.log.error(err, getLogHeader('error'))
             reject(new RequestError(err, 500))
           }
         } else {
+          this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
           reject(new RequestError('Unauthorized', 401))
         }
 
@@ -172,6 +208,7 @@ export class ResponseHelper {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         try {
           const data = JSON.parse(response.body)
+          this.req.log.debug(data, getLogHeader('response'))
 
           if (Array.isArray(data)) {
             resolve({ data, meta })
@@ -179,9 +216,11 @@ export class ResponseHelper {
             resolve({ ...data, meta })
           }
         } catch (err) {
+          this.req.log.debug(response.body, getLogHeader('response'))
           resolve({ data: response.body, meta })
         }
       } else {
+        this.req.log.error(response.body || response, getLogHeader('error'))
         reject(new RequestError(response.body || response, response.statusCode || 500))
       }
     })
@@ -207,11 +246,14 @@ export class ResponseHelper {
 
     try {
       opt.auth.pass = await getProxyTicket(this.req, this.config)
-      Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
-      request.get(opt).pipe(this.res)
     } catch (err) {
-      this.req.log.error('Error when requesting PT, Authentication failed! ', err)
+      this.req.log.error(err, getLogHeader('error'))
+      return
     }
+
+    logRequest(this.req, this.config, opt)
+    Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
+    request.get(opt).pipe(this.res)
   }
 
   /**
