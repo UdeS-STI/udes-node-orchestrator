@@ -381,7 +381,7 @@ describe('server/lib/ResponseHelper', () => {
         meta: {
           count: '1',
           debug: {
-            'x-TempsMs': 0,
+            'x-TempsMs': response.meta.debug['x-TempsMs'],
           },
           messages: 'message',
           status: 200,
@@ -411,7 +411,7 @@ describe('server/lib/ResponseHelper', () => {
         meta: {
           count: '1',
           debug: {
-            'x-TempsMs': 0,
+            'x-TempsMs': response.meta.debug['x-TempsMs'],
           },
           messages: 'message',
           status: 200,

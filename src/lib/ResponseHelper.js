@@ -140,9 +140,10 @@ export class ResponseHelper {
    * @param {('DELETE'|'GET'|'POST'|'PUT')} options.method - Request method.
    * @param {String} options.url - Request URL.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
+   * @param {Boolean} [retry=true] - True to renew PT and retry request on 401.
    * @returns {Promise} Promise object represents server response.
    */
-  fetch = options => new Promise(async (resolve, reject) => {
+  fetch = (options, retry = true) => new Promise(async (resolve, reject) => {
     const { body, headers = getHeaders() } = options
     const opt = {
       ...options,
@@ -177,12 +178,18 @@ export class ResponseHelper {
       }
 
       if (response.statusCode === 401) {
-        try {
-          this.req.log.warn('Authentication failed, requested new PT')
-          resolve(await getProxyTicket(this.req, this.config, true))
-        } catch (err) {
-          this.req.log.error(err, getLogHeader('error'))
-          reject(new RequestError(err, 500))
+        if (retry) {
+          try {
+            this.req.log.warn('Authentication failed, requested new PT')
+            this.req.session.cas.pt = await getProxyTicket(this.req, this.config, true)
+            resolve(await this.fetch(options, false))
+          } catch (err) {
+            this.req.log.error(err, getLogHeader('error'))
+            reject(new RequestError(err, 500))
+          }
+        } else {
+          this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
+          reject(new RequestError('Unauthorized', 401))
         }
 
         return
@@ -232,15 +239,18 @@ export class ResponseHelper {
       ...options,
       auth: {
         user: this.req.session.cas.user,
+        pass: this.req.session.cas.pt,
       },
       headers,
     }
 
-    try {
-      opt.auth.pass = await getProxyTicket(this.req, this.config)
-    } catch (err) {
-      this.req.log.error(err, getLogHeader('error'))
-      return
+    if (!opt.auth.pass) {
+      try {
+        this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
+      } catch (err) {
+        this.req.log.error(err, getLogHeader('error'))
+        return
+      }
     }
 
     logRequest(this.req, this.config, opt)
