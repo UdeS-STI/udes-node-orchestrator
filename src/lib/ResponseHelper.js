@@ -244,11 +244,13 @@ export class ResponseHelper {
       headers,
     }
 
-    try {
-      opt.auth.pass = await getProxyTicket(this.req, this.config)
-    } catch (err) {
-      this.req.log.error(err, getLogHeader('error'))
-      return
+    if (!opt.auth.pass) {
+      try {
+        this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
+      } catch (err) {
+        this.req.log.error(err, getLogHeader('error'))
+        return
+      }
     }
 
     logRequest(this.req, this.config, opt)
