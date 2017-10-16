@@ -182,7 +182,7 @@ export class ResponseHelper {
           try {
             this.req.log.warn('Authentication failed, requested new PT')
             this.req.session.cas.pt = await getProxyTicket(this.req, this.config, true)
-            resolve(await this.fetch(options), false)
+            resolve(await this.fetch(options, false))
           } catch (err) {
             this.req.log.error(err, getLogHeader('error'))
             reject(new RequestError(err, 500))
