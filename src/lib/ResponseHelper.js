@@ -111,9 +111,10 @@ export class ResponseHelper {
    * @param {('DELETE'|'GET'|'POST'|'PUT')} options.method - Request method.
    * @param {String} options.url - Request URL.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
+   * @param {Boolean} [retry=true] - True to renew PT and retry request on 401.
    * @returns {Promise} Promise object represents server response.
    */
-  fetch = options => new Promise(async (resolve, reject) => {
+  fetch = (options, retry = true) => new Promise(async (resolve, reject) => {
     const { body, headers = getHeaders() } = options
     const opt = {
       ...options,
@@ -144,10 +145,15 @@ export class ResponseHelper {
       }
 
       if (response.statusCode === 401) {
-        try {
-          resolve(await getProxyTicket(this.req, this.config, true))
-        } catch (err) {
-          reject(new RequestError(err, 500))
+        if (retry) {
+          try {
+            this.req.session.cas.pt = await getProxyTicket(this.req, this.config, true)
+            resolve(await this.fetch(options), false)
+          } catch (err) {
+            reject(new RequestError(err, 500))
+          }
+        } else {
+          reject(new RequestError('Unauthorized', 401))
         }
 
         return
@@ -194,6 +200,7 @@ export class ResponseHelper {
       ...options,
       auth: {
         user: this.req.session.cas.user,
+        pass: this.req.session.cas.pt,
       },
       headers,
     }
