@@ -51,7 +51,6 @@ export default {
       header: 'x-client-ajax',
       status: 401,
     },
-    logger: (req, type) => req.getLogger(type, '[CAS_CLIENT]: '),
   },
   enableCORS: true,
   allowedMethods: 'GET,POST,OPTIONS,PUT,DELETE',
@@ -59,5 +58,6 @@ export default {
     name: 'udes-node-orchestrator',
     logLevel: 'debug',
     prettyPrint: true,
+    showCredentialsAsClearText: false,
   },
 }
