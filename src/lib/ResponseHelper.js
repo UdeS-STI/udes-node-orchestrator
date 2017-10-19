@@ -143,26 +143,28 @@ export class ResponseHelper {
    * @param {Boolean} [retry=true] - True to renew PT and retry request on 401.
    * @returns {Promise} Promise object represents server response.
    */
-  fetch = (options, retry = true) => new Promise(async (resolve, reject) => {
+  fetch = (options, { retry = true, auth = true }) => new Promise(async (resolve, reject) => {
     const { body, headers = getHeaders() } = options
-    const opt = {
-      ...options,
-      auth: {
-        user: this.req.session.cas.user,
-        pass: this.req.session.cas.pt,
-      },
-      body: body && typeof body === 'object' ? JSON.stringify(body) : body,
-      headers,
+
+    if (auth) {
+      if (!this.req.session.id) {
+        this.req.session.cas.pass = await getProxyTicket(this.req, this.config)
+
+        if (this.config.sessionUrl) {
+          this.req.session.id = await fetch(this.config.sessionUrl, { auth: false })
+        }
+      }
     }
 
-    if (!opt.auth.pass) {
-      try {
-        this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
-      } catch (err) {
-        this.req.log.error(err, getLogHeader('error'))
-        reject(new RequestError(err, 500))
-        return
-      }
+    const opt = {
+      ...options,
+      auth: auth && this.req.session.cas,
+      body: body && typeof body === 'object' ? JSON.stringify(body) : body,
+      headers: {
+        ...headers,
+        sessionId: this.req.session.id,
+
+      },
     }
 
     logRequest(this.req, this.config, opt)
@@ -182,7 +184,7 @@ export class ResponseHelper {
           try {
             this.req.log.warn('Authentication failed, requested new PT')
             this.req.session.cas.pt = await getProxyTicket(this.req, this.config, true)
-            resolve(await this.fetch(options, false))
+            resolve(await this.fetch(options, { retry: false }))
           } catch (err) {
             this.req.log.error(err, getLogHeader('error'))
             reject(new RequestError(err, 500))
