@@ -108,8 +108,9 @@ const getSessionId = (req, config, retry = true) => new Promise(async (resolve, 
       return
     }
 
-    req.session.id = response.body
-    resolve(response.body)
+    const { sessionId } = JSON.parse(response.body)
+    req.session.id = sessionId
+    resolve(sessionId)
   })
 })
 

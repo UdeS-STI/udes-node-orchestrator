@@ -148,6 +148,8 @@ var getSessionId = function getSessionId(req, config) {
 
               (0, _request.request)(options, function () {
                 var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(error, response) {
+                  var _JSON$parse, sessionId;
+
                   return regeneratorRuntime.wrap(function _callee$(_context) {
                     while (1) {
                       switch (_context.prev = _context.next) {
@@ -190,11 +192,12 @@ var getSessionId = function getSessionId(req, config) {
                           return _context.abrupt('return');
 
                         case 17:
+                          _JSON$parse = JSON.parse(response.body), sessionId = _JSON$parse.sessionId;
 
-                          req.session.id = response.body;
-                          resolve(response.body);
+                          req.session.id = sessionId;
+                          resolve(sessionId);
 
-                        case 19:
+                        case 20:
                         case 'end':
                           return _context.stop();
                       }
