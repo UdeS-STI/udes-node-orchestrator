@@ -109,9 +109,13 @@ const getSessionId = (req, config, retry = true) => new Promise(async (resolve, 
       return
     }
 
-    const { sessionId } = JSON.parse(response.body)
-    req.session.apiSessionId = sessionId
-    resolve(sessionId)
+    try {
+      const { sessionId } = JSON.parse(response.body)
+      req.session.apiSessionId = sessionId
+      resolve(sessionId)
+    } catch (err) {
+      reject(new RequestError('Cannot get session id', 500))
+    }
   })
 })
 
