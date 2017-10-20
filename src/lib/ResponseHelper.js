@@ -86,7 +86,7 @@ const getProxyTicket = (req, config, renew = false) => new Promise((resolve, rej
 const getSessionId = (req, config, retry = true) => new Promise(async (resolve, reject) => {
   const options = {
     method: 'GET',
-    url: this.config.sessionUrl,
+    url: config.sessionUrl,
     headers: {
       ...getHeaders(),
       'x-proxy-ticket': await getProxyTicket(req, config, !retry),

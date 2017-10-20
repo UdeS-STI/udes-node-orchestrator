@@ -126,7 +126,7 @@ var getSessionId = function getSessionId(req, config) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.t0 = undefined.config.sessionUrl;
+              _context2.t0 = config.sessionUrl;
               _context2.t1 = _extends;
               _context2.t2 = {};
               _context2.t3 = getHeaders();
