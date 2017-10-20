@@ -186,12 +186,17 @@ var getSessionId = function getSessionId(req, config) {
                           return _context.abrupt('return');
 
                         case 17:
-                          _JSON$parse = JSON.parse(response.body), sessionId = _JSON$parse.sessionId;
 
-                          req.session.apiSessionId = sessionId;
-                          resolve(sessionId);
+                          try {
+                            _JSON$parse = JSON.parse(response.body), sessionId = _JSON$parse.sessionId;
 
-                        case 20:
+                            req.session.apiSessionId = sessionId;
+                            resolve(sessionId);
+                          } catch (err) {
+                            reject(new _RequestError2.default('Cannot get session id', 500));
+                          }
+
+                        case 18:
                         case 'end':
                           return _context.stop();
                       }
