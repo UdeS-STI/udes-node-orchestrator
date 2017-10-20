@@ -121,28 +121,22 @@ var getSessionId = function getSessionId(req, config) {
   var retry = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
   return new Promise(function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(resolve, reject) {
-      var options;
+      var pt, options;
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.t0 = config.sessionUrl;
-              _context2.t1 = _extends;
-              _context2.t2 = {};
-              _context2.t3 = getHeaders();
-              _context2.next = 6;
+              _context2.next = 2;
               return getProxyTicket(req, config, !retry);
 
-            case 6:
-              _context2.t4 = _context2.sent;
-              _context2.t5 = {
-                'x-proxy-ticket': _context2.t4
-              };
-              _context2.t6 = (0, _context2.t1)(_context2.t2, _context2.t3, _context2.t5);
+            case 2:
+              pt = _context2.sent;
               options = {
                 method: 'GET',
-                url: _context2.t0,
-                headers: _context2.t6
+                url: config.sessionUrl + '?ticket=' + pt,
+                headers: _extends({}, getHeaders(), {
+                  'x-proxy-ticket': pt
+                })
               };
 
 
@@ -210,7 +204,7 @@ var getSessionId = function getSessionId(req, config) {
                 };
               }());
 
-            case 11:
+            case 5:
             case 'end':
               return _context2.stop();
           }
