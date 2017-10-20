@@ -109,7 +109,7 @@ const getSessionId = (req, config, retry = true) => new Promise(async (resolve, 
     }
 
     const { sessionId } = JSON.parse(response.body)
-    req.session.id = sessionId
+    req.session.apiSessionId = sessionId
     resolve(sessionId)
   })
 })
@@ -193,7 +193,7 @@ export class ResponseHelper {
 
     if (auth) {
       if (this.config.sessionUrl) {
-        opt.headers['x-sessionid'] = this.req.session.id || await getSessionId(this.req, this.config)
+        opt.headers['x-sessionid'] = this.req.session.apiSessionId || await getSessionId(this.req, this.config)
       } else {
         opt.auth = {
           user: this.req.session.cas.user,
