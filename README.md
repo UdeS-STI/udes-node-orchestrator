@@ -17,7 +17,7 @@ Since it uses a socket you cannot run it on a local machine.
 
 # Getting started
 ## Setup development machine
-1. `git clone git@github.com:UdeS-STI/udes-node-orchestrator`
+1. `git clone https://github.com/UdeS-STI/udes-node-orchestrator.git`
 2. `cd udes-node-orchestrator`
 3. `npm install`
 

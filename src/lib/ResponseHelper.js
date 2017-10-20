@@ -115,6 +115,46 @@ const getSessionId = (req, config, retry = true) => new Promise(async (resolve, 
 })
 
 /**
+ * Get options needed for API call.
+ * @private
+ * @async
+ * @param {Object} req - HTTP request.
+ * @param {Config} config - Orchestrator configuration.
+ * @param {Object} options - Request options.
+ * @param {Boolean} [auth=true] - True to add authentication information to request options.
+ * @param {Boolean} [retry=true] - True to renew auth and retry request on 401.
+ * @returns {Promise} Promise object represents request options.
+ */
+const getRequestOptions = async (req, config, options, auth, retry) => {
+  const { body, headers = getHeaders() } = options
+  const opt = {
+    ...options,
+    body: body && typeof body === 'object' ? JSON.stringify(body) : body,
+    headers,
+  }
+
+  // If API requires an authentication
+  if (auth) {
+    try {
+      // If API requires using a session id
+      if (config.sessionUrl) {
+        opt.headers['x-sessionid'] = req.session.apiSessionId || await getSessionId(req, config)
+      } else {
+        // Without session id, basic auth is used for authentication
+        opt.auth = {
+          user: req.session.cas.user,
+          pass: await getProxyTicket(req, config, !retry),
+        }
+      }
+    } catch (err) {
+      req.log.error(err)
+    }
+  }
+
+  return opt
+}
+
+/**
  * @private
  * @param {String} title - Log section title.
  * @returns {String} Formatted log header.
@@ -184,24 +224,7 @@ export class ResponseHelper {
    * @returns {Promise} Promise object represents server response.
    */
   fetch = (options, auth = true, retry = true) => new Promise(async (resolve, reject) => {
-    const { body, headers = getHeaders() } = options
-    const opt = {
-      ...options,
-      body: body && typeof body === 'object' ? JSON.stringify(body) : body,
-      headers,
-    }
-
-    if (auth) {
-      if (this.config.sessionUrl) {
-        opt.headers['x-sessionid'] = this.req.session.apiSessionId || await getSessionId(this.req, this.config)
-      } else {
-        opt.auth = {
-          user: this.req.session.cas.user,
-          pass: await getProxyTicket(this.req, this.config, !retry),
-        }
-      }
-    }
-
+    const opt = await getRequestOptions(this.req, this.config, options, auth, retry)
     logRequest(this.req, this.config, opt)
     const time = +(new Date())
 
@@ -268,26 +291,11 @@ export class ResponseHelper {
    * @param {Object} options - Request options.
    * @param {String} options.url - URL to access the file.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
+   * @param {Boolean} [auth=true] - True to add authentication information to request options.
    */
-  getFile = async (options) => {
+  getFile = async (options, auth = true) => {
     const { headers = getHeaders() } = options
-    const opt = {
-      ...options,
-      auth: {
-        user: this.req.session.cas.user,
-        pass: this.req.session.cas.pt,
-      },
-      headers,
-    }
-
-    if (!opt.auth.pass) {
-      try {
-        this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
-      } catch (err) {
-        this.req.log.error(err, getLogHeader('error'))
-        return
-      }
-    }
+    const opt = getRequestOptions(this.req, this.config, options, auth)
 
     logRequest(this.req, this.config, opt)
     Object.keys(headers).forEach(key => this.res.set(key, headers[key]))

@@ -194,7 +194,7 @@ var getSessionId = function getSessionId(req, config) {
                         case 17:
                           _JSON$parse = JSON.parse(response.body), sessionId = _JSON$parse.sessionId;
 
-                          req.session.id = sessionId;
+                          req.session.apiSessionId = sessionId;
                           resolve(sessionId);
 
                         case 20:
@@ -223,6 +223,101 @@ var getSessionId = function getSessionId(req, config) {
     };
   }());
 };
+
+/**
+ * Get options needed for API call.
+ * @private
+ * @async
+ * @param {Object} req - HTTP request.
+ * @param {Config} config - Orchestrator configuration.
+ * @param {Object} options - Request options.
+ * @param {Boolean} [auth=true] - True to add authentication information to request options.
+ * @param {Boolean} [retry=true] - True to renew auth and retry request on 401.
+ * @returns {Promise} Promise object represents request options.
+ */
+var getRequestOptions = function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(req, config, options, auth, retry) {
+    var body, _options$headers, headers, opt;
+
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            body = options.body, _options$headers = options.headers, headers = _options$headers === undefined ? getHeaders() : _options$headers;
+            opt = _extends({}, options, {
+              body: body && (typeof body === 'undefined' ? 'undefined' : _typeof(body)) === 'object' ? JSON.stringify(body) : body,
+              headers: headers
+
+              // If API requires an authentication
+            });
+
+            if (!auth) {
+              _context3.next = 23;
+              break;
+            }
+
+            _context3.prev = 3;
+
+            if (!config.sessionUrl) {
+              _context3.next = 13;
+              break;
+            }
+
+            _context3.t0 = req.session.apiSessionId;
+
+            if (_context3.t0) {
+              _context3.next = 10;
+              break;
+            }
+
+            _context3.next = 9;
+            return getSessionId(req, config);
+
+          case 9:
+            _context3.t0 = _context3.sent;
+
+          case 10:
+            opt.headers['x-sessionid'] = _context3.t0;
+            _context3.next = 18;
+            break;
+
+          case 13:
+            _context3.t1 = req.session.cas.user;
+            _context3.next = 16;
+            return getProxyTicket(req, config, !retry);
+
+          case 16:
+            _context3.t2 = _context3.sent;
+            opt.auth = {
+              user: _context3.t1,
+              pass: _context3.t2
+            };
+
+          case 18:
+            _context3.next = 23;
+            break;
+
+          case 20:
+            _context3.prev = 20;
+            _context3.t3 = _context3['catch'](3);
+
+            req.log.error(_context3.t3);
+
+          case 23:
+            return _context3.abrupt('return', opt);
+
+          case 24:
+          case 'end':
+            return _context3.stop();
+        }
+      }
+    }, _callee3, undefined, [[3, 20]]);
+  }));
+
+  return function getRequestOptions(_x8, _x9, _x10, _x11, _x12) {
+    return _ref3.apply(this, arguments);
+  };
+}();
 
 /**
  * @private
@@ -285,116 +380,73 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
     var auth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     var retry = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
     return new Promise(function () {
-      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(resolve, reject) {
-        var body, _options$headers, headers, opt, time;
-
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(resolve, reject) {
+        var opt, time;
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                body = options.body, _options$headers = options.headers, headers = _options$headers === undefined ? getHeaders() : _options$headers;
-                opt = _extends({}, options, {
-                  body: body && (typeof body === 'undefined' ? 'undefined' : _typeof(body)) === 'object' ? JSON.stringify(body) : body,
-                  headers: headers
-                });
+                _context5.next = 2;
+                return getRequestOptions(_this.req, _this.config, options, auth, retry);
 
-                if (!auth) {
-                  _context4.next = 17;
-                  break;
-                }
-
-                if (!_this.config.sessionUrl) {
-                  _context4.next = 12;
-                  break;
-                }
-
-                _context4.t0 = _this.req.session.id;
-
-                if (_context4.t0) {
-                  _context4.next = 9;
-                  break;
-                }
-
-                _context4.next = 8;
-                return getSessionId(_this.req, _this.config);
-
-              case 8:
-                _context4.t0 = _context4.sent;
-
-              case 9:
-                opt.headers['x-sessionid'] = _context4.t0;
-                _context4.next = 17;
-                break;
-
-              case 12:
-                _context4.t1 = _this.req.session.cas.user;
-                _context4.next = 15;
-                return getProxyTicket(_this.req, _this.config, !retry);
-
-              case 15:
-                _context4.t2 = _context4.sent;
-                opt.auth = {
-                  user: _context4.t1,
-                  pass: _context4.t2
-                };
-
-              case 17:
+              case 2:
+                opt = _context5.sent;
 
                 logRequest(_this.req, _this.config, opt);
                 time = +new Date();
 
 
                 (0, _request.request)(opt, function () {
-                  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(error, response) {
+                  var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(error, response) {
                     var callDuration, customHeaderPrefix, meta, data;
-                    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                    return regeneratorRuntime.wrap(function _callee4$(_context4) {
                       while (1) {
-                        switch (_context3.prev = _context3.next) {
+                        switch (_context4.prev = _context4.next) {
                           case 0:
                             callDuration = +new Date() - time;
 
                             if (!error) {
-                              _context3.next = 5;
+                              _context4.next = 5;
                               break;
                             }
 
                             _this.req.log.error(error, getLogHeader('error'));
                             reject(new _RequestError2.default(error, 500));
-                            return _context3.abrupt('return');
+                            return _context4.abrupt('return');
 
                           case 5:
                             if (!(response.statusCode === 401)) {
-                              _context3.next = 25;
+                              _context4.next = 25;
                               break;
                             }
 
                             if (!retry) {
-                              _context3.next = 22;
+                              _context4.next = 22;
                               break;
                             }
 
-                            _context3.prev = 7;
+                            _context4.prev = 7;
 
                             _this.req.log.warn('Authentication failed, requested new PT');
-                            _context3.t0 = resolve;
-                            _context3.next = 12;
+                            _context4.t0 = resolve;
+                            _context4.next = 12;
                             return _this.fetch(options, auth, false);
 
                           case 12:
-                            _context3.t1 = _context3.sent;
-                            (0, _context3.t0)(_context3.t1);
-                            _context3.next = 20;
+                            _context4.t1 = _context4.sent;
+                            (0, _context4.t0)(_context4.t1);
+                            _context4.next = 20;
                             break;
 
                           case 16:
-                            _context3.prev = 16;
-                            _context3.t2 = _context3['catch'](7);
+                            _context4.prev = 16;
+                            _context4.t2 = _context4['catch'](7);
 
-                            _this.req.log.error(_context3.t2, getLogHeader('error'));
-                            reject(new _RequestError2.default(_context3.t2, 500));
+                            _this.req.log.error(_context4.t2, getLogHeader('error'));
+                            reject(new _RequestError2.default(_context4.t2, 500));
 
                           case 20:
-                            _context3.next = 24;
+                            _context4.next = 24;
                             break;
 
                           case 22:
@@ -402,7 +454,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                             reject(new _RequestError2.default('Unauthorized', 401));
 
                           case 24:
-                            return _context3.abrupt('return');
+                            return _context4.abrupt('return');
 
                           case 25:
                             customHeaderPrefix = _this.config.customHeaderPrefix;
@@ -438,70 +490,44 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
                           case 28:
                           case 'end':
-                            return _context3.stop();
+                            return _context4.stop();
                         }
                       }
-                    }, _callee3, _this, [[7, 16]]);
+                    }, _callee4, _this, [[7, 16]]);
                   }));
 
-                  return function (_x12, _x13) {
-                    return _ref4.apply(this, arguments);
+                  return function (_x17, _x18) {
+                    return _ref5.apply(this, arguments);
                   };
                 }());
 
-              case 20:
+              case 6:
               case 'end':
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, _this);
+        }, _callee5, _this);
       }));
 
-      return function (_x10, _x11) {
-        return _ref3.apply(this, arguments);
+      return function (_x15, _x16) {
+        return _ref4.apply(this, arguments);
       };
     }());
   };
 
   this.getFile = function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(options) {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(options) {
+      var auth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
       var _options$headers2, headers, opt;
 
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      return regeneratorRuntime.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
               _options$headers2 = options.headers, headers = _options$headers2 === undefined ? getHeaders() : _options$headers2;
-              opt = _extends({}, options, {
-                auth: {
-                  user: _this.req.session.cas.user,
-                  pass: _this.req.session.cas.pt
-                },
-                headers: headers
-              });
+              opt = getRequestOptions(_this.req, _this.config, options, auth);
 
-              if (opt.auth.pass) {
-                _context5.next = 13;
-                break;
-              }
-
-              _context5.prev = 3;
-              _context5.next = 6;
-              return getProxyTicket(_this.req, _this.config);
-
-            case 6:
-              _this.req.session.cas.pt = opt.auth.pass = _context5.sent;
-              _context5.next = 13;
-              break;
-
-            case 9:
-              _context5.prev = 9;
-              _context5.t0 = _context5['catch'](3);
-
-              _this.req.log.error(_context5.t0, getLogHeader('error'));
-              return _context5.abrupt('return');
-
-            case 13:
 
               logRequest(_this.req, _this.config, opt);
               Object.keys(headers).forEach(function (key) {
@@ -509,16 +535,16 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
               });
               _request.request.get(opt).pipe(_this.res);
 
-            case 16:
+            case 5:
             case 'end':
-              return _context5.stop();
+              return _context6.stop();
           }
         }
-      }, _callee5, _this, [[3, 9]]);
+      }, _callee6, _this);
     }));
 
-    return function (_x14) {
-      return _ref5.apply(this, arguments);
+    return function (_x19) {
+      return _ref6.apply(this, arguments);
     };
   }();
 
@@ -600,6 +626,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
  * @param {Object} options - Request options.
  * @param {String} options.url - URL to access the file.
  * @param {Object} [options.headers=getHeaders()] - Request headers.
+ * @param {Boolean} [auth=true] - True to add authentication information to request options.
  */
 
 

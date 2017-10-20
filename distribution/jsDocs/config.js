@@ -54,6 +54,7 @@
  * @param {Boolean} log.showCredentialsAsClearText - If true credentials will be displayed as clear text in logs.
  * @param {String} nocasPwd - CAS default password when `enableAuth` is false.
  * @param {String} nocasUser - CAS default username when `enableAuth` is false.
+ * @param {String} [sessionUrl] - URL for getting session id.
  * @param {String} socket - Relative path to socket.
  */
 "use strict";
