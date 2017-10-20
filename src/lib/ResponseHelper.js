@@ -76,6 +76,44 @@ const getProxyTicket = (req, config, renew = false) => new Promise((resolve, rej
 })
 
 /**
+ * Obtain session id from API.
+ * @private
+ * @param {Object} req - HTTP request.
+ * @param {Config} config - Orchestrator configuration.
+ * @param {Boolean} [retry=true] - True to update PT and retry getting session id from API.
+ * @returns {Promise} Promise object represents session id.
+ */
+const getSessionId = (req, config, retry = true) => new Promise(async (resolve, reject) => {
+  const options = {
+    method: 'GET',
+    url: this.config.sessionUrl,
+    headers: {
+      ...getHeaders(),
+      'x-proxy-ticket': await getProxyTicket(req, config, !retry),
+    },
+  }
+
+  request(options, async (error, response) => {
+    if (error || response.statusCode === 401) {
+      if (retry) {
+        try {
+          resolve(await getSessionId(false))
+        } catch (err) {
+          reject(err)
+        }
+      } else {
+        reject(new RequestError('Invalid proxy ticket', 401))
+      }
+
+      return
+    }
+
+    req.session.id = response.body
+    resolve(response.body)
+  })
+})
+
+/**
  * @private
  * @param {String} title - Log section title.
  * @returns {String} Formatted log header.
@@ -140,31 +178,27 @@ export class ResponseHelper {
    * @param {('DELETE'|'GET'|'POST'|'PUT')} options.method - Request method.
    * @param {String} options.url - Request URL.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
-   * @param {Boolean} [retry=true] - True to renew PT and retry request on 401.
+   * @param {Boolean} [auth=true] - True to add authentication information to request options.
+   * @param {Boolean} [retry=true] - True to renew auth and retry request on 401.
    * @returns {Promise} Promise object represents server response.
    */
-  fetch = (options, { retry = true, auth = true }) => new Promise(async (resolve, reject) => {
+  fetch = (options, auth = true, retry = true) => new Promise(async (resolve, reject) => {
     const { body, headers = getHeaders() } = options
-
-    if (auth) {
-      if (!this.req.session.id) {
-        this.req.session.cas.pass = await getProxyTicket(this.req, this.config)
-
-        if (this.config.sessionUrl) {
-          this.req.session.id = await fetch(this.config.sessionUrl, { auth: false })
-        }
-      }
-    }
-
     const opt = {
       ...options,
-      auth: auth && this.req.session.cas,
       body: body && typeof body === 'object' ? JSON.stringify(body) : body,
-      headers: {
-        ...headers,
-        sessionId: this.req.session.id,
+      headers,
+    }
 
-      },
+    if (auth) {
+      if (this.config.sessionUrl) {
+        opt.headers['x-sessionid'] = this.req.session.id || await getSessionId(this.req, this.config)
+      } else {
+        opt.auth = {
+          user: this.req.session.cas.user,
+          pass: await getProxyTicket(this.req, this.config, !retry),
+        }
+      }
     }
 
     logRequest(this.req, this.config, opt)
@@ -183,8 +217,7 @@ export class ResponseHelper {
         if (retry) {
           try {
             this.req.log.warn('Authentication failed, requested new PT')
-            this.req.session.cas.pt = await getProxyTicket(this.req, this.config, true)
-            resolve(await this.fetch(options, { retry: false }))
+            resolve(await this.fetch(options, auth, false))
           } catch (err) {
             this.req.log.error(err, getLogHeader('error'))
             reject(new RequestError(err, 500))

@@ -27,9 +27,9 @@ var _RequestError2 = _interopRequireDefault(_RequestError);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -110,6 +110,118 @@ var getProxyTicket = function getProxyTicket(req, config) {
 };
 
 /**
+ * Obtain session id from API.
+ * @private
+ * @param {Object} req - HTTP request.
+ * @param {Config} config - Orchestrator configuration.
+ * @param {Boolean} [retry=true] - True to update PT and retry getting session id from API.
+ * @returns {Promise} Promise object represents session id.
+ */
+var getSessionId = function getSessionId(req, config) {
+  var retry = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  return new Promise(function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(resolve, reject) {
+      var options;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.t0 = undefined.config.sessionUrl;
+              _context2.t1 = _extends;
+              _context2.t2 = {};
+              _context2.t3 = getHeaders();
+              _context2.next = 6;
+              return getProxyTicket(req, config, !retry);
+
+            case 6:
+              _context2.t4 = _context2.sent;
+              _context2.t5 = {
+                'x-proxy-ticket': _context2.t4
+              };
+              _context2.t6 = (0, _context2.t1)(_context2.t2, _context2.t3, _context2.t5);
+              options = {
+                method: 'GET',
+                url: _context2.t0,
+                headers: _context2.t6
+              };
+
+
+              (0, _request.request)(options, function () {
+                var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(error, response) {
+                  return regeneratorRuntime.wrap(function _callee$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          if (!(error || response.statusCode === 401)) {
+                            _context.next = 17;
+                            break;
+                          }
+
+                          if (!retry) {
+                            _context.next = 15;
+                            break;
+                          }
+
+                          _context.prev = 2;
+                          _context.t0 = resolve;
+                          _context.next = 6;
+                          return getSessionId(false);
+
+                        case 6:
+                          _context.t1 = _context.sent;
+                          (0, _context.t0)(_context.t1);
+                          _context.next = 13;
+                          break;
+
+                        case 10:
+                          _context.prev = 10;
+                          _context.t2 = _context['catch'](2);
+
+                          reject(_context.t2);
+
+                        case 13:
+                          _context.next = 16;
+                          break;
+
+                        case 15:
+                          reject(new _RequestError2.default('Invalid proxy ticket', 401));
+
+                        case 16:
+                          return _context.abrupt('return');
+
+                        case 17:
+
+                          req.session.id = response.body;
+                          resolve(response.body);
+
+                        case 19:
+                        case 'end':
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee, undefined, [[2, 10]]);
+                }));
+
+                return function (_x6, _x7) {
+                  return _ref2.apply(this, arguments);
+                };
+              }());
+
+            case 11:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, _callee2, undefined);
+    }));
+
+    return function (_x4, _x5) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+};
+
+/**
  * @private
  * @param {String} title - Log section title.
  * @returns {String} Formatted log header.
@@ -167,119 +279,129 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
   _classCallCheck(this, ResponseHelper);
 
   this.fetch = function (options) {
-    var retry = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    var auth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    var retry = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
     return new Promise(function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(resolve, reject) {
+      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(resolve, reject) {
         var body, _options$headers, headers, opt, time;
 
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 body = options.body, _options$headers = options.headers, headers = _options$headers === undefined ? getHeaders() : _options$headers;
                 opt = _extends({}, options, {
-                  auth: {
-                    user: _this.req.session.cas.user,
-                    pass: _this.req.session.cas.pt
-                  },
                   body: body && (typeof body === 'undefined' ? 'undefined' : _typeof(body)) === 'object' ? JSON.stringify(body) : body,
                   headers: headers
                 });
 
-                if (opt.auth.pass) {
-                  _context2.next = 14;
+                if (!auth) {
+                  _context4.next = 17;
                   break;
                 }
 
-                _context2.prev = 3;
-                _context2.next = 6;
-                return getProxyTicket(_this.req, _this.config);
+                if (!_this.config.sessionUrl) {
+                  _context4.next = 12;
+                  break;
+                }
 
-              case 6:
-                _this.req.session.cas.pt = opt.auth.pass = _context2.sent;
-                _context2.next = 14;
-                break;
+                _context4.t0 = _this.req.session.id;
+
+                if (_context4.t0) {
+                  _context4.next = 9;
+                  break;
+                }
+
+                _context4.next = 8;
+                return getSessionId(_this.req, _this.config);
+
+              case 8:
+                _context4.t0 = _context4.sent;
 
               case 9:
-                _context2.prev = 9;
-                _context2.t0 = _context2['catch'](3);
+                opt.headers['x-sessionid'] = _context4.t0;
+                _context4.next = 17;
+                break;
 
-                _this.req.log.error(_context2.t0, getLogHeader('error'));
-                reject(new _RequestError2.default(_context2.t0, 500));
-                return _context2.abrupt('return');
+              case 12:
+                _context4.t1 = _this.req.session.cas.user;
+                _context4.next = 15;
+                return getProxyTicket(_this.req, _this.config, !retry);
 
-              case 14:
+              case 15:
+                _context4.t2 = _context4.sent;
+                opt.auth = {
+                  user: _context4.t1,
+                  pass: _context4.t2
+                };
+
+              case 17:
 
                 logRequest(_this.req, _this.config, opt);
                 time = +new Date();
 
 
                 (0, _request.request)(opt, function () {
-                  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(error, response) {
+                  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(error, response) {
                     var callDuration, customHeaderPrefix, meta, data;
-                    return regeneratorRuntime.wrap(function _callee$(_context) {
+                    return regeneratorRuntime.wrap(function _callee3$(_context3) {
                       while (1) {
-                        switch (_context.prev = _context.next) {
+                        switch (_context3.prev = _context3.next) {
                           case 0:
                             callDuration = +new Date() - time;
 
                             if (!error) {
-                              _context.next = 5;
+                              _context3.next = 5;
                               break;
                             }
 
                             _this.req.log.error(error, getLogHeader('error'));
                             reject(new _RequestError2.default(error, 500));
-                            return _context.abrupt('return');
+                            return _context3.abrupt('return');
 
                           case 5:
                             if (!(response.statusCode === 401)) {
-                              _context.next = 28;
+                              _context3.next = 25;
                               break;
                             }
 
                             if (!retry) {
-                              _context.next = 25;
+                              _context3.next = 22;
                               break;
                             }
 
-                            _context.prev = 7;
+                            _context3.prev = 7;
 
                             _this.req.log.warn('Authentication failed, requested new PT');
-                            _context.next = 11;
-                            return getProxyTicket(_this.req, _this.config, true);
+                            _context3.t0 = resolve;
+                            _context3.next = 12;
+                            return _this.fetch(options, auth, false);
 
-                          case 11:
-                            _this.req.session.cas.pt = _context.sent;
-                            _context.t0 = resolve;
-                            _context.next = 15;
-                            return _this.fetch(options, false);
-
-                          case 15:
-                            _context.t1 = _context.sent;
-                            (0, _context.t0)(_context.t1);
-                            _context.next = 23;
+                          case 12:
+                            _context3.t1 = _context3.sent;
+                            (0, _context3.t0)(_context3.t1);
+                            _context3.next = 20;
                             break;
 
-                          case 19:
-                            _context.prev = 19;
-                            _context.t2 = _context['catch'](7);
+                          case 16:
+                            _context3.prev = 16;
+                            _context3.t2 = _context3['catch'](7);
 
-                            _this.req.log.error(_context.t2, getLogHeader('error'));
-                            reject(new _RequestError2.default(_context.t2, 500));
+                            _this.req.log.error(_context3.t2, getLogHeader('error'));
+                            reject(new _RequestError2.default(_context3.t2, 500));
 
-                          case 23:
-                            _context.next = 27;
+                          case 20:
+                            _context3.next = 24;
                             break;
 
-                          case 25:
+                          case 22:
                             _this.req.log.error('401 - Unauthorized access', getLogHeader('error'));
                             reject(new _RequestError2.default('Unauthorized', 401));
 
-                          case 27:
-                            return _context.abrupt('return');
+                          case 24:
+                            return _context3.abrupt('return');
 
-                          case 28:
+                          case 25:
                             customHeaderPrefix = _this.config.customHeaderPrefix;
                             meta = {
                               count: response.headers[customHeaderPrefix + '-count'],
@@ -311,40 +433,40 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                               reject(new _RequestError2.default(response.body || response, response.statusCode || 500));
                             }
 
-                          case 31:
+                          case 28:
                           case 'end':
-                            return _context.stop();
+                            return _context3.stop();
                         }
                       }
-                    }, _callee, _this, [[7, 19]]);
+                    }, _callee3, _this, [[7, 16]]);
                   }));
 
-                  return function (_x6, _x7) {
-                    return _ref2.apply(this, arguments);
+                  return function (_x12, _x13) {
+                    return _ref4.apply(this, arguments);
                   };
                 }());
 
-              case 17:
+              case 20:
               case 'end':
-                return _context2.stop();
+                return _context4.stop();
             }
           }
-        }, _callee2, _this, [[3, 9]]);
+        }, _callee4, _this);
       }));
 
-      return function (_x4, _x5) {
-        return _ref.apply(this, arguments);
+      return function (_x10, _x11) {
+        return _ref3.apply(this, arguments);
       };
     }());
   };
 
   this.getFile = function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(options) {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(options) {
       var _options$headers2, headers, opt;
 
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
               _options$headers2 = options.headers, headers = _options$headers2 === undefined ? getHeaders() : _options$headers2;
               opt = _extends({}, options, {
@@ -356,25 +478,25 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
               });
 
               if (opt.auth.pass) {
-                _context3.next = 13;
+                _context5.next = 13;
                 break;
               }
 
-              _context3.prev = 3;
-              _context3.next = 6;
+              _context5.prev = 3;
+              _context5.next = 6;
               return getProxyTicket(_this.req, _this.config);
 
             case 6:
-              _this.req.session.cas.pt = opt.auth.pass = _context3.sent;
-              _context3.next = 13;
+              _this.req.session.cas.pt = opt.auth.pass = _context5.sent;
+              _context5.next = 13;
               break;
 
             case 9:
-              _context3.prev = 9;
-              _context3.t0 = _context3['catch'](3);
+              _context5.prev = 9;
+              _context5.t0 = _context5['catch'](3);
 
-              _this.req.log.error(_context3.t0, getLogHeader('error'));
-              return _context3.abrupt('return');
+              _this.req.log.error(_context5.t0, getLogHeader('error'));
+              return _context5.abrupt('return');
 
             case 13:
 
@@ -386,14 +508,14 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
             case 16:
             case 'end':
-              return _context3.stop();
+              return _context5.stop();
           }
         }
-      }, _callee3, _this, [[3, 9]]);
+      }, _callee5, _this, [[3, 9]]);
     }));
 
-    return function (_x8) {
-      return _ref3.apply(this, arguments);
+    return function (_x14) {
+      return _ref5.apply(this, arguments);
     };
   }();
 
@@ -463,7 +585,8 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
  * @param {('DELETE'|'GET'|'POST'|'PUT')} options.method - Request method.
  * @param {String} options.url - Request URL.
  * @param {Object} [options.headers=getHeaders()] - Request headers.
- * @param {Boolean} [retry=true] - True to renew PT and retry request on 401.
+ * @param {Boolean} [auth=true] - True to add authentication information to request options.
+ * @param {Boolean} [retry=true] - True to renew auth and retry request on 401.
  * @returns {Promise} Promise object represents server response.
  */
 
