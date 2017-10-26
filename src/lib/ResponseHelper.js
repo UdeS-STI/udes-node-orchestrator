@@ -202,9 +202,9 @@ export class ResponseHelper {
         status: response.statusCode,
       }
 
-      this.config.customHeaders.forEach(({ header, property }) =>
+      this.config.customHeaders.forEach(({ header, property }) => {
         meta[property || header] = response.headers[header]
-      )
+      })
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         try {
