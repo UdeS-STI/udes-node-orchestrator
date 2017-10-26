@@ -88,6 +88,7 @@ var getRange = exports.getRange = function getRange(req, query) {
 
 /**
  * Obtain proxy ticket for CAS authentication.
+ * @private
  * @param {Object} req - HTTP request.
  * @param {Config} config - Orchestrator configuration.
  * @param {Boolean} renew=false - True to renew proxy ticket.
@@ -106,6 +107,35 @@ var getProxyTicket = function getProxyTicket(req, config) {
       return resolve(pt);
     });
   });
+};
+
+/**
+ * @private
+ * @param {String} title - Log section title.
+ * @returns {String} Formatted log header.
+ */
+var getLogHeader = function getLogHeader(title) {
+  return '\n=============== ' + title.toUpperCase() + ' ===============\n';
+};
+
+/**
+ * Log request options.
+ * @private
+ * @param {Object} req - HTTP request.
+ * @param {Object} config - Orchestrator configuration.
+ * @param {Object} options - Request options.
+ */
+var logRequest = function logRequest(req, config, options) {
+  if (config.log.showCredentialsAsClearText) {
+    req.log.info(options, getLogHeader('request'));
+  } else {
+    req.log.info(_extends({}, options, {
+      auth: {
+        user: '********',
+        pass: '********'
+      }
+    }), getLogHeader('request'));
+  }
 };
 
 /**
@@ -137,6 +167,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
   _classCallCheck(this, ResponseHelper);
 
   this.fetch = function (options) {
+    var retry = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     return new Promise(function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(resolve, reject) {
         var body, _options$headers, headers, opt, time;
@@ -156,7 +187,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                 });
 
                 if (opt.auth.pass) {
-                  _context2.next = 13;
+                  _context2.next = 14;
                   break;
                 }
 
@@ -166,8 +197,21 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
               case 6:
                 _this.req.session.cas.pt = opt.auth.pass = _context2.sent;
-                _context2.next = 13;
+                _context2.next = 14;
                 break;
+
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2['catch'](3);
+
+                _this.req.log.error(_context2.t0, getLogHeader('error'));
+                reject(new _RequestError2.default(_context2.t0, 500));
+                return _context2.abrupt('return');
+
+              case 14:
+
+                logRequest(_this.req, _this.config, opt);
+                time = +new Date();
 
               case 9:
                 _context2.prev = 9;
@@ -189,40 +233,62 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                             callDuration = +new Date() - time;
 
                             if (!error) {
-                              _context.next = 4;
+                              _context.next = 5;
                               break;
                             }
 
+                            _this.req.log.error(error, getLogHeader('error'));
                             reject(new _RequestError2.default(error, 500));
                             return _context.abrupt('return');
 
-                          case 4:
+                          case 5:
                             if (!(response.statusCode === 401)) {
-                              _context.next = 17;
+                              _context.next = 28;
                               break;
                             }
 
-                            _context.prev = 5;
-                            _context.t0 = resolve;
-                            _context.next = 9;
+                            if (!retry) {
+                              _context.next = 25;
+                              break;
+                            }
+
+                            _context.prev = 7;
+
+                            _this.req.log.warn('Authentication failed, requested new PT');
+                            _context.next = 11;
                             return getProxyTicket(_this.req, _this.config, true);
 
-                          case 9:
+                          case 11:
+                            _this.req.session.cas.pt = _context.sent;
+                            _context.t0 = resolve;
+                            _context.next = 15;
+                            return _this.fetch(options, false);
+
+                          case 15:
                             _context.t1 = _context.sent;
                             (0, _context.t0)(_context.t1);
-                            _context.next = 16;
+                            _context.next = 23;
                             break;
 
-                          case 13:
-                            _context.prev = 13;
-                            _context.t2 = _context['catch'](5);
+                          case 19:
+                            _context.prev = 19;
+                            _context.t2 = _context['catch'](7);
 
+                            _this.req.log.error(_context.t2, getLogHeader('error'));
                             reject(new _RequestError2.default(_context.t2, 500));
 
-                          case 16:
+                          case 23:
+                            _context.next = 27;
+                            break;
+
+                          case 25:
+                            _this.req.log.error('401 - Unauthorized access', getLogHeader('error'));
+                            reject(new _RequestError2.default('Unauthorized', 401));
+
+                          case 27:
                             return _context.abrupt('return');
 
-                          case 17:
+                          case 28:
                             customHeaderPrefix = _this.config.customHeaderPrefix;
                             meta = {
                               count: response.headers[customHeaderPrefix + '-count'],
@@ -238,6 +304,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                               try {
                                 data = JSON.parse(response.body);
 
+                                _this.req.log.debug(data, getLogHeader('response'));
 
                                 if (Array.isArray(data)) {
                                   resolve({ data: data, meta: meta });
@@ -245,26 +312,28 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                                   resolve(_extends({}, data, { meta: meta }));
                                 }
                               } catch (err) {
+                                _this.req.log.debug(response.body, getLogHeader('response'));
                                 resolve({ data: response.body, meta: meta });
                               }
                             } else {
+                              _this.req.log.error(response.body || response, getLogHeader('error'));
                               reject(new _RequestError2.default(response.body || response, response.statusCode || 500));
                             }
 
-                          case 20:
+                          case 31:
                           case 'end':
                             return _context.stop();
                         }
                       }
-                    }, _callee, _this, [[5, 13]]);
+                    }, _callee, _this, [[7, 19]]);
                   }));
 
-                  return function (_x5, _x6) {
+                  return function (_x6, _x7) {
                     return _ref2.apply(this, arguments);
                   };
                 }());
 
-              case 15:
+              case 17:
               case 'end':
                 return _context2.stop();
             }
@@ -272,7 +341,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
         }, _callee2, _this, [[3, 9]]);
       }));
 
-      return function (_x3, _x4) {
+      return function (_x4, _x5) {
         return _ref.apply(this, arguments);
       };
     }());
@@ -289,39 +358,50 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
               _options$headers2 = options.headers, headers = _options$headers2 === undefined ? getHeaders() : _options$headers2;
               opt = _extends({}, options, {
                 auth: {
-                  user: _this.req.session.cas.user
+                  user: _this.req.session.cas.user,
+                  pass: _this.req.session.cas.pt
                 },
                 headers: headers
               });
-              _context3.prev = 2;
-              _context3.next = 5;
+
+              if (opt.auth.pass) {
+                _context3.next = 13;
+                break;
+              }
+
+              _context3.prev = 3;
+              _context3.next = 6;
               return getProxyTicket(_this.req, _this.config);
 
-            case 5:
-              opt.auth.pass = _context3.sent;
+            case 6:
+              _this.req.session.cas.pt = opt.auth.pass = _context3.sent;
+              _context3.next = 13;
+              break;
 
+            case 9:
+              _context3.prev = 9;
+              _context3.t0 = _context3['catch'](3);
+
+              _this.req.log.error(_context3.t0, getLogHeader('error'));
+              return _context3.abrupt('return');
+
+            case 13:
+
+              logRequest(_this.req, _this.config, opt);
               Object.keys(headers).forEach(function (key) {
                 return _this.res.set(key, headers[key]);
               });
               _request.request.get(opt).pipe(_this.res);
-              _context3.next = 13;
-              break;
 
-            case 10:
-              _context3.prev = 10;
-              _context3.t0 = _context3['catch'](2);
-
-              _this.req.log.error('Error when requesting PT, Authentication failed! ', _context3.t0);
-
-            case 13:
+            case 16:
             case 'end':
               return _context3.stop();
           }
         }
-      }, _callee3, _this, [[2, 10]]);
+      }, _callee3, _this, [[3, 9]]);
     }));
 
-    return function (_x7) {
+    return function (_x8) {
       return _ref3.apply(this, arguments);
     };
   }();
@@ -392,6 +472,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
  * @param {('DELETE'|'GET'|'POST'|'PUT')} options.method - Request method.
  * @param {String} options.url - Request URL.
  * @param {Object} [options.headers=getHeaders()] - Request headers.
+ * @param {Boolean} [retry=true] - True to renew PT and retry request on 401.
  * @returns {Promise} Promise object represents server response.
  */
 

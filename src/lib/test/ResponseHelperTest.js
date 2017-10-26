@@ -23,6 +23,7 @@ const config = {
     targetService: 'targetService',
   },
   customHeaderPrefix: 'foo',
+  log: {},
 }
 
 describe('server/lib/ResponseHelper', () => {
@@ -45,7 +46,10 @@ describe('server/lib/ResponseHelper', () => {
         'Content-Type': 'application/json',
       },
       log: {
+        debug () {},
         error () {},
+        info () {},
+        warn () {},
       },
       session: {
         cas: {
@@ -377,7 +381,7 @@ describe('server/lib/ResponseHelper', () => {
         meta: {
           count: '1',
           debug: {
-            'x-TempsMs': 0,
+            'x-TempsMs': response.meta.debug['x-TempsMs'],
           },
           messages: 'message',
           status: 200,
@@ -407,7 +411,7 @@ describe('server/lib/ResponseHelper', () => {
         meta: {
           count: '1',
           debug: {
-            'x-TempsMs': 0,
+            'x-TempsMs': response.meta.debug['x-TempsMs'],
           },
           messages: 'message',
           status: 200,

@@ -70,6 +70,16 @@ orchestrator.setRoutes([
 // Your server is now up and running, listening on set routes.
 ```
 
+## Logging
+The logging system uses [Pino](https://www.npmjs.com/package/pino). Log levels used are:
+* `error` to display only errors;
+* `warn` to display errors and warnings;
+* `info` to display all above and request information;
+* `debug` to display all above and response information;
+* `trace` to display all logs;
+* `silent` to disable logs;
+* NOTE: `fatal` is not used as it exits node process;
+
 # Documentation
 [JSDocs documentation](http://UdeS-STI.github.io/udes-node-orchestrator)
 
