@@ -138,7 +138,7 @@ export class ResponseHelper {
       },
       body: body && typeof body === 'object' ? JSON.stringify(body) : body,
       headers,
-      url: `${this.config.apiUrl}${url}`,
+      url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
     }
 
     if (!opt.auth.pass) {
@@ -228,7 +228,7 @@ export class ResponseHelper {
         pass: this.req.session.cas.pt,
       },
       headers,
-      url: `${this.config.apiUrl}${url}`,
+      url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
     }
 
     if (!opt.auth.pass) {

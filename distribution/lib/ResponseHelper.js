@@ -170,7 +170,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                   },
                   body: body && (typeof body === 'undefined' ? 'undefined' : _typeof(body)) === 'object' ? JSON.stringify(body) : body,
                   headers: headers,
-                  url: '' + _this.config.apiUrl + url
+                  url: /^.+:\/\//.test(url) ? url : '' + _this.config.apiUrl + url
                 });
 
                 if (opt.auth.pass) {
@@ -340,7 +340,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                   pass: _this.req.session.cas.pt
                 },
                 headers: headers,
-                url: '' + _this.config.apiUrl + url
+                url: /^.+:\/\//.test(url) ? url : '' + _this.config.apiUrl + url
               });
 
               if (opt.auth.pass) {
