@@ -1,12 +1,11 @@
-import Orchestrator, { ResponseHelper } from 'udes-node-orchestrator'
+import Orchestrator from 'udes-node-orchestrator'
 import config from './config'
 
-const getPostInfo = async (req, res) => {
-  const responseHelper = new ResponseHelper(req, res, config)
+const getPostInfo = async (responseHelper) => {
   const { post } = responseHelper.getQueryParameters()
   const options = {
     method: 'GET',
-    url: `${config.apiUrl}/posts/${post}`,
+    url: `/posts/${post}`,
   }
 
   try {

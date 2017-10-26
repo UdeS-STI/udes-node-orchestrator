@@ -22,6 +22,8 @@ var _notFound = require('../lib/notFound');
 
 var _express3 = require('../dependencies/express');
 
+var _ResponseHelper = require('../lib/ResponseHelper');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -103,6 +105,17 @@ var _initialiseProps = function _initialiseProps() {
           fn = _ref.fn;
       return _this.router[method.toLowerCase()](url, fn);
     });
+
+    routes.forEach(function (_ref2) {
+      var method = _ref2.method,
+          url = _ref2.url,
+          fn = _ref2.fn;
+
+      _this.router[method.toLowerCase()](url, function (req, res) {
+        fn(new _ResponseHelper.ResponseHelper(req, res, _this.config), req, res);
+      });
+    });
+
     _this.app.use(_this.router);
 
     // Must handle errors after settings routes or express throws an error.
