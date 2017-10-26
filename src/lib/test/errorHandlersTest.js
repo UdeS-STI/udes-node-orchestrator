@@ -37,9 +37,14 @@ describe('server/lib/errorHandlers', () => {
 
   describe('logErrors', () => {
     it('should call `next` with `error`', () => {
+      const req = {
+        log: {
+          error () {},
+        },
+      }
       const error = 'error'
       const next = sinon.spy()
-      logErrors(error, {}, {}, next)
+      logErrors(error, req, {}, next)
       expect(next).to.be.calledWith(error)
     })
   })
