@@ -205,6 +205,10 @@ export class ResponseHelper {
         status: response.statusCode,
       }
 
+      this.config.customHeaders.forEach(({ header, property }) =>
+        meta[property || header] = response.headers[header]
+      )
+
       if (response.statusCode >= 200 && response.statusCode < 300) {
         try {
           const data = JSON.parse(response.body)

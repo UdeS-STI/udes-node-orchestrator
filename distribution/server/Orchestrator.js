@@ -16,7 +16,15 @@ var _https = require('https');
 
 var _https2 = _interopRequireDefault(_https);
 
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _serverConfig = require('./serverConfig');
+
+var _defaultConfig = require('./defaultConfig');
+
+var _defaultConfig2 = _interopRequireDefault(_defaultConfig);
 
 var _notFound = require('../lib/notFound');
 
@@ -56,7 +64,7 @@ var Orchestrator = function Orchestrator(config, routes) {
 
   this.env = process.env.NODE_ENV || 'development';
   this.app = (0, _express2.default)();
-  this.config = config;
+  this.config = _lodash2.default.merge({}, _defaultConfig2.default, config);
 
   (0, _serverConfig.configureExpress)(this.app, this.config, this.env);
   this.server = _http2.default.createServer(this.app);
