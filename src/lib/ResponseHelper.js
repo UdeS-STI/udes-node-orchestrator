@@ -104,20 +104,6 @@ const logRequest = (req, config, options) => {
 }
 
 /**
- * Validate class constructor arguments.
- * @private
- * @param {Object} args - Arguments passed to class constructor.
- * @throws {Error} If an argument is null or undefined.
- */
-const checkArgs = args => {
-  Object.keys(args).forEach((key) => {
-    if (!args[key]) {
-      throw new Error(`new ResponseHelper() - Missing argument ${key}`)
-    }
-  })
-}
-
-/**
  * Handles response standardisation as well as http responses and requests.
  * @class
  * @param {Object} req - {@link https://expressjs.com/en/4x/api.html#req HTTP request}.
@@ -127,7 +113,6 @@ const checkArgs = args => {
  */
 export class ResponseHelper {
   constructor (req, res, config) {
-    checkArgs({ req, res, config })
     this.req = req
     this.res = res
     this.config = config
@@ -144,7 +129,7 @@ export class ResponseHelper {
    * @returns {Promise} Promise object represents server response.
    */
   fetch = (options, retry = true) => new Promise(async (resolve, reject) => {
-    const { body, headers = getHeaders() } = options
+    const { body, headers = getHeaders(), url } = options
     const opt = {
       ...options,
       auth: {
@@ -153,6 +138,7 @@ export class ResponseHelper {
       },
       body: body && typeof body === 'object' ? JSON.stringify(body) : body,
       headers,
+      url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
     }
 
     if (!opt.auth.pass) {
@@ -235,7 +221,7 @@ export class ResponseHelper {
    * @param {Object} [options.headers=getHeaders()] - Request headers.
    */
   getFile = async (options) => {
-    const { headers = getHeaders() } = options
+    const { headers = getHeaders(), url } = options
     const opt = {
       ...options,
       auth: {
@@ -243,6 +229,7 @@ export class ResponseHelper {
         pass: this.req.session.cas.pt,
       },
       headers,
+      url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
     }
 
     if (!opt.auth.pass) {

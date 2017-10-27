@@ -7,6 +7,7 @@ import { configureExpress, handleErrors, setListeners } from './serverConfig'
 import defaultConfig from './defaultConfig'
 import { notFound } from '../lib/notFound'
 import { Router as router } from '../dependencies/express'
+import { ResponseHelper } from '../lib/ResponseHelper'
 
 // Configure http/https before requiring Request module since Request is also using global config
 http.globalAgent.maxSockets = 25
@@ -65,6 +66,13 @@ export default class Orchestrator {
 
     this.router = router()
     routes.forEach(({ method, url, fn }) => this.router[method.toLowerCase()](url, fn))
+
+    routes.forEach(({ method, url, fn }) => {
+      this.router[method.toLowerCase()](url, (req, res) => {
+        fn(new ResponseHelper(req, res, this.config), req, res)
+      })
+    })
+
     this.app.use(this.router)
 
     // Must handle errors after settings routes or express throws an error.
