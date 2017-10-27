@@ -131,11 +131,12 @@ const getSessionId = (req, config, retry = true) => new Promise(async (resolve, 
  * @returns {Promise} Promise object represents request options.
  */
 const getRequestOptions = async (req, config, options, auth, retry) => {
-  const { body, headers = getHeaders() } = options
+  const { body, headers = getHeaders(), url } = options
   const opt = {
     ...options,
     body: body && typeof body === 'object' ? JSON.stringify(body) : body,
     headers,
+    url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
   }
 
   // If API requires an authentication
@@ -191,20 +192,6 @@ const logRequest = (req, config, options) => {
 }
 
 /**
- * Validate class constructor arguments.
- * @private
- * @param {Object} args - Arguments passed to class constructor.
- * @throws {Error} If an argument is null or undefined.
- */
-const checkArgs = args => {
-  Object.keys(args).forEach((key) => {
-    if (!args[key]) {
-      throw new Error(`new ResponseHelper() - Missing argument ${key}`)
-    }
-  })
-}
-
-/**
  * Handles response standardisation as well as http responses and requests.
  * @class
  * @param {Object} req - {@link https://expressjs.com/en/4x/api.html#req HTTP request}.
@@ -214,7 +201,6 @@ const checkArgs = args => {
  */
 export class ResponseHelper {
   constructor (req, res, config) {
-    checkArgs({ req, res, config })
     this.req = req
     this.res = res
     this.config = config
@@ -262,15 +248,16 @@ export class ResponseHelper {
         return
       }
 
-      const { customHeaderPrefix } = this.config
       const meta = {
-        count: response.headers[`${customHeaderPrefix}-count`],
         debug: {
           'x-TempsMs': callDuration,
         },
-        messages: response.headers[`${customHeaderPrefix}-messages`] || undefined,
         status: response.statusCode,
       }
+
+      this.config.customHeaders.forEach(({ header, property }) => {
+        meta[property || header] = response.headers[header]
+      })
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         try {

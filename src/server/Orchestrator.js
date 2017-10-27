@@ -1,10 +1,13 @@
 import express from 'express'
 import http from 'http'
 import https from 'https'
+import _ from 'lodash'
 
 import { configureExpress, handleErrors, setListeners } from './serverConfig'
+import defaultConfig from './defaultConfig'
 import { notFound } from '../lib/notFound'
 import { Router as router } from '../dependencies/express'
+import { ResponseHelper } from '../lib/ResponseHelper'
 
 // Configure http/https before requiring Request module since Request is also using global config
 http.globalAgent.maxSockets = 25
@@ -30,7 +33,7 @@ export default class Orchestrator {
 
     this.env = process.env.NODE_ENV || 'development'
     this.app = express()
-    this.config = config
+    this.config = _.merge({}, defaultConfig, config)
 
     configureExpress(this.app, this.config, this.env)
     this.server = http.createServer(this.app)
@@ -63,6 +66,13 @@ export default class Orchestrator {
 
     this.router = router()
     routes.forEach(({ method, url, fn }) => this.router[method.toLowerCase()](url, fn))
+
+    routes.forEach(({ method, url, fn }) => {
+      this.router[method.toLowerCase()](url, (req, res) => {
+        fn(new ResponseHelper(req, res, this.config), req, res)
+      })
+    })
+
     this.app.use(this.router)
 
     // Must handle errors after settings routes or express throws an error.

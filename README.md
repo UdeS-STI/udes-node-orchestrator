@@ -31,6 +31,8 @@ Since it uses a socket you cannot run it on a local machine.
   * `npm run test`
 * Run code coverage
   * `npm run coverage`
+* Security check dependencies
+  * `npm run audit`
 * Build library for distribution
   * `npm run build`
 * Generate documentation for public API

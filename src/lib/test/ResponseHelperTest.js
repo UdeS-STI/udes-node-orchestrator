@@ -22,8 +22,12 @@ const config = {
   cas: {
     targetService: 'targetService',
   },
-  customHeaderPrefix: 'foo',
+  customHeaders: [
+    { header: 'foo-count', property: 'count' },
+    { header: 'foo-messages', property: 'messages' },
+  ],
   log: {},
+  apiUrl: 'https://exemple.com',
 }
 
 describe('server/lib/ResponseHelper', () => {
@@ -66,42 +70,6 @@ describe('server/lib/ResponseHelper', () => {
   })
 
   describe('constructor', () => {
-    it('should throw error if `req` argument is missing', () => {
-      let error = null
-
-      try {
-        new ResponseHelper() // eslint-disable-line no-new
-      } catch (err) {
-        error = err
-      }
-
-      expect(error).to.be.not.null
-    })
-
-    it('should throw error if `res` argument is missing', () => {
-      let error = null
-
-      try {
-        new ResponseHelper(req) // eslint-disable-line no-new
-      } catch (err) {
-        error = err
-      }
-
-      expect(error).to.be.not.null
-    })
-
-    it('should throw error if `config` argument is missing', () => {
-      let error = null
-
-      try {
-        new ResponseHelper(req, res) // eslint-disable-line no-new
-      } catch (err) {
-        error = err
-      }
-
-      expect(error).to.be.not.null
-    })
-
     it('should set it\'s req property correctly', () => {
       const responseHelper = new ResponseHelper(req, res, config)
       expect(responseHelper.req).to.be.equal(req)
@@ -140,11 +108,9 @@ describe('server/lib/ResponseHelper', () => {
         service: {
           body: 'My sexy body',
           meta: {
-            count: 0,
             debug: {
               'x-tempsMs': 0,
             },
-            messages: '',
             status: 200,
           },
         },
@@ -152,12 +118,10 @@ describe('server/lib/ResponseHelper', () => {
       const body = formatResponse(req, data)
       const responses = {
         service: {
-          count: 0,
           data: data.service,
           debug: {
             'x-tempsMs': 0,
           },
-          messages: '',
           status: 200,
         },
       }
@@ -299,10 +263,12 @@ describe('server/lib/ResponseHelper', () => {
           Accept: 'application/json; charset=utf-8',
           'Content-Type': 'application/json; charset=utf-8',
         },
+        url: '/path',
       }
       getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'))
       HTTP.request.get = sinon.spy(() => ({ pipe () {} }))
-      await (new ResponseHelper(req, res, config)).getFile({})
+      await (new ResponseHelper(req, res, config)).getFile(opt)
+      opt.url = `${config.apiUrl}${opt.url}`
       expect(HTTP.request.get).to.be.calledWith(opt)
     })
 

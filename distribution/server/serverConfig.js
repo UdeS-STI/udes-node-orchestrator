@@ -88,7 +88,7 @@ var configureExpress = exports.configureExpress = function configureExpress(app,
     app.all('*', function (req, res, next) {
       res.header('Access-Control-Allow-Origin', req.headers.origin);
       res.header('Access-Control-Allow-Credentials', 'true');
-      res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+      res.header('Access-Control-Allow-Methods', configuration.allowedMethods.join(','));
       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Content-Disposition, Accept, x-client-ajax, Range');
       next();
     });

@@ -236,22 +236,23 @@ var getSessionId = function getSessionId(req, config) {
  */
 var getRequestOptions = function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(req, config, options, auth, retry) {
-    var body, _options$headers, headers, opt;
+    var body, _options$headers, headers, url, opt, pt;
 
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            body = options.body, _options$headers = options.headers, headers = _options$headers === undefined ? getHeaders() : _options$headers;
+            body = options.body, _options$headers = options.headers, headers = _options$headers === undefined ? getHeaders() : _options$headers, url = options.url;
             opt = _extends({}, options, {
               body: body && (typeof body === 'undefined' ? 'undefined' : _typeof(body)) === 'object' ? JSON.stringify(body) : body,
-              headers: headers
+              headers: headers,
+              url: /^.+:\/\//.test(url) ? url : '' + undefined.config.apiUrl + url
 
               // If API requires an authentication
             });
 
             if (!auth) {
-              _context3.next = 23;
+              _context3.next = 22;
               break;
             }
 
@@ -277,40 +278,42 @@ var getRequestOptions = function () {
 
           case 10:
             opt.headers['x-sessionid'] = _context3.t0;
-            _context3.next = 18;
+            _context3.next = 17;
             break;
 
           case 13:
-            _context3.t1 = req.session.cas.user;
-            _context3.next = 16;
+            _context3.next = 15;
             return getProxyTicket(req, config, !retry);
 
-          case 16:
-            _context3.t2 = _context3.sent;
+          case 15:
+            pt = _context3.sent;
+
+            // Testing removing PT from auth
+            // opt.url += `&user=req.session.cas.user&ticket=${pt}`
             opt.auth = {
-              user: _context3.t1,
-              pass: _context3.t2
+              user: req.session.cas.user,
+              pass: pt
             };
 
-          case 18:
-            _context3.next = 23;
+          case 17:
+            _context3.next = 22;
             break;
 
-          case 20:
-            _context3.prev = 20;
-            _context3.t3 = _context3['catch'](3);
+          case 19:
+            _context3.prev = 19;
+            _context3.t1 = _context3['catch'](3);
 
-            req.log.error(_context3.t3);
+            req.log.error(_context3.t1);
 
-          case 23:
+          case 22:
             return _context3.abrupt('return', opt);
 
-          case 24:
+          case 23:
           case 'end':
             return _context3.stop();
         }
       }
-    }, _callee3, undefined, [[3, 20]]);
+    }, _callee3, undefined, [[3, 19]]);
   }));
 
   return function getRequestOptions(_x8, _x9, _x10, _x11, _x12) {
@@ -345,20 +348,6 @@ var logRequest = function logRequest(req, config, options) {
       }
     }), getLogHeader('request'));
   }
-};
-
-/**
- * Validate class constructor arguments.
- * @private
- * @param {Object} args - Arguments passed to class constructor.
- * @throws {Error} If an argument is null or undefined.
- */
-var checkArgs = function checkArgs(args) {
-  Object.keys(args).forEach(function (key) {
-    if (!args[key]) {
-      throw new Error('new ResponseHelper() - Missing argument ' + key);
-    }
-  });
 };
 
 /**
@@ -397,7 +386,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
                 (0, _request.request)(opt, function () {
                   var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(error, response) {
-                    var callDuration, customHeaderPrefix, meta, data;
+                    var callDuration, meta, data;
                     return regeneratorRuntime.wrap(function _callee4$(_context4) {
                       while (1) {
                         switch (_context4.prev = _context4.next) {
@@ -456,16 +445,20 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                             return _context4.abrupt('return');
 
                           case 25:
-                            customHeaderPrefix = _this.config.customHeaderPrefix;
                             meta = {
-                              count: response.headers[customHeaderPrefix + '-count'],
                               debug: {
                                 'x-TempsMs': callDuration
                               },
-                              messages: response.headers[customHeaderPrefix + '-messages'] || undefined,
                               status: response.statusCode
                             };
 
+
+                            _this.config.customHeaders.forEach(function (_ref6) {
+                              var header = _ref6.header,
+                                  property = _ref6.property;
+
+                              meta[property || header] = response.headers[header];
+                            });
 
                             if (response.statusCode >= 200 && response.statusCode < 300) {
                               try {
@@ -515,7 +508,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
   };
 
   this.getFile = function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(options) {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(options) {
       var auth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
       var _options$headers2, headers, opt;
@@ -543,7 +536,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
     }));
 
     return function (_x19) {
-      return _ref6.apply(this, arguments);
+      return _ref7.apply(this, arguments);
     };
   }();
 
@@ -600,7 +593,6 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
     _this.res.status(200).send(formatData ? formatResponse(_this.req, data) : data);
   };
 
-  checkArgs({ req: req, res: res, config: config });
   this.req = req;
   this.res = res;
   this.config = config;
