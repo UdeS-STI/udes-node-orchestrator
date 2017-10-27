@@ -228,7 +228,7 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>cache</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+            <span class='code bold'>cache</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
 	    CAS cache configuration.
 
           </div>
@@ -247,21 +247,27 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cache.enable</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+                  <td class='break-word'><span class='code bold'>cache.enable</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>false</code>)
                   </td>
                   <td class='break-word'><span>Whether to enable CAS caching or not.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cache.filter</span> <code class='quiet'>[<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]</code>
+                  <td class='break-word'><span class='code bold'>cache.filter</span> <code class='quiet'>[<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]?</code>
+                  
+                    (default <code>[]</code>)
                   </td>
                   <td class='break-word'><span>Filter service url for PT cache
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cache.ttl</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>
+                  <td class='break-word'><span class='code bold'>cache.ttl</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
+                  
+                    (default <code>300000</code>)
                   </td>
                   <td class='break-word'><span>Time to live of cache in ms.
 </span></td>
@@ -274,7 +280,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>debug</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+            <span class='code bold'>debug</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
+            = <code>false</code>)</code>
 	    Whether to activate CAS debugging or not.
 
           </div>
@@ -283,7 +290,7 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>fromAjax</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+            <span class='code bold'>fromAjax</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
 	    CAS from AJAX configuration.
 
           </div>
@@ -302,14 +309,18 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>fromAjax.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>fromAjax.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>x-client-ajax</code>)
                   </td>
                   <td class='break-word'><span>Default response header for AJAX responses.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>fromAjax.status</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>
+                  <td class='break-word'><span class='code bold'>fromAjax.status</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
+                  
+                    (default <code>401</code>)
                   </td>
                   <td class='break-word'><span>Default status code for AJAX responses.
 </span></td>
@@ -322,7 +333,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>gateway</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+            <span class='code bold'>gateway</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
+            = <code>false</code>)</code>
 	    Send all validation requests through the CAS gateway feature.
 
           </div>
@@ -331,7 +343,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>ignore</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>])</code>
+            <span class='code bold'>ignore</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]?
+            = <code>[]</code>)</code>
 	    Ignore CAS validation on these routes.
 
           </div>
@@ -340,7 +353,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>match</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>])</code>
+            <span class='code bold'>match</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]?
+            = <code>[]</code>)</code>
 	    Filter url for CAS authentication
 
           </div>
@@ -349,7 +363,7 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>paths</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+            <span class='code bold'>paths</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
 	    CAS path configuration.
 
           </div>
@@ -368,42 +382,54 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.login</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>paths.login</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>/login</code>)
                   </td>
                   <td class='break-word'><span>CAS login path.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.logout</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>paths.logout</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>/logout</code>)
                   </td>
                   <td class='break-word'><span>CAS logout path.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.proxy</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>paths.proxy</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>/proxy</code>)
                   </td>
                   <td class='break-word'><span>Path to obtain proxy ticket.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.proxyCallback</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>paths.proxyCallback</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>/proxyCallback</code>)
                   </td>
                   <td class='break-word'><span>Path to call once proxy ticket is obtained.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.serviceValidate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>paths.serviceValidate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>/proxyValidate</code>)
                   </td>
                   <td class='break-word'><span>Path to validate TGT.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.validate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>paths.validate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>/validate</code>)
                   </td>
                   <td class='break-word'><span>Validation path.
 </span></td>
@@ -416,8 +442,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>redirect</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
-	    -Whether to automatically redirect or not.
+            <span class='code bold'>redirect</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
+            = <code>false</code>)</code>
+	    Whether to automatically redirect or not.
 
           </div>
           
@@ -425,7 +452,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>renew</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+            <span class='code bold'>renew</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
+            = <code>false</code>)</code>
 	    Whether to renew CAS authentication by default or not.
 
           </div>
@@ -452,7 +480,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>slo</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+            <span class='code bold'>slo</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
+            = <code>false</code>)</code>
 	    single sign logout feature
 
           </div>
@@ -526,7 +555,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>allowedMethods</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+            <span class='code bold'>allowedMethods</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]?
+            = <code>[&#39;GET&#39;,&#39;POST&#39;,&#39;OPTIONS&#39;,&#39;PUT&#39;,&#39;DELETE&#39;]</code>)</code>
 	    List of allowed HTTP methods, separated by comas.
 
           </div>
@@ -554,7 +584,7 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>cookies</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+            <span class='code bold'>cookies</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
 	    Cookie configuration.
 
           </div>
@@ -573,42 +603,54 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.maxAge</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>
+                  <td class='break-word'><span class='code bold'>cookies.maxAge</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
+                  
+                    (default <code>14400000</code>)
                   </td>
                   <td class='break-word'><span>Time to live (TTL) for the cookie in ms.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.httpOnly</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+                  <td class='break-word'><span class='code bold'>cookies.httpOnly</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>true</code>)
                   </td>
                   <td class='break-word'><span><a href="https://www.owasp.org/index.php/HttpOnly">HttpOnly flag</a>
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>cookies.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>udes-node-orchestrator</code>)
                   </td>
                   <td class='break-word'><span>Cookie name.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>cookies.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>/</code>)
                   </td>
                   <td class='break-word'><span>Path to store cookie.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.secret</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>cookies.secret</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>S3CR3T</code>)
                   </td>
                   <td class='break-word'><span>Encryption key for cookie.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.secure</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+                  <td class='break-word'><span class='code bold'>cookies.secure</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>true</code>)
                   </td>
                   <td class='break-word'><span>Whether to encrypt cookie or not.
 </span></td>
@@ -621,10 +663,41 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>customHeaderPrefix</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-	    Prefix for retrieving data from custom headers.
+            <span class='code bold'>customHeaders</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>]?
+            = <code>[]</code>)</code>
+	    Retrieve data from custom headers.
 
           </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>customHeaders.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  </td>
+                  <td class='break-word'><span>The custom header to retrieve.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>customHeaders.property</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>??</code>
+                  </td>
+                  <td class='break-word'><span>The property name to give to data. Defaults to header if not defined.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
           
         </div>
       
@@ -690,7 +763,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>enableAuth</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+            <span class='code bold'>enableAuth</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
+            = <code>true</code>)</code>
 	    Whether to enable CAS authentication or not.
 
           </div>
@@ -699,7 +773,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>enableCORS</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>)</code>
+            <span class='code bold'>enableCORS</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
+            = <code>true</code>)</code>
 	    Whether to enable CORS or not.
 
           </div>
@@ -708,7 +783,7 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>log</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+            <span class='code bold'>log</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
 	    Logger configuration.
 
           </div>
@@ -727,28 +802,36 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>log.logLevel</span> <code class='quiet'>(<code>"trace"</code> | <code>"info"</code> | <code>"debug"</code> | <code>"warn"</code> | <code>"error"</code> | <code>"silent"</code>)</code>
+                  <td class='break-word'><span class='code bold'>log.logLevel</span> <code class='quiet'>(<code>"trace"</code> | <code>"info"</code> | <code>"debug"</code> | <code>"warn"</code> | <code>"error"</code> | <code>"silent"</code>)?</code>
+                  
+                    (default <code>error</code>)
                   </td>
                   <td class='break-word'><span>Log level.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>log.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  <td class='break-word'><span class='code bold'>log.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>udes-node-orchestrator</code>)
                   </td>
                   <td class='break-word'><span>Logger name.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>log.prettyPrint</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+                  <td class='break-word'><span class='code bold'>log.prettyPrint</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>true</code>)
                   </td>
                   <td class='break-word'><span>Whether to print pretty or raw.
 </span></td>
                 </tr>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>log.showCredentialsAsClearText</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+                  <td class='break-word'><span class='code bold'>log.showCredentialsAsClearText</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>false</code>)
                   </td>
                   <td class='break-word'><span>If true credentials will be displayed as clear text in logs.
 </span></td>
@@ -761,7 +844,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>nocasPwd</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+            <span class='code bold'>nocasPwd</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?
+            = <code>nocas</code>)</code>
 	    CAS default password when 
 <code>enableAuth</code>
  is false.
@@ -772,7 +856,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>nocasUser</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+            <span class='code bold'>nocasUser</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?
+            = <code>nocas</code>)</code>
 	    CAS default username when 
 <code>enableAuth</code>
  is false.

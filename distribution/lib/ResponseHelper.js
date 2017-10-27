@@ -291,6 +291,12 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                             };
 
 
+                            _this.config.customHeaders.forEach(function (_ref3) {
+                              var header = _ref3.header,
+                                  property = _ref3.property;
+                              return meta[property || header] = response.headers[header];
+                            });
+
                             if (response.statusCode >= 200 && response.statusCode < 300) {
                               try {
                                 data = JSON.parse(response.body);
@@ -311,7 +317,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                               reject(new _RequestError2.default(response.body || response, response.statusCode || 500));
                             }
 
-                          case 31:
+                          case 32:
                           case 'end':
                             return _context.stop();
                         }
@@ -339,7 +345,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
   };
 
   this.getFile = function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(options) {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(options) {
       var _options$headers2, headers, opt;
 
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
@@ -393,7 +399,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
     }));
 
     return function (_x8) {
-      return _ref3.apply(this, arguments);
+      return _ref4.apply(this, arguments);
     };
   }();
 

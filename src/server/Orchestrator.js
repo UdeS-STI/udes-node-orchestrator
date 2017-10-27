@@ -1,8 +1,10 @@
 import express from 'express'
 import http from 'http'
 import https from 'https'
+import _ from 'lodash'
 
 import { configureExpress, handleErrors, setListeners } from './serverConfig'
+import defaultConfig from './defaultConfig'
 import { notFound } from '../lib/notFound'
 import { Router as router } from '../dependencies/express'
 
@@ -30,7 +32,7 @@ export default class Orchestrator {
 
     this.env = process.env.NODE_ENV || 'development'
     this.app = express()
-    this.config = config
+    this.config = _.merge({}, defaultConfig, config)
 
     configureExpress(this.app, this.config, this.env)
     this.server = http.createServer(this.app)
