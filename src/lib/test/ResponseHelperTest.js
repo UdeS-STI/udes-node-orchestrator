@@ -22,7 +22,10 @@ const config = {
   cas: {
     targetService: 'targetService',
   },
-  customHeaderPrefix: 'foo',
+  customHeaders: [
+    { header: 'foo-count', property: 'count' },
+    { header: 'foo-messages', property: 'messages' },
+  ],
   log: {},
   apiUrl: 'https://exemple.com',
 }
@@ -105,11 +108,9 @@ describe('server/lib/ResponseHelper', () => {
         service: {
           body: 'My sexy body',
           meta: {
-            count: 0,
             debug: {
               'x-tempsMs': 0,
             },
-            messages: '',
             status: 200,
           },
         },
@@ -117,12 +118,10 @@ describe('server/lib/ResponseHelper', () => {
       const body = formatResponse(req, data)
       const responses = {
         service: {
-          count: 0,
           data: data.service,
           debug: {
             'x-tempsMs': 0,
           },
-          messages: '',
           status: 200,
         },
       }

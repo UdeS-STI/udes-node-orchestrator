@@ -203,7 +203,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
                 (0, _request.request)(opt, function () {
                   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(error, response) {
-                    var callDuration, customHeaderPrefix, meta, data;
+                    var callDuration, meta, data;
                     return regeneratorRuntime.wrap(function _callee$(_context) {
                       while (1) {
                         switch (_context.prev = _context.next) {
@@ -267,16 +267,20 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                             return _context.abrupt('return');
 
                           case 28:
-                            customHeaderPrefix = _this.config.customHeaderPrefix;
                             meta = {
-                              count: response.headers[customHeaderPrefix + '-count'],
                               debug: {
                                 'x-TempsMs': callDuration
                               },
-                              messages: response.headers[customHeaderPrefix + '-messages'] || undefined,
                               status: response.statusCode
                             };
 
+
+                            _this.config.customHeaders.forEach(function (_ref3) {
+                              var header = _ref3.header,
+                                  property = _ref3.property;
+
+                              meta[property || header] = response.headers[header];
+                            });
 
                             if (response.statusCode >= 200 && response.statusCode < 300) {
                               try {
@@ -326,7 +330,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
   };
 
   this.getFile = function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(options) {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(options) {
       var _options$headers2, headers, url, opt;
 
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
@@ -381,7 +385,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
     }));
 
     return function (_x8) {
-      return _ref3.apply(this, arguments);
+      return _ref4.apply(this, arguments);
     };
   }();
 
