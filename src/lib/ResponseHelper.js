@@ -1,6 +1,7 @@
 import url from 'url'
 
 import { getAttributes } from './auth'
+import { getRequestOptions } from './RequestOptions'
 import Utils from './Utils'
 import { request } from '../dependencies/request'
 import RequestError from './RequestError'
@@ -54,113 +55,6 @@ export const getRange = (req, query) => {
     start: +rangeInfo[2] || 0,
     end: +rangeInfo[3] || undefined,
   }
-}
-
-/**
- * Obtain proxy ticket for CAS authentication.
- * @private
- * @param {Object} req - HTTP request.
- * @param {Config} config - Orchestrator configuration.
- * @param {Boolean} renew=false - True to renew proxy ticket.
- * @returns {Promise} Promise object represents proxy ticket.
- */
-const getProxyTicket = (req, config, renew = false) => new Promise((resolve, reject) => {
-  const { targetService } = config.cas
-  req.getProxyTicket(targetService, { renew }, (err, pt) => {
-    if (err) {
-      return reject(err)
-    }
-
-    return resolve(pt)
-  })
-})
-
-/**
- * Obtain session id from API.
- * @private
- * @param {Object} req - HTTP request.
- * @param {Config} config - Orchestrator configuration.
- * @param {Boolean} [retry=true] - True to update PT and retry getting session id from API.
- * @returns {Promise} Promise object represents session id.
- */
-const getSessionId = (req, config, retry = true) => new Promise(async (resolve, reject) => {
-  const pt = await getProxyTicket(req, config, !retry)
-  const options = {
-    method: 'GET',
-    url: `${config.sessionUrl}?ticket=${pt}`,
-    headers: {
-      ...getHeaders(),
-      'x-proxy-ticket': pt,
-    },
-  }
-
-  request(options, async (error, response) => {
-    if (error || response.statusCode === 401) {
-      if (retry) {
-        try {
-          resolve(await getSessionId(false))
-        } catch (err) {
-          reject(err)
-        }
-      } else {
-        reject(new RequestError('Invalid proxy ticket', 401))
-      }
-
-      return
-    }
-
-    try {
-      const { sessionId } = JSON.parse(response.body)
-      req.session.apiSessionId = sessionId
-      resolve(sessionId)
-    } catch (err) {
-      reject(new RequestError('Cannot get session id', 500))
-    }
-  })
-})
-
-/**
- * Get options needed for API call.
- * @private
- * @async
- * @param {Object} req - HTTP request.
- * @param {Config} config - Orchestrator configuration.
- * @param {Object} options - Request options.
- * @param {Boolean} [auth=true] - True to add authentication information to request options.
- * @param {Boolean} [retry=true] - True to renew auth and retry request on 401.
- * @returns {Promise} Promise object represents request options.
- */
-const getRequestOptions = async (req, config, options, auth, retry) => {
-  const { body, headers = getHeaders(), url } = options
-  const opt = {
-    ...options,
-    body: body && typeof body === 'object' ? JSON.stringify(body) : body,
-    headers,
-    url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
-  }
-
-  // If API requires an authentication
-  if (auth) {
-    try {
-      // If API requires using a session id
-      if (config.sessionUrl) {
-        opt.headers['x-sessionid'] = req.session.apiSessionId || await getSessionId(req, config)
-      } else {
-        // Without session id, basic auth is used for authentication
-        const pt = await getProxyTicket(req, config, !retry)
-        // Testing removing PT from auth
-        // opt.url += `&user=req.session.cas.user&ticket=${pt}`
-        opt.auth = {
-          user: req.session.cas.user,
-          pass: pt,
-        }
-      }
-    } catch (err) {
-      req.log.error(err)
-    }
-  }
-
-  return opt
 }
 
 /**
@@ -218,7 +112,14 @@ export class ResponseHelper {
    * @returns {Promise} Promise object represents server response.
    */
   fetch = (options, auth = true, retry = true) => new Promise(async (resolve, reject) => {
-    const opt = await getRequestOptions(this.req, this.config, options, auth, retry)
+    let opt
+
+    try {
+      opt = await getRequestOptions(this.req, this.config, options, auth, retry)
+    } catch (error) {
+      reject(new RequestError(error, 500))
+    }
+
     logRequest(this.req, this.config, opt)
     const time = +(new Date())
 
@@ -290,11 +191,15 @@ export class ResponseHelper {
    */
   getFile = async (options, auth = true) => {
     const { headers = getHeaders() } = options
-    const opt = getRequestOptions(this.req, this.config, options, auth)
 
-    logRequest(this.req, this.config, opt)
-    Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
-    request.get(opt).pipe(this.res)
+    try {
+      const opt = await getRequestOptions(this.req, this.config, options, auth)
+      logRequest(this.req, this.config, opt)
+      Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
+      request.get(opt).pipe(this.res)
+    } catch (error) {
+      this.req.log.error(error)
+    }
   }
 
   /**
