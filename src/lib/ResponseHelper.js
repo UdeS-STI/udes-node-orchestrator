@@ -4,7 +4,6 @@ import { getAttributes } from './auth'
 import Utils from './Utils'
 import { request } from '../dependencies/request'
 import RequestError from './RequestError'
-import BasicAuthProxyTicketPlugin from './AuthPlugin/BasicAuthProxyTicketPlugin'
 
 const { getHeaders } = Utils
 
@@ -130,12 +129,16 @@ export class ResponseHelper {
    * @returns {Promise} Promise object represents server response.
    */
   fetch = (options, auth = true, retry = true) => new Promise(async (resolve, reject) => {
-    let opt = options
-    const authPlugin = new BasicAuthProxyTicketPlugin()
+    let opt = formatRequestOptions(options, this.config.apiUrl)
+    const authPattern = this.config.authPatterns.find(({ path }) => opt.url.match(new RegExp(path)))
 
-    try {
-      opt = await authPlugin.authenticate(this.req.session, formatRequestOptions(options, this.config.apiUrl))
-    } catch (error) {}
+    if (authPattern) {
+      try {
+        // eslint-disable-next-line new-cap
+        const authPlugin = new authPattern.plugin()
+        opt = await authPlugin.authenticate(this.req.session, opt)
+      } catch (error) {}
+    }
 
     logRequest(this.req, this.config, opt)
     const time = +(new Date())

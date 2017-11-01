@@ -8,9 +8,6 @@ export default class AuthPluginInterface {
     }
 
     const authFn = this.authenticate
-    this.authenticate = async (session, options, retry = true) => {
-      const opt = await authFn(session, options, retry)
-      return opt
-    }
+    this.authenticate = (session, options, retry = true) => authFn(session, options, retry)
   }
 }
