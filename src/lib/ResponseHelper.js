@@ -1,12 +1,30 @@
 import url from 'url'
 
 import { getAttributes } from './auth'
-import { getRequestOptions } from './RequestOptions'
 import Utils from './Utils'
 import { request } from '../dependencies/request'
 import RequestError from './RequestError'
+import BasicAuthProxyTicketPlugin from './AuthPlugin/BasicAuthProxyTicketPlugin'
 
 const { getHeaders } = Utils
+
+/**
+ * Format options for API call.
+ * @private
+ * @async
+ * @param {Object} options - Request options.
+ * @param {String} apiUrl - The base url for the api.
+ * @returns {Promise} Promise object represents request options.
+ */
+const formatRequestOptions = (options, apiUrl) => {
+  const { body, headers = getHeaders(), url } = options
+  return {
+    ...options,
+    body: body && typeof body === 'object' ? JSON.stringify(body) : body,
+    headers,
+    url: /^.+:\/\//.test(url) ? url : `${apiUrl}${url}`,
+  }
+}
 
 /**
  * Standardize response format.
@@ -112,13 +130,12 @@ export class ResponseHelper {
    * @returns {Promise} Promise object represents server response.
    */
   fetch = (options, auth = true, retry = true) => new Promise(async (resolve, reject) => {
-    let opt
+    let opt = options
+    const authPlugin = new BasicAuthProxyTicketPlugin()
 
     try {
-      opt = await getRequestOptions(this.req, this.config, options, auth, retry)
-    } catch (error) {
-      reject(new RequestError(error, 500))
-    }
+      opt = await authPlugin.authenticate(this.req.session, formatRequestOptions(options, this.config.apiUrl))
+    } catch (error) {}
 
     logRequest(this.req, this.config, opt)
     const time = +(new Date())
@@ -135,11 +152,11 @@ export class ResponseHelper {
       if (response.statusCode === 401) {
         if (retry) {
           try {
-            this.req.log.warn('Authentication failed, requested new PT')
+            this.req.log.warn('Authentication failed, re-authenticating')
             resolve(await this.fetch(options, auth, false))
           } catch (err) {
             this.req.log.error(err, getLogHeader('error'))
-            reject(new RequestError(err, 500))
+            reject(new RequestError(err.message || err, error.statusCode || 500))
           }
         } else {
           this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
@@ -190,16 +207,11 @@ export class ResponseHelper {
    * @param {Boolean} [auth=true] - True to add authentication information to request options.
    */
   getFile = async (options, auth = true) => {
-    const { headers = getHeaders() } = options
+    const opt = formatRequestOptions(options, this.config.apiUrl)
 
-    try {
-      const opt = await getRequestOptions(this.req, this.config, options, auth)
-      logRequest(this.req, this.config, opt)
-      Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
-      request.get(opt).pipe(this.res)
-    } catch (error) {
-      this.req.log.error(error)
-    }
+    logRequest(this.req, this.config, opt)
+    Object.keys(opt.headers).forEach(key => this.res.set(key, opt.headers[key]))
+    request.get(opt).pipe(this.res)
   }
 
   /**
