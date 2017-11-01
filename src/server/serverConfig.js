@@ -106,6 +106,21 @@ export const configureExpress = (app, configuration, env) => {
   app.use(bodyParser.json({
     limit: '1mb',
   }))
+
+  app.use((req, res, next) => {
+    req.session.apiSessionUrl = configuration.sessionUrl
+    req.session.getProxyTicket = (renew = false) => new Promise((resolve, reject) => {
+      req.getProxyTicket(configuration.cas.targetService, { renew }, (err, pt) => {
+        if (err) {
+          return reject(err)
+        }
+
+        return resolve(pt)
+      })
+    })
+
+    next()
+  })
 }
 
 export const setListeners = (app, server, config) => {

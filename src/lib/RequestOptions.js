@@ -31,12 +31,9 @@ export const getRequestOptions = async (req, config, options, auth, retry) => {
         opt.headers['x-sessionid'] = req.session.apiSessionId || await getSessionId(req, config)
       } else {
         // Without session id, basic auth is used for authentication
-        const pt = await getProxyTicket(req, config, !retry)
-        // Testing removing PT from auth
-        // opt.url += `&user=req.session.cas.user&ticket=${pt}`
         opt.auth = {
           user: req.session.cas.user,
-          pass: pt,
+          pass: await getProxyTicket(req, config, !retry),
         }
       }
     } catch (err) {

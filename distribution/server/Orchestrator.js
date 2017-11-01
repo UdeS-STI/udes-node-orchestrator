@@ -107,17 +107,11 @@ var _initialiseProps = function _initialiseProps() {
     }
 
     _this.router = (0, _express3.Router)();
+
     routes.forEach(function (_ref) {
       var method = _ref.method,
           url = _ref.url,
           fn = _ref.fn;
-      return _this.router[method.toLowerCase()](url, fn);
-    });
-
-    routes.forEach(function (_ref2) {
-      var method = _ref2.method,
-          url = _ref2.url,
-          fn = _ref2.fn;
 
       _this.router[method.toLowerCase()](url, function (req, res) {
         fn(new _ResponseHelper.ResponseHelper(req, res, _this.config), req, res);

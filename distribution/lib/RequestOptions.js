@@ -35,7 +35,7 @@ var getHeaders = _Utils2.default.getHeaders;
 
 var getRequestOptions = exports.getRequestOptions = function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, config, options, auth, retry) {
-    var body, _options$headers, headers, url, opt, pt;
+    var body, _options$headers, headers, url, opt;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -51,7 +51,7 @@ var getRequestOptions = exports.getRequestOptions = function () {
             });
 
             if (!auth) {
-              _context.next = 22;
+              _context.next = 23;
               break;
             }
 
@@ -77,42 +77,40 @@ var getRequestOptions = exports.getRequestOptions = function () {
 
           case 10:
             opt.headers['x-sessionid'] = _context.t0;
-            _context.next = 17;
+            _context.next = 18;
             break;
 
           case 13:
-            _context.next = 15;
+            _context.t1 = req.session.cas.user;
+            _context.next = 16;
             return (0, _auth.getProxyTicket)(req, config, !retry);
 
-          case 15:
-            pt = _context.sent;
-
-            // Testing removing PT from auth
-            // opt.url += `&user=req.session.cas.user&ticket=${pt}`
+          case 16:
+            _context.t2 = _context.sent;
             opt.auth = {
-              user: req.session.cas.user,
-              pass: pt
+              user: _context.t1,
+              pass: _context.t2
             };
 
-          case 17:
-            _context.next = 22;
+          case 18:
+            _context.next = 23;
             break;
 
-          case 19:
-            _context.prev = 19;
-            _context.t1 = _context['catch'](3);
+          case 20:
+            _context.prev = 20;
+            _context.t3 = _context['catch'](3);
 
-            req.log.error(_context.t1);
-
-          case 22:
-            return _context.abrupt('return', opt);
+            req.log.error(_context.t3);
 
           case 23:
+            return _context.abrupt('return', opt);
+
+          case 24:
           case 'end':
             return _context.stop();
         }
       }
-    }, _callee, undefined, [[3, 19]]);
+    }, _callee, undefined, [[3, 20]]);
   }));
 
   return function getRequestOptions(_x, _x2, _x3, _x4, _x5) {
