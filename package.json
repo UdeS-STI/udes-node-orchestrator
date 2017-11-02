@@ -28,7 +28,7 @@
     "lodash": "4.17.4",
     "method-override": "2.3.10",
     "moment": "2.19.1",
-    "pino": "4.8.2",
+    "pino": "4.9.0",
     "request": "2.83.0",
     "udes-connect-cas": "1.0.2",
     "uuid": "3.1.0"
