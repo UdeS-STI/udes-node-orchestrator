@@ -135,8 +135,7 @@ export class ResponseHelper {
     if (authPattern) {
       try {
         // eslint-disable-next-line new-cap
-        const authPlugin = new authPattern.plugin()
-        opt = await authPlugin.authenticate(this.req.session, opt)
+        opt = await (new authPattern.plugin()).authenticate(this.req.session, opt)
       } catch (error) {}
     }
 
@@ -159,7 +158,7 @@ export class ResponseHelper {
             resolve(await this.fetch(options, auth, false))
           } catch (err) {
             this.req.log.error(err, getLogHeader('error'))
-            reject(new RequestError(err.message || err, error.statusCode || 500))
+            reject(new RequestError(err, 500))
           }
         } else {
           this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
