@@ -1,6 +1,7 @@
 UdeS Node Orchestrator
 ======================
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/UdeS-STI/udes-node-orchestrator.svg)](https://greenkeeper.io/)
 [![CircleCI](https://circleci.com/gh/UdeS-STI/udes-node-orchestrator/tree/master.svg?style=svg&circle-token=2bf1290ed52937519d0b7e67dccd4ad10a002a74)](https://circleci.com/gh/UdeS-STI/udes-node-orchestrator/tree/master)
 [![npm](https://img.shields.io/npm/v/udes-node-orchestrator.svg?style=flat-square)](https://www.npmjs.com/package/udes-node-orchestrator)
 ![Node](https://img.shields.io/badge/node-6.10.1-brightgreen.svg)
