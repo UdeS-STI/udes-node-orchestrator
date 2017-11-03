@@ -7,41 +7,6 @@ import RequestError from './RequestError'
 
 const { getHeaders } = Utils
 
-// class HttpOptions {
-//   constructor (options) {
-//     this.options = options
-//   }
-//
-//   appendAuthInfo () {
-//     const authPattern = this.config.authPatterns.find(({ path }) => opt.url.match(new RegExp(path)))
-//
-//     if (authPattern) {
-//       try {
-//         // eslint-disable-next-line new-cap
-//         opt = await (new authPattern.plugin()).authenticate(this.req.session, opt)
-//       } catch (error) {}
-//     }
-//   }
-// }
-
-/**
- * Format options for API call.
- * @private
- * @async
- * @param {Object} options - Request options.
- * @param {String} apiUrl - The base url for the api.
- * @returns {Promise} Promise object represents request options.
- */
-const formatRequestOptions = (options, apiUrl) => {
-  const { body, headers = getHeaders(), url } = options
-  return {
-    ...options,
-    body: body && typeof body === 'object' ? JSON.stringify(body) : body,
-    headers,
-    url: /^.+:\/\//.test(url) ? url : `${apiUrl}${url}`,
-  }
-}
-
 /**
  * Standardize response format.
  * @private
@@ -135,32 +100,92 @@ export class ResponseHelper {
   }
 
   /**
+   * Add auth information to HTTP request options based on auth method of the called URL.
+   * @private
+   * @param {Object} options - HTTP request options.
+   * @returns {Promise} Promise represents requests options with auth info.
+   */
+  appendAuthOptions = async (options) => {
+    const authPattern = this.config.authPatterns.find(({ path }) => options.url.match(new RegExp(path)))
+    // eslint-disable-next-line new-cap
+    return authPattern ? (new authPattern.plugin()).authenticate(this.req.session, options) : options
+  }
+
+  /**
+   * Format options for API call.
+   * @private
+   * @async
+   * @param {Object} options - Request options.
+   * @returns {Promise} Promise object represents request options.
+   */
+  formatRequestOptions = (options) => {
+    const { body, headers = getHeaders(), url } = options
+    return this.appendAuthOptions({
+      ...options,
+      body: body && typeof body === 'object' ? JSON.stringify(body) : body,
+      headers,
+      url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
+    })
+  }
+
+  /**
+   * Extract meta-data from response.
+   * @private
+   * @param {Object} response - HTTP response.
+   * @returns {Object} Response meta data
+   */
+  getResponseMetaData = (response) => {
+    const meta = {
+      debug: {
+        'x-TempsMs': this.callDuration,
+      },
+      status: response.statusCode,
+    }
+
+    this.config.customHeaders.forEach(({ header, property }) => {
+      meta[property || header] = response.headers[header]
+    })
+
+    return meta
+  }
+
+  /**
+   * Extract response data from response.
+   * @private
+   * @param {Object} response - HTTP response.
+   * @returns {Object} Response data.
+   */
+  getResponseData = (response) => {
+    const meta = this.getResponseMetaData(response)
+
+    try {
+      const data = JSON.parse(response.body)
+      return Array.isArray(data) ? { data, meta } : { ...data, meta }
+    } catch (err) {
+      return { data: response.body, meta }
+    }
+  }
+
+  /**
    * Get file from server and send it as response.
    * @param {Object} options - Request options.
    * @param {Object} options.body - Request body.
    * @param {('DELETE'|'GET'|'POST'|'PUT')} options.method - Request method.
    * @param {String} options.url - Request URL.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
-   * @param {Boolean} [auth=true] - True to add authentication information to request options.
    * @param {Boolean} [retry=true] - True to renew auth and retry request on 401.
    * @returns {Promise} Promise object represents server response.
    */
-  fetch = (options, auth = true, retry = true) => new Promise(async (resolve, reject) => {
-    let opt = formatRequestOptions(options, this.config.apiUrl)
-    const authPattern = this.config.authPatterns.find(({ path }) => opt.url.match(new RegExp(path)))
+  fetch = (options, retry = true) => new Promise(async (resolve, reject) => {
+    const requestOptions = await this.formatRequestOptions(options)
 
-    if (authPattern) {
-      try {
-        // eslint-disable-next-line new-cap
-        opt = await (new authPattern.plugin()).authenticate(this.req.session, opt)
-      } catch (error) {}
-    }
+    logRequest(this.req, this.config, requestOptions)
+    this.callTimestamp = +(new Date())
 
-    logRequest(this.req, this.config, opt)
-    const time = +(new Date())
-
-    request(opt, async (error, response) => {
-      const callDuration = +(new Date()) - time
+    request(requestOptions, async (error, response) => {
+      this.callDuration = +(new Date()) - this.callTimestamp
+      const isUnauthorized = () => response.statusCode === 401
+      const isStatusOk = () => response.statusCode >= 200 && response.statusCode < 300
 
       if (error) {
         this.req.log.error(error, getLogHeader('error'))
@@ -168,11 +193,15 @@ export class ResponseHelper {
         return
       }
 
-      if (response.statusCode === 401) {
+      if (isStatusOk()) {
+        const data = this.getResponseData(response)
+        this.req.log.debug(data, getLogHeader('response'))
+        resolve(data)
+      } else if (isUnauthorized()) {
         if (retry) {
           try {
             this.req.log.warn('Authentication failed, re-authenticating')
-            resolve(await this.fetch(options, auth, false))
+            resolve(await this.fetch(options, false))
           } catch (err) {
             this.req.log.error(err, getLogHeader('error'))
             reject(new RequestError(err, 500))
@@ -180,35 +209,6 @@ export class ResponseHelper {
         } else {
           this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
           reject(new RequestError('Unauthorized', 401))
-        }
-
-        return
-      }
-
-      const meta = {
-        debug: {
-          'x-TempsMs': callDuration,
-        },
-        status: response.statusCode,
-      }
-
-      this.config.customHeaders.forEach(({ header, property }) => {
-        meta[property || header] = response.headers[header]
-      })
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        try {
-          const data = JSON.parse(response.body)
-          this.req.log.debug(data, getLogHeader('response'))
-
-          if (Array.isArray(data)) {
-            resolve({ data, meta })
-          } else {
-            resolve({ ...data, meta })
-          }
-        } catch (err) {
-          this.req.log.debug(response.body, getLogHeader('response'))
-          resolve({ data: response.body, meta })
         }
       } else {
         this.req.log.error(response.body || response, getLogHeader('error'))
@@ -223,14 +223,13 @@ export class ResponseHelper {
    * @param {Object} options - Request options.
    * @param {String} options.url - URL to access the file.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
-   * @param {Boolean} [auth=true] - True to add authentication information to request options.
    */
-  getFile = async (options, auth = true) => {
-    const opt = formatRequestOptions(options, this.config.apiUrl)
+  getFile = async (options) => {
+    const requestOptions = await this.formatRequestOptions(options)
 
-    logRequest(this.req, this.config, opt)
-    Object.keys(opt.headers).forEach(key => this.res.set(key, opt.headers[key]))
-    request.get(opt).pipe(this.res)
+    logRequest(this.req, this.config, requestOptions)
+    Object.keys(requestOptions.headers).forEach(key => this.res.set(key, requestOptions.headers[key]))
+    request.get(requestOptions).pipe(this.res)
   }
 
   /**

@@ -30,14 +30,6 @@ const config = {
   sessionUrl: 'https://exemple.com/session',
 }
 
-const getOptions = () => ({
-  headers: {
-    Accept: 'application/json; charset=utf-8',
-    'Content-Type': 'application/json; charset=utf-8',
-  },
-  url: '/path',
-})
-
 describe('server/lib/ResponseHelper', () => {
   before(() => {
     sinon.spy(Auth, 'getAttributes')
@@ -94,7 +86,11 @@ describe('server/lib/ResponseHelper', () => {
 
     it('should match property list', () => {
       const responseHelper = new ResponseHelper(req, res, config)
-      const properties = ['fetch', 'getFile', 'getQueryParameters', 'getRequestParameters', 'handleError', 'handleResponse', 'req', 'res', 'config']
+      const properties = [
+        'appendAuthOptions', 'formatRequestOptions', 'getResponseMetaData', 'getResponseData',
+        'fetch', 'getFile', 'getQueryParameters', 'getRequestParameters', 'handleError',
+        'handleResponse', 'req', 'res', 'config',
+      ]
       expect(Object.keys(responseHelper)).to.be.deep.equal(properties)
     })
   })
@@ -262,19 +258,12 @@ describe('server/lib/ResponseHelper', () => {
       const pipe = sinon.spy()
       HTTP.request.get = sinon.spy(() => ({ pipe }))
 
-      await (new ResponseHelper(req, res, config)).getFile({})
+      const responseHelper = new ResponseHelper(req, res, config)
+      responseHelper.formatRequestOptions = () => ({ headers: {} })
+      await responseHelper.getFile({})
 
       expect(HTTP.request.get).to.be.called
       expect(pipe).to.be.calledWith(res)
-    })
-
-    it('should not call `request.get` if there is an error', async () => {
-      HTTP.request.get = sinon.spy(() => ({ pipe () {} }))
-      RequestOptions.getRequestOptions.callsFake(() => {
-        throw new Error('error')
-      })
-      await (new ResponseHelper(req, res, config)).getFile({})
-      expect(HTTP.request.get).not.to.be.called
     })
   })
 
@@ -284,7 +273,9 @@ describe('server/lib/ResponseHelper', () => {
       let error
 
       try {
-        await (new ResponseHelper(req, res, config)).fetch({})
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        await responseHelper.fetch({})
       } catch (err) {
         error = err
       }
@@ -303,7 +294,9 @@ describe('server/lib/ResponseHelper', () => {
       HTTP.request.callsFake((options, cb) => cb(null, response))
 
       try {
-        await (new ResponseHelper(req, res, config)).fetch({ url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {}    // eslint-disable-line
 
       expect(HTTP.request).to.be.called
@@ -322,7 +315,9 @@ describe('server/lib/ResponseHelper', () => {
       }))
 
       try {
-        response = await (new ResponseHelper(req, res, config)).fetch(req, { url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        response = await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {}    // eslint-disable-line
 
       expect(response).to.be.deep.equal({
@@ -351,7 +346,9 @@ describe('server/lib/ResponseHelper', () => {
       }))
 
       try {
-        response = await (new ResponseHelper(req, res, config)).fetch(req, { url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        response = await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {}    // eslint-disable-line
 
       expect(response).to.be.deep.equal({
@@ -372,7 +369,9 @@ describe('server/lib/ResponseHelper', () => {
       HTTP.request.callsFake((options, cb) => cb('error'))
 
       try {
-        await (new ResponseHelper(req, res, config)).fetch(req, { url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {
         error = err
       }
@@ -390,7 +389,9 @@ describe('server/lib/ResponseHelper', () => {
       HTTP.request.callsFake((options, cb) => cb(null, response))
 
       try {
-        await (new ResponseHelper(req, res, config)).fetch(req, { url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {
         error = err
       }
