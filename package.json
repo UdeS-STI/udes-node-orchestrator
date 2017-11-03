@@ -2,10 +2,10 @@
   "name": "udes-node-orchestrator",
   "version": "1.0.0",
   "description": "Orchestrator server. Handles routes and HTTP traffic.",
-  "main": "distribution/index.js",
+  "main": "src/index.js",
   "scripts": {
     "audit": "node_modules/.bin/nsp check",
-    "build": "babel ./src --out-dir distribution --ignore '**/*Test.js'",
+    "build": "babel ./src --out-dir dist --ignore '**/*Test.js'",
     "coverage": "NODE_ENV=test node_modules/.bin/nyc --require babel-core/register -x '**/config/**' -x '**/**Test.js' -x '**/dependencies/**' node_modules/.bin/mocha --opts ../mocha.opts \\ ./src/**/**Test.js",
     "documentation": "documentation build src/index.js -f html -o docs",
     "lint": "eslint ./src",
