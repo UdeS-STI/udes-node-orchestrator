@@ -89,6 +89,17 @@ The logging system uses [Pino](https://www.npmjs.com/package/pino). Log levels u
 # Example
 A minimalist usage example is available in `/boilerplate`
 
+# Release
+These steps consider that version bump has already been done.
+```bash
+git tag vX.X.X
+git push origin --tags
+npm run build
+# Change `main` field in `package.json` from `src/index.js` to `dist/index.js`
+npm publish
+# Revert change to `main` field in `package.json`
+```
+
 # Contributing
 You must use the following guides:
 * [UdeS JavaScript Style Guide](https://www.npmjs.com/package/eslint-config-udes)
