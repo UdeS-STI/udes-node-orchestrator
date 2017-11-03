@@ -8,7 +8,6 @@ import sinonChai from 'sinon-chai'
 import * as Auth from '../auth'
 import * as HTTP from '../../dependencies/request'
 import { formatResponse, getRange, ResponseHelper } from '../ResponseHelper'
-import * as RequestOptions from '../RequestOptions'
 
 chai.use(sinonChai)
 
@@ -43,13 +42,11 @@ describe('server/lib/ResponseHelper', () => {
   before(() => {
     sinon.spy(Auth, 'getAttributes')
     sinon.stub(HTTP, 'request')
-    sinon.stub(RequestOptions, 'getRequestOptions')
   })
 
   beforeEach(() => {
     Auth.getAttributes.reset()
     HTTP.request.reset()
-    RequestOptions.getRequestOptions.reset()
     res.send.reset()
     res.set.reset()
     res.status.reset()
@@ -72,14 +69,11 @@ describe('server/lib/ResponseHelper', () => {
       },
       url: 'http://exemple.com',
     }
-
-    RequestOptions.getRequestOptions.returns(getOptions())
   })
 
   after(() => {
     Auth.getAttributes.restore()
     HTTP.request.restore()
-    RequestOptions.getRequestOptions.restore()
   })
 
   describe('constructor', () => {

@@ -7,6 +7,23 @@ import RequestError from './RequestError'
 
 const { getHeaders } = Utils
 
+// class HttpOptions {
+//   constructor (options) {
+//     this.options = options
+//   }
+//
+//   appendAuthInfo () {
+//     const authPattern = this.config.authPatterns.find(({ path }) => opt.url.match(new RegExp(path)))
+//
+//     if (authPattern) {
+//       try {
+//         // eslint-disable-next-line new-cap
+//         opt = await (new authPattern.plugin()).authenticate(this.req.session, opt)
+//       } catch (error) {}
+//     }
+//   }
+// }
+
 /**
  * Format options for API call.
  * @private
