@@ -107,8 +107,14 @@ export class ResponseHelper {
    */
   appendAuthOptions = async (options) => {
     const authPattern = this.config.authPatterns.find(({ path }) => options.url.match(new RegExp(path)))
-    // eslint-disable-next-line new-cap
-    return authPattern ? (new authPattern.plugin()).authenticate(this.req.session, options) : options
+
+    if (authPattern) {
+      this.req.session.targetService = authPattern.targetService
+      // eslint-disable-next-line new-cap
+      return (new authPattern.plugin()).authenticate(this.req.session, options)
+    }
+
+    return options
   }
 
   /**

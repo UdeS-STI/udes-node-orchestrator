@@ -247,6 +247,52 @@
       
         <div class='space-bottom0'>
           <div>
+            <span class='code bold'>authPatterns</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>])</code>
+	    Set authentication plugin to be used with specific routes.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>authPatterns.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Regex string to match 1 or more routes.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>authPatterns.plugin</span> <code class='quiet'>Class</code>
+                  </td>
+                  <td class='break-word'><span>Auth plugin, must extend AuthHandler interface from udes-auth-plugins.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>authPatterns.targetService</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  </td>
+                  <td class='break-word'><span>Custom target service. If none specified the target service in CAS config will be used.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
             <span class='code bold'>cas</span> <code class='quiet'>(<a href="#casconfig">CasConfig</a>)</code>
 	    <a href="https://github.com/UdeS-STI/connect-cas">CAS configuration</a>
 .

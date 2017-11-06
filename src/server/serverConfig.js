@@ -108,9 +108,11 @@ export const configureExpress = (app, configuration, env) => {
   }))
 
   app.use((req, res, next) => {
+    const defaultTargetService = configuration.cas.targetService
+
     req.session.apiSessionUrl = configuration.sessionUrl
-    req.session.getProxyTicket = (renew = false) => new Promise((resolve, reject) => {
-      req.getProxyTicket(configuration.cas.targetService, { renew }, (err, pt) => {
+    req.session.getProxyTicket = (targetService = defaultTargetService, renew = false) => new Promise((resolve, reject) => {
+      req.getProxyTicket(targetService, { renew }, (err, pt) => {
         if (err) {
           return reject(err)
         }
