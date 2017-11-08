@@ -109,6 +109,8 @@ export class ResponseHelper {
     const authPattern = this.config.authPatterns.find(({ path }) => options.url.match(new RegExp(path)))
 
     if (authPattern) {
+      this.req.session.apiSessionUrl = authPattern.sessionUrl
+      this.req.session.path = authPattern.path
       this.req.session.targetService = authPattern.targetService
       // eslint-disable-next-line new-cap
       return (new authPattern.plugin()).authenticate(this.req.session, options)
