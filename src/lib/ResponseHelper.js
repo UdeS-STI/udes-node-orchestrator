@@ -183,10 +183,13 @@ export class ResponseHelper {
       }
 
       const meta = {
-        debug: {
-          'x-TempsMs': callDuration,
-        },
         status: response.statusCode,
+      }
+
+      if (this.config.debug) {
+        meta.debug = {
+          'x-TempsMs': callDuration,
+        }
       }
 
       this.config.customHeaders.forEach(({ header, property }) => {

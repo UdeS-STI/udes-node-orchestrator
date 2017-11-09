@@ -28,6 +28,7 @@ const config = {
   ],
   log: {},
   apiUrl: 'https://exemple.com',
+  debug: true,
 }
 
 describe('server/lib/ResponseHelper', () => {

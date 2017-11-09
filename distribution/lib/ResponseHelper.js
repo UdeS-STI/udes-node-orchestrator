@@ -267,12 +267,15 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
                           case 28:
                             meta = {
-                              debug: {
-                                'x-TempsMs': callDuration
-                              },
                               status: response.statusCode
                             };
 
+
+                            if (_this.config.debug) {
+                              meta.debug = {
+                                'x-TempsMs': callDuration
+                              };
+                            }
 
                             _this.config.customHeaders.forEach(function (_ref3) {
                               var header = _ref3.header,
@@ -301,7 +304,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                               reject(new _RequestError2.default(response.body || response, response.statusCode || 500));
                             }
 
-                          case 31:
+                          case 32:
                           case 'end':
                             return _context.stop();
                         }
