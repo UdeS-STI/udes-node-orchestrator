@@ -1,6 +1,5 @@
 import url from 'url'
 
-import { getAttributes } from './auth'
 import Utils from './Utils'
 import { request } from '../dependencies/request'
 import RequestError from './RequestError'

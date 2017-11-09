@@ -13,8 +13,6 @@ var _url = require('url');
 
 var _url2 = _interopRequireDefault(_url);
 
-var _auth = require('./auth');
-
 var _Utils = require('./Utils');
 
 var _Utils2 = _interopRequireDefault(_Utils);
