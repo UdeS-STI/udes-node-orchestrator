@@ -45,20 +45,21 @@ var getHeaders = _Utils2.default.getHeaders;
 
 var formatResponse = exports.formatResponse = function formatResponse(req) {
   var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return {
-    auth: (0, _auth.getAttributes)(req),
-    isAuth: true,
-    responses: Object.keys(data).length ? Object.keys(data).reduce(function (acc, cur) {
-      var currentData = data[cur];
-      var meta = currentData.meta;
 
-      delete currentData.meta;
+  if (!Object.keys(data).length) {
+    return {};
+  }
 
-      return _extends({}, acc, _defineProperty({}, cur, _extends({}, meta, {
-        data: currentData.data || currentData
-      })));
-    }, {}) : {}
-  };
+  return Object.keys(data).reduce(function (acc, cur) {
+    var currentData = data[cur];
+    var meta = currentData.meta;
+
+    delete currentData.meta;
+
+    return _extends({}, acc, _defineProperty({}, cur, _extends({}, meta, {
+      data: currentData.data || currentData
+    })));
+  }, {});
 };
 
 /**
