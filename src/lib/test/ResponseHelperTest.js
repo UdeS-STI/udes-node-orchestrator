@@ -28,6 +28,7 @@ const config = {
   ],
   log: {},
   apiUrl: 'https://exemple.com',
+  debug: true,
 }
 
 describe('server/lib/ResponseHelper', () => {
@@ -93,16 +94,6 @@ describe('server/lib/ResponseHelper', () => {
   })
 
   describe('formatResponse', () => {
-    it('should return an object with proper keys', () => {
-      const data = formatResponse(req, {})
-      expect(data).to.have.all.keys('auth', 'isAuth', 'responses')
-    })
-
-    it('should call `auth.getAttributes` with the given request object', () => {
-      formatResponse(req, {})
-      expect(Auth.getAttributes).to.be.calledWith(req)
-    })
-
     it('should return correctly formatted response', () => {
       const data = {
         service: {
@@ -125,7 +116,7 @@ describe('server/lib/ResponseHelper', () => {
           status: 200,
         },
       }
-      expect(body.responses).to.be.deep.equal(responses)
+      expect(body).to.be.deep.equal(responses)
     })
   })
 

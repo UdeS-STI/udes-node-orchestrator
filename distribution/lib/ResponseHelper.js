@@ -13,8 +13,6 @@ var _url = require('url');
 
 var _url2 = _interopRequireDefault(_url);
 
-var _auth = require('./auth');
-
 var _Utils = require('./Utils');
 
 var _Utils2 = _interopRequireDefault(_Utils);
@@ -45,20 +43,21 @@ var getHeaders = _Utils2.default.getHeaders;
 
 var formatResponse = exports.formatResponse = function formatResponse(req) {
   var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return {
-    auth: (0, _auth.getAttributes)(req),
-    isAuth: true,
-    responses: Object.keys(data).length ? Object.keys(data).reduce(function (acc, cur) {
-      var currentData = data[cur];
-      var meta = currentData.meta;
 
-      delete currentData.meta;
+  if (!Object.keys(data).length) {
+    return {};
+  }
 
-      return _extends({}, acc, _defineProperty({}, cur, _extends({}, meta, {
-        data: currentData.data || currentData
-      })));
-    }, {}) : {}
-  };
+  return Object.keys(data).reduce(function (acc, cur) {
+    var currentData = data[cur];
+    var meta = currentData.meta;
+
+    delete currentData.meta;
+
+    return _extends({}, acc, _defineProperty({}, cur, _extends({}, meta, {
+      data: currentData.data || currentData
+    })));
+  }, {});
 };
 
 /**
@@ -268,12 +267,15 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
 
                           case 28:
                             meta = {
-                              debug: {
-                                'x-TempsMs': callDuration
-                              },
                               status: response.statusCode
                             };
 
+
+                            if (_this.config.debug) {
+                              meta.debug = {
+                                'x-TempsMs': callDuration
+                              };
+                            }
 
                             _this.config.customHeaders.forEach(function (_ref3) {
                               var header = _ref3.header,
@@ -302,7 +304,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                               reject(new _RequestError2.default(response.body || response, response.statusCode || 500));
                             }
 
-                          case 31:
+                          case 32:
                           case 'end':
                             return _context.stop();
                         }
