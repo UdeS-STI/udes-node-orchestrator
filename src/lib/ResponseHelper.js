@@ -1,6 +1,5 @@
 import url from 'url'
 
-import { getAttributes } from './auth'
 import Utils from './Utils'
 import { request } from '../dependencies/request'
 import RequestError from './RequestError'
@@ -14,10 +13,12 @@ const { getHeaders } = Utils
  * @param {Object} data={} - Response data.
  * @returns {Object} Formatted response data.
  */
-export const formatResponse = (req, data = {}) => ({
-  auth: getAttributes(req),
-  isAuth: true,
-  responses: Object.keys(data).length ? Object.keys(data).reduce((acc, cur) => {
+export const formatResponse = (req, data = {}) => {
+  if (!Object.keys(data).length) {
+    return {}
+  }
+
+  return Object.keys(data).reduce((acc, cur) => {
     const currentData = data[cur]
     const { meta } = currentData
     delete currentData.meta
@@ -29,8 +30,8 @@ export const formatResponse = (req, data = {}) => ({
         data: currentData.data || currentData,
       },
     }
-  }, {}) : {},
-})
+  }, {})
+}
 
 /**
  * Get range information from either request headers or query parameters.

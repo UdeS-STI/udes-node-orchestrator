@@ -52,6 +52,7 @@
  * @param {[String]} database.couchbaseCluster - List of Couchbase cluster URLs.
  * @param {String} database.sessionBucketName - Session bucket name.
  * @param {String} database.sessionBucketPwd - Session bucket password.
+ * @param {Boolean} [debug=false] - True to return debug data.
  * @param {Boolean?} [enableAuth=true] - Whether to enable CAS authentication or not.
  * @param {Boolean?} [enableCORS=true] - Whether to enable CORS or not.
  * @param {Object?} log - Logger configuration.
