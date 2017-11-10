@@ -243,9 +243,13 @@ export class ResponseHelper {
    * @param {Object|String} error - Error encountered.
    * @param {Number} [error.statusCode=500] - Error status code (3xx-5xx).
    * @param {String} [error.message=error] - Error message. Value of error if it's a string.
-   * @returns {null} Nothing.
    */
-  handleError = error => this.res.status(error.statusCode || 500).send(error.message || error)
+  handleError = (error) => {
+    const ErrorFormatter = this.config.errorFormatter
+    const errorData = ErrorFormatter ? (new ErrorFormatter()).format(error) : error.message || error
+
+    this.res.status(error.statusCode || 500).send(errorData)
+  }
 
   /**
    * Set response headers, status code and send response data.
@@ -291,9 +295,10 @@ export class ResponseHelper {
    * @returns {Object} Formatted response data.
    */
   formatResponse = (data = {}) => {
-    if (this.config.responseFormatter) {
-      // eslint-disable-next-line new-cap
-      return (new this.config.responseFormatter()).format(data)
+    const ResponseFormatter = this.config.responseFormatter
+
+    if (ResponseFormatter) {
+      return (new ResponseFormatter()).format(data)
     }
 
     return data

@@ -374,7 +374,10 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
   };
 
   this.handleError = function (error) {
-    return _this.res.status(error.statusCode || 500).send(error.message || error);
+    var ErrorFormatter = _this.config.errorFormatter;
+    var errorData = ErrorFormatter ? new ErrorFormatter().format(error) : error.message || error;
+
+    _this.res.status(error.statusCode || 500).send(errorData);
   };
 
   this.handleResponse = function (data) {
@@ -421,9 +424,10 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
   this.formatResponse = function () {
     var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    if (_this.config.responseFormatter) {
-      // eslint-disable-next-line new-cap
-      return new _this.config.responseFormatter().format(data);
+    var ResponseFormatter = _this.config.responseFormatter;
+
+    if (ResponseFormatter) {
+      return new ResponseFormatter().format(data);
     }
 
     return data;
@@ -472,7 +476,6 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
  * @param {Object|String} error - Error encountered.
  * @param {Number} [error.statusCode=500] - Error status code (3xx-5xx).
  * @param {String} [error.message=error] - Error message. Value of error if it's a string.
- * @returns {null} Nothing.
  */
 
 

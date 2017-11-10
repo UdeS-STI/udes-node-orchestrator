@@ -50,6 +50,7 @@
  * @param {Boolean} [debug=false] - True to return debug data.
  * @param {Boolean?} [enableAuth=true] - Whether to enable CAS authentication or not.
  * @param {Boolean?} [enableCORS=true] - Whether to enable CORS or not.
+ * @param {Class?} [errorFormatter] - Class extending the ResponseFormatter interface. Format data on error.
  * @param {Object?} log - Logger configuration.
  * @param {('trace'|'info'|'debug'|'warn'|'error'|'silent')?} [log.logLevel=error] - Log level.
  * @param {String?} [log.name=udes-node-orchestrator] - Logger name.
