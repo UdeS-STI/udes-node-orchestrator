@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ResponseHelper = exports.getRange = exports.formatResponse = undefined;
+exports.ResponseHelper = exports.getRange = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -25,40 +25,13 @@ var _RequestError2 = _interopRequireDefault(_RequestError);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var getHeaders = _Utils2.default.getHeaders;
-
-/**
- * Standardize response format.
- * @private
- * @param {Object} req - HTTP request.
- * @param {Object} data={} - Response data.
- * @returns {Object} Formatted response data.
- */
-
-var formatResponse = exports.formatResponse = function formatResponse(req) {
-  var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-  if (!Object.keys(data).length) {
-    return {};
-  }
-
-  return Object.keys(data).reduce(function (acc, cur) {
-    var currentData = data[cur];
-    var meta = currentData.meta;
-
-    delete currentData.meta;
-
-    return _extends({}, acc, _defineProperty({}, cur, _extends({}, meta, {
-      data: currentData.data || currentData
-    })));
-  }, {});
-};
 
 /**
  * Get range information from either request headers or query parameters.
@@ -67,6 +40,7 @@ var formatResponse = exports.formatResponse = function formatResponse(req) {
  * @param {Object} query - Query string data.
  * @returns {Object} Range information or null if none.
  */
+
 var getRange = exports.getRange = function getRange(req, query) {
   var headers = req.headers;
 
@@ -312,7 +286,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
                     }, _callee, _this, [[7, 19]]);
                   }));
 
-                  return function (_x6, _x7) {
+                  return function (_x5, _x6) {
                     return _ref2.apply(this, arguments);
                   };
                 }());
@@ -325,7 +299,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
         }, _callee2, _this, [[3, 9]]);
       }));
 
-      return function (_x4, _x5) {
+      return function (_x3, _x4) {
         return _ref.apply(this, arguments);
       };
     }());
@@ -386,7 +360,7 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
       }, _callee3, _this, [[3, 9]]);
     }));
 
-    return function (_x8) {
+    return function (_x7) {
       return _ref4.apply(this, arguments);
     };
   }();
@@ -435,13 +409,24 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
       if (end - start !== size - 1) {
         _this.res.set('Content-Range', unit + ' ' + start + '-' + end + '/' + size);
         var partialData = _defineProperty({}, key, values.splice(start, end));
-        var responseData = formatData ? formatResponse(_this.req, partialData) : partialData;
+        var responseData = formatData ? _this.formatResponse(partialData) : partialData;
         _this.res.status(206).send(responseData);
         return;
       }
     }
 
-    _this.res.status(200).send(formatData ? formatResponse(_this.req, data) : data);
+    _this.res.status(200).send(formatData ? _this.formatResponse(data) : data);
+  };
+
+  this.formatResponse = function () {
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    if (_this.config.responseFormatter) {
+      // eslint-disable-next-line new-cap
+      return new _this.config.responseFormatter().format(data);
+    }
+
+    return data;
   };
 
   this.req = req;
@@ -497,5 +482,13 @@ var ResponseHelper = exports.ResponseHelper = function ResponseHelper(req, res, 
  * @param {Object} [options={}] - Additional options for response.
  * @param {Object} [options.headers={}] - Response headers.
  * @param {Boolean} [options.formatData=true] - True to standardise response format.
+ */
+
+
+/**
+ * Standardize response format.
+ * @private
+ * @param {Object} data={} - Response data.
+ * @returns {Object} Formatted response data.
  */
 ;

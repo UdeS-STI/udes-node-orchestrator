@@ -57,5 +57,6 @@
  * @param {Boolean?} [log.showCredentialsAsClearText=false] - If true credentials will be displayed as clear text in logs.
  * @param {String?} [nocasPwd=nocas] - CAS default password when `enableAuth` is false.
  * @param {String?} [nocasUser=nocas] - CAS default username when `enableAuth` is false.
+ * @param {Class?} [responseFormatter] - Class extending the ResponseFormatter interface. Format response data.
  * @param {String} socket - Relative path to socket.
  */

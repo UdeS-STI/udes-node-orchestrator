@@ -7,33 +7,6 @@ import RequestError from './RequestError'
 const { getHeaders } = Utils
 
 /**
- * Standardize response format.
- * @private
- * @param {Object} req - HTTP request.
- * @param {Object} data={} - Response data.
- * @returns {Object} Formatted response data.
- */
-export const formatResponse = (req, data = {}) => {
-  if (!Object.keys(data).length) {
-    return {}
-  }
-
-  return Object.keys(data).reduce((acc, cur) => {
-    const currentData = data[cur]
-    const { meta } = currentData
-    delete currentData.meta
-
-    return {
-      ...acc,
-      [cur]: {
-        ...meta,
-        data: currentData.data || currentData,
-      },
-    }
-  }, {})
-}
-
-/**
  * Get range information from either request headers or query parameters.
  * @private
  * @param {Object} req - HTTP request.
@@ -302,12 +275,27 @@ export class ResponseHelper {
       if (end - start !== size - 1) {
         this.res.set('Content-Range', `${unit} ${start}-${end}/${size}`)
         const partialData = { [key]: values.splice(start, end) }
-        const responseData = formatData ? formatResponse(this.req, partialData) : partialData
+        const responseData = formatData ? this.formatResponse(partialData) : partialData
         this.res.status(206).send(responseData)
         return
       }
     }
 
-    this.res.status(200).send(formatData ? formatResponse(this.req, data) : data)
+    this.res.status(200).send(formatData ? this.formatResponse(data) : data)
+  }
+
+  /**
+   * Standardize response format.
+   * @private
+   * @param {Object} data={} - Response data.
+   * @returns {Object} Formatted response data.
+   */
+  formatResponse = (data = {}) => {
+    if (this.config.responseFormatter) {
+      // eslint-disable-next-line new-cap
+      return (new this.config.responseFormatter()).format(data)
+    }
+
+    return data
   }
 }
