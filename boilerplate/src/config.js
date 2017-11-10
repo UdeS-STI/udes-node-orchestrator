@@ -1,3 +1,5 @@
+import DataFormatter from './DataFormatter'
+
 export default {
   apiUrl: 'https://jsonplaceholder.typicode.com',
   customHeaderPrefix: 'foo',
@@ -14,4 +16,5 @@ export default {
     targetService: 'services://foo.service.ca',
     serverPath: 'https://exemple.ca',
   },
+  responseFormatter: DataFormatter,
 }
