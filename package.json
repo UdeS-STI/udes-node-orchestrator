@@ -27,7 +27,7 @@
     "express-session": "1.15.6",
     "lodash": "4.17.4",
     "method-override": "2.3.10",
-    "moment": "2.19.1",
+    "moment": "2.19.2",
     "pino": "4.8.2",
     "request": "2.83.0",
     "udes-connect-cas": "1.0.2",
