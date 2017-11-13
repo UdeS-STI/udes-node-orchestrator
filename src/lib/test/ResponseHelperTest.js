@@ -5,9 +5,8 @@ import chai, { expect } from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 
-import * as Auth from '../auth'
 import * as HTTP from '../../dependencies/request'
-import { formatResponse, getRange, ResponseHelper } from '../ResponseHelper'
+import { getRange, ResponseHelper } from '../ResponseHelper'
 
 chai.use(sinonChai)
 
@@ -33,12 +32,10 @@ const config = {
 
 describe('server/lib/ResponseHelper', () => {
   before(() => {
-    sinon.spy(Auth, 'getAttributes')
     sinon.stub(HTTP, 'request')
   })
 
   beforeEach(() => {
-    Auth.getAttributes.reset()
     HTTP.request.reset()
     res.send.reset()
     res.set.reset()
@@ -65,7 +62,6 @@ describe('server/lib/ResponseHelper', () => {
   })
 
   after(() => {
-    Auth.getAttributes.restore()
     HTTP.request.restore()
   })
 
@@ -90,36 +86,10 @@ describe('server/lib/ResponseHelper', () => {
       const properties = [
         'appendAuthOptions', 'formatRequestOptions', 'getResponseMetaData', 'getResponseData',
         'fetch', 'getFile', 'getQueryParameters', 'getRequestParameters', 'handleError',
-        'handleResponse', 'req', 'res', 'config',
+        'handleResponse', 'formatResponse', 'req', 'res', 'config',
       ]
-      expect(Object.keys(responseHelper)).to.be.deep.equal(properties)
-    })
-  })
 
-  describe('formatResponse', () => {
-    it('should return correctly formatted response', () => {
-      const data = {
-        service: {
-          body: 'My sexy body',
-          meta: {
-            debug: {
-              'x-tempsMs': 0,
-            },
-            status: 200,
-          },
-        },
-      }
-      const body = formatResponse(req, data)
-      const responses = {
-        service: {
-          data: data.service,
-          debug: {
-            'x-tempsMs': 0,
-          },
-          status: 200,
-        },
-      }
-      expect(body).to.be.deep.equal(responses)
+      expect(Object.keys(responseHelper)).to.be.deep.equal(properties)
     })
   })
 
@@ -175,7 +145,7 @@ describe('server/lib/ResponseHelper', () => {
       const responseHelper = new ResponseHelper(req, res, config)
       responseHelper.handleResponse(data)
       expect(res.status).to.be.calledWith(200)
-      expect(res.send).to.be.calledWith(formatResponse(req, data))
+      expect(res.send).to.be.calledWith(data)
     })
 
     it('should call `res.send` with unformatted response data and a 200 status code when the formatData flag is false', () => {
@@ -192,7 +162,7 @@ describe('server/lib/ResponseHelper', () => {
       const responseHelper = new ResponseHelper(req, res, config)
       responseHelper.handleResponse(data)
       expect(res.status).to.be.calledWith(206)
-      expect(res.send).to.be.calledWith(formatResponse(req, { data: ['世界', 'フ'] }))
+      expect(res.send).to.be.calledWith({ data: ['世界', 'フ'] })
     })
 
     it('should call `res.send` with partial unformatted response data and a 206 status code when a valid range is sent and the formatData flag is false', () => {
@@ -218,7 +188,7 @@ describe('server/lib/ResponseHelper', () => {
       const responseHelper = new ResponseHelper(req, res, config)
       responseHelper.handleResponse(data)
       expect(res.status).to.be.calledWith(200)
-      expect(res.send).to.be.calledWith(formatResponse(req, data))
+      expect(res.send).to.be.calledWith(data)
     })
   })
 

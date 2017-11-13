@@ -83,6 +83,16 @@
               
                 
                 <li><a
+                  href='#responseformatter'
+                  class="">
+                  ResponseFormatter
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
                   href='#responsehelper'
                   class=" toggle-sibling">
                   ResponseHelper
@@ -529,6 +539,15 @@
       
         <div class='space-bottom0'>
           <div>
+            <span class='code bold'>errorFormatter</span> <code class='quiet'>(Class??)</code>
+	    Class extending the ResponseFormatter interface. Format data on error.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
             <span class='code bold'>log</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
 	    Logger configuration.
 
@@ -607,6 +626,15 @@
 	    CAS default username when 
 <code>enableAuth</code>
  is false.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>responseFormatter</span> <code class='quiet'>(Class??)</code>
+	    Class extending the ResponseFormatter interface. Format response data.
 
           </div>
           
@@ -1283,6 +1311,53 @@
   
   <div class='clearfix'>
     
+    <h3 class='fl m0' id='responseformatter'>
+      ResponseFormatter
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Interface for formatting HTTP response data.</p>
+
+
+  <div class='pre p1 fill-light mt0'>new ResponseFormatter()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
     <h3 class='fl m0' id='responsehelper'>
       ResponseHelper
     </h3>
@@ -1771,14 +1846,6 @@
 
   
 
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>null</code>:
-        Nothing.
-
-      
-    
   
 
   

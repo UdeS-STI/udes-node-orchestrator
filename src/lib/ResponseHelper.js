@@ -7,33 +7,6 @@ import RequestError from './RequestError'
 const { getHeaders } = Utils
 
 /**
- * Standardize response format.
- * @private
- * @param {Object} req - HTTP request.
- * @param {Object} data={} - Response data.
- * @returns {Object} Formatted response data.
- */
-export const formatResponse = (req, data = {}) => {
-  if (!Object.keys(data).length) {
-    return {}
-  }
-
-  return Object.keys(data).reduce((acc, cur) => {
-    const currentData = data[cur]
-    const { meta } = currentData
-    delete currentData.meta
-
-    return {
-      ...acc,
-      [cur]: {
-        ...meta,
-        data: currentData.data || currentData,
-      },
-    }
-  }, {})
-}
-
-/**
  * Get range information from either request headers or query parameters.
  * @private
  * @param {Object} req - HTTP request.
@@ -261,9 +234,13 @@ export class ResponseHelper {
    * @param {Object|String} error - Error encountered.
    * @param {Number} [error.statusCode=500] - Error status code (3xx-5xx).
    * @param {String} [error.message=error] - Error message. Value of error if it's a string.
-   * @returns {null} Nothing.
    */
-  handleError = error => this.res.status(error.statusCode || 500).send(error.message || error)
+  handleError = (error) => {
+    const ErrorFormatter = this.config.errorFormatter
+    const errorData = ErrorFormatter ? (new ErrorFormatter()).format(error) : error.message || error
+
+    this.res.status(error.statusCode || 500).send(errorData)
+  }
 
   /**
    * Set response headers, status code and send response data.
@@ -293,12 +270,28 @@ export class ResponseHelper {
       if (end - start !== size - 1) {
         this.res.set('Content-Range', `${unit} ${start}-${end}/${size}`)
         const partialData = { [key]: values.splice(start, end) }
-        const responseData = formatData ? formatResponse(this.req, partialData) : partialData
+        const responseData = formatData ? this.formatResponse(partialData) : partialData
         this.res.status(206).send(responseData)
         return
       }
     }
 
-    this.res.status(200).send(formatData ? formatResponse(this.req, data) : data)
+    this.res.status(200).send(formatData ? this.formatResponse(data) : data)
+  }
+
+  /**
+   * Standardize response format.
+   * @private
+   * @param {Object} data={} - Response data.
+   * @returns {Object} Formatted response data.
+   */
+  formatResponse = (data = {}) => {
+    const ResponseFormatter = this.config.responseFormatter
+
+    if (ResponseFormatter) {
+      return (new ResponseFormatter()).format(data)
+    }
+
+    return data
   }
 }

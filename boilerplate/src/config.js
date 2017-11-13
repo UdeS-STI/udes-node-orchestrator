@@ -1,3 +1,4 @@
+import DataFormatter from './DataFormatter'
 import { BasicAuthProxyTicketPlugin } from 'udes-auth-plugins'
 
 export default {
@@ -25,4 +26,5 @@ export default {
     targetService: 'services://foo.service.ca',
     serverPath: 'https://exemple.ca',
   },
+  responseFormatter: DataFormatter,
 }
