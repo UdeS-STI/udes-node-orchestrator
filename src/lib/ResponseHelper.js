@@ -31,25 +31,6 @@ export const getRange = (req, query) => {
 }
 
 /**
- * Obtain proxy ticket for CAS authentication.
- * @private
- * @param {Object} req - HTTP request.
- * @param {Config} config - Orchestrator configuration.
- * @param {Boolean} renew=false - True to renew proxy ticket.
- * @returns {Promise} Promise object represents proxy ticket.
- */
-const getProxyTicket = (req, config, renew = false) => new Promise((resolve, reject) => {
-  const { targetService } = config.cas
-  req.getProxyTicket(targetService, { renew }, (err, pt) => {
-    if (err) {
-      return reject(err)
-    }
-
-    return resolve(pt)
-  })
-})
-
-/**
  * @private
  * @param {String} title - Log section title.
  * @returns {String} Formatted log header.
@@ -93,43 +74,100 @@ export class ResponseHelper {
   }
 
   /**
+   * Add auth information to HTTP request options based on auth method of the called URL.
+   * @private
+   * @param {Object} options - HTTP request options.
+   * @returns {Promise} Promise represents requests options with auth info.
+   */
+  appendAuthOptions = async (options) => {
+    const authPattern = this.config.authPatterns.find(({ path }) => options.url.match(new RegExp(path)))
+
+    if (authPattern) {
+      this.req.session.apiSessionUrl = authPattern.sessionUrl
+      this.req.session.path = authPattern.path
+      this.req.session.targetService = authPattern.targetService
+      // eslint-disable-next-line new-cap
+      return (new authPattern.plugin()).authenticate(this.req.session, options)
+    }
+
+    return options
+  }
+
+  /**
+   * Format options for API call.
+   * @private
+   * @async
+   * @param {Object} options - Request options.
+   * @returns {Promise} Promise object represents request options.
+   */
+  formatRequestOptions = (options) => {
+    const { body, headers = getHeaders(), url } = options
+    return this.appendAuthOptions({
+      ...options,
+      body: body && typeof body === 'object' ? JSON.stringify(body) : body,
+      headers,
+      url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
+    })
+  }
+
+  /**
+   * Extract meta-data from response.
+   * @private
+   * @param {Object} response - HTTP response.
+   * @returns {Object} Response meta data
+   */
+  getResponseMetaData = (response) => {
+    const meta = {
+      debug: {
+        'x-TempsMs': this.callDuration,
+      },
+      status: response.statusCode,
+    }
+
+    this.config.customHeaders.forEach(({ header, property }) => {
+      meta[property || header] = response.headers[header]
+    })
+
+    return meta
+  }
+
+  /**
+   * Extract response data from response.
+   * @private
+   * @param {Object} response - HTTP response.
+   * @returns {Object} Response data.
+   */
+  getResponseData = (response) => {
+    const meta = this.getResponseMetaData(response)
+
+    try {
+      const data = JSON.parse(response.body)
+      return Array.isArray(data) ? { data, meta } : { ...data, meta }
+    } catch (err) {
+      return { data: response.body, meta }
+    }
+  }
+
+  /**
    * Get file from server and send it as response.
    * @param {Object} options - Request options.
    * @param {Object} options.body - Request body.
    * @param {('DELETE'|'GET'|'POST'|'PUT')} options.method - Request method.
    * @param {String} options.url - Request URL.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
-   * @param {Boolean} [retry=true] - True to renew PT and retry request on 401.
+   * @param {Boolean} [retry=true] - True to renew auth and retry request on 401.
    * @returns {Promise} Promise object represents server response.
    */
   fetch = (options, retry = true) => new Promise(async (resolve, reject) => {
-    const { body, headers = getHeaders(), url } = options
-    const opt = {
-      ...options,
-      auth: {
-        user: this.req.session.cas.user,
-        pass: this.req.session.cas.pt,
-      },
-      body: body && typeof body === 'object' ? JSON.stringify(body) : body,
-      headers,
-      url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
-    }
+    const requestOptions = await this.formatRequestOptions(options)
 
-    if (!opt.auth.pass) {
-      try {
-        this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
-      } catch (err) {
-        this.req.log.error(err, getLogHeader('error'))
-        reject(new RequestError(err, 500))
-        return
-      }
-    }
+    logRequest(this.req, this.config, requestOptions)
+    this.callTimestamp = +(new Date())
 
-    logRequest(this.req, this.config, opt)
-    const time = +(new Date())
-
-    request(opt, async (error, response) => {
-      const callDuration = +(new Date()) - time
+    request(requestOptions, async (error, response) => {
+      this.callDuration = +(new Date()) - this.callTimestamp
+      const isUnauthorized = () => response.statusCode === 401
+      const isStatusOk = () => response.statusCode >= 200 && response.statusCode < 300
 
       if (error) {
         this.req.log.error(error, getLogHeader('error'))
@@ -137,11 +175,14 @@ export class ResponseHelper {
         return
       }
 
-      if (response.statusCode === 401) {
+      if (isStatusOk()) {
+        const data = this.getResponseData(response)
+        this.req.log.debug(data, getLogHeader('response'))
+        resolve(data)
+      } else if (isUnauthorized()) {
         if (retry) {
           try {
-            this.req.log.warn('Authentication failed, requested new PT')
-            this.req.session.cas.pt = await getProxyTicket(this.req, this.config, true)
+            this.req.log.warn('Authentication failed, re-authenticating')
             resolve(await this.fetch(options, false))
           } catch (err) {
             this.req.log.error(err, getLogHeader('error'))
@@ -150,38 +191,6 @@ export class ResponseHelper {
         } else {
           this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
           reject(new RequestError('Unauthorized', 401))
-        }
-
-        return
-      }
-
-      const meta = {
-        status: response.statusCode,
-      }
-
-      if (this.config.debug) {
-        meta.debug = {
-          'x-TempsMs': callDuration,
-        }
-      }
-
-      this.config.customHeaders.forEach(({ header, property }) => {
-        meta[property || header] = response.headers[header]
-      })
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        try {
-          const data = JSON.parse(response.body)
-          this.req.log.debug(data, getLogHeader('response'))
-
-          if (Array.isArray(data)) {
-            resolve({ data, meta })
-          } else {
-            resolve({ ...data, meta })
-          }
-        } catch (err) {
-          this.req.log.debug(response.body, getLogHeader('response'))
-          resolve({ data: response.body, meta })
         }
       } else {
         this.req.log.error(response.body || response, getLogHeader('error'))
@@ -198,29 +207,11 @@ export class ResponseHelper {
    * @param {Object} [options.headers=getHeaders()] - Request headers.
    */
   getFile = async (options) => {
-    const { headers = getHeaders(), url } = options
-    const opt = {
-      ...options,
-      auth: {
-        user: this.req.session.cas.user,
-        pass: this.req.session.cas.pt,
-      },
-      headers,
-      url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
-    }
+    const requestOptions = await this.formatRequestOptions(options)
 
-    if (!opt.auth.pass) {
-      try {
-        this.req.session.cas.pt = opt.auth.pass = await getProxyTicket(this.req, this.config)
-      } catch (err) {
-        this.req.log.error(err, getLogHeader('error'))
-        return
-      }
-    }
-
-    logRequest(this.req, this.config, opt)
-    Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
-    request.get(opt).pipe(this.res)
+    logRequest(this.req, this.config, requestOptions)
+    Object.keys(requestOptions.headers).forEach(key => this.res.set(key, requestOptions.headers[key]))
+    request.get(requestOptions).pipe(this.res)
   }
 
   /**

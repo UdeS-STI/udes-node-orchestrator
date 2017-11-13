@@ -9,8 +9,9 @@ const getPostInfo = async (responseHelper) => {
   }
 
   try {
-    const data = await responseHelper.fetch(options)
-    responseHelper.handleResponse({ data })
+    responseHelper.handleResponse({
+      data: await responseHelper.fetch(options),
+    })
   } catch (err) {
     responseHelper.handleError(err)
   }

@@ -1,8 +1,18 @@
 import DataFormatter from './DataFormatter'
+import { BasicAuthProxyTicketPlugin } from 'udes-auth-plugins'
 
 export default {
   apiUrl: 'https://jsonplaceholder.typicode.com',
-  customHeaderPrefix: 'foo',
+  customHeaders: [
+    { header: 'x-count', property: 'count' },
+    { header: 'message' },
+  ],
+  authPatterns: [
+    {
+      path: '/post',
+      plugin: BasicAuthProxyTicketPlugin,
+    },
+  ],
   socket: '../nodejs-sockets/nodejs.sock',
   database: {
     couchbaseCluster: ['couchbase.cluster.exemple.ca'],
