@@ -12,7 +12,6 @@ import { formatResponse, getRange, ResponseHelper } from '../ResponseHelper'
 chai.use(sinonChai)
 
 let req
-const getProxyTicket = sinon.stub()
 const res = {
   send: sinon.spy(),
   set: sinon.spy(),
@@ -28,6 +27,7 @@ const config = {
   ],
   log: {},
   apiUrl: 'https://exemple.com',
+  sessionUrl: 'https://exemple.com/session',
   debug: true,
 }
 
@@ -40,13 +40,11 @@ describe('server/lib/ResponseHelper', () => {
   beforeEach(() => {
     Auth.getAttributes.reset()
     HTTP.request.reset()
-    getProxyTicket.reset()
     res.send.reset()
     res.set.reset()
     res.status.reset()
 
     req = {
-      getProxyTicket,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -60,6 +58,7 @@ describe('server/lib/ResponseHelper', () => {
         cas: {
           user: 'user',
         },
+        apiSessionId: 'apiSessionId',
       },
       url: 'http://exemple.com',
     }
@@ -88,7 +87,11 @@ describe('server/lib/ResponseHelper', () => {
 
     it('should match property list', () => {
       const responseHelper = new ResponseHelper(req, res, config)
-      const properties = ['fetch', 'getFile', 'getQueryParameters', 'getRequestParameters', 'handleError', 'handleResponse', 'req', 'res', 'config']
+      const properties = [
+        'appendAuthOptions', 'formatRequestOptions', 'getResponseMetaData', 'getResponseData',
+        'fetch', 'getFile', 'getQueryParameters', 'getRequestParameters', 'handleError',
+        'handleResponse', 'req', 'res', 'config',
+      ]
       expect(Object.keys(responseHelper)).to.be.deep.equal(properties)
     })
   })
@@ -242,55 +245,28 @@ describe('server/lib/ResponseHelper', () => {
   })
 
   describe('getFile', () => {
-    it('should call `req.getProxyTicket`', async () => {
-      (new ResponseHelper(req, res, config)).getFile({})
-      expect(getProxyTicket).to.be.called
-    })
-
-    it('should call `request.get` if there is no error', async () => {
-      const opt = {
-        auth: { pass: 'pt', user: 'user' },
-        headers: {
-          Accept: 'application/json; charset=utf-8',
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-        url: '/path',
-      }
-      getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'))
-      HTTP.request.get = sinon.spy(() => ({ pipe () {} }))
-      await (new ResponseHelper(req, res, config)).getFile(opt)
-      opt.url = `${config.apiUrl}${opt.url}`
-      expect(HTTP.request.get).to.be.calledWith(opt)
-    })
-
-    it('should call `pipe` if there is no error', async () => {
-      getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'))
+    it('should call request\'s `get` and `pipe` methods if there is no error', async () => {
       const pipe = sinon.spy()
-      HTTP.request.get = () => ({ pipe })
-      await (new ResponseHelper(req, res, config)).getFile({})
-      expect(pipe).to.be.calledWith(res)
-    })
+      HTTP.request.get = sinon.spy(() => ({ pipe }))
 
-    it('should not call `request.get` if there is an error', async () => {
-      getProxyTicket.callsFake((targetService, options, cb) => cb('error', null))
-      HTTP.request.get = sinon.spy(() => ({ pipe () {} }))
-      await (new ResponseHelper(req, res, config)).getFile({})
-      expect(HTTP.request.get).not.to.be.called
+      const responseHelper = new ResponseHelper(req, res, config)
+      responseHelper.formatRequestOptions = () => ({ headers: {} })
+      await responseHelper.getFile({})
+
+      expect(HTTP.request.get).to.be.called
+      expect(pipe).to.be.calledWith(res)
     })
   })
 
   describe('fetch', () => {
-    it('should call `req.getProxyTicket`', () => {
-      (new ResponseHelper(req, res, config)).fetch({})
-      expect(getProxyTicket).to.be.called
-    })
-
     it('should throw an error if error is returned in callback', async () => {
+      HTTP.request.callsFake((options, cb) => cb('error'))
       let error
-      getProxyTicket.callsFake((targetService, options, cb) => cb('error'))
 
       try {
-        await (new ResponseHelper(req, res, config)).fetch({})
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        await responseHelper.fetch({})
       } catch (err) {
         error = err
       }
@@ -306,11 +282,12 @@ describe('server/lib/ResponseHelper', () => {
           'foo-messages': '',
         },
       }
-      getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'))
       HTTP.request.callsFake((options, cb) => cb(null, response))
 
       try {
-        await (new ResponseHelper(req, res, config)).fetch({ url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {}    // eslint-disable-line
 
       expect(HTTP.request).to.be.called
@@ -319,7 +296,6 @@ describe('server/lib/ResponseHelper', () => {
     it('should return an Object when response is a JSON string', async () => {
       let response
       const data = { body: 'My beautiful body' }
-      getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'))
       HTTP.request.callsFake((options, cb) => cb(null, {
         statusCode: 200,
         body: JSON.stringify(data),
@@ -330,7 +306,9 @@ describe('server/lib/ResponseHelper', () => {
       }))
 
       try {
-        response = await (new ResponseHelper(req, res, config)).fetch(req, { url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        response = await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {}    // eslint-disable-line
 
       expect(response).to.be.deep.equal({
@@ -349,7 +327,6 @@ describe('server/lib/ResponseHelper', () => {
     it('should return a String when response is a JSON string', async () => {
       let response
       const data = 'My beautiful body'
-      getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'))
       HTTP.request.callsFake((options, cb) => cb(null, {
         statusCode: 200,
         body: data,
@@ -360,7 +337,9 @@ describe('server/lib/ResponseHelper', () => {
       }))
 
       try {
-        response = await (new ResponseHelper(req, res, config)).fetch(req, { url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        response = await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {}    // eslint-disable-line
 
       expect(response).to.be.deep.equal({
@@ -378,11 +357,12 @@ describe('server/lib/ResponseHelper', () => {
 
     it('should return an error when response is an error', async () => {
       let error
-      getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'))
       HTTP.request.callsFake((options, cb) => cb('error'))
 
       try {
-        await (new ResponseHelper(req, res, config)).fetch(req, { url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {
         error = err
       }
@@ -397,11 +377,12 @@ describe('server/lib/ResponseHelper', () => {
         body: 'Internal server error',
         headers: {},
       }
-      getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'))
       HTTP.request.callsFake((options, cb) => cb(null, response))
 
       try {
-        await (new ResponseHelper(req, res, config)).fetch(req, { url: 'http://localhost', method: 'GET' })
+        const responseHelper = new ResponseHelper(req, res, config)
+        responseHelper.formatRequestOptions = () => {}
+        await responseHelper.fetch({ url: 'http://localhost', method: 'GET' })
       } catch (err) {
         error = err
       }
@@ -410,20 +391,6 @@ describe('server/lib/ResponseHelper', () => {
         statusCode: response.statusCode,
         message: response.body,
       })
-    })
-
-    it('should call `req.getProxyTicket` twice when response status code is 401', async () => {
-      getProxyTicket.callsFake((targetService, options, cb) => cb(null, 'pt'))
-      HTTP.request.callsFake((options, cb) => cb(null, {
-        statusCode: 401,
-        body: '',
-      }))
-
-      try {
-        await (new ResponseHelper(req, res, config)).fetch(req, { url: 'http://localhost', method: 'GET' })
-      } catch (err) {} // eslint-disable-line no-empty
-
-      expect(req.getProxyTicket).to.be.calledTwice
     })
   })
 })
