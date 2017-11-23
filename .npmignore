@@ -1,0 +1,13 @@
+*.log
+.circleci
+.idea
+.nyc_output
+boilerplate
+coverage
+docs
+node_modules
+src
+test_env
+.babelrc
+.nsprc
+mocha.opts

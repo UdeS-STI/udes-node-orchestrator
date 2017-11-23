@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>udes-node-orchestrator 1.0.0 | Documentation</title>
+  <title>udes-node-orchestrator 2.1.0 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>udes-node-orchestrator</h3>
-          <div class='mb1'><code>1.0.0</code></div>
+          <div class='mb1'><code>2.1.0</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -22,6 +22,16 @@
             type='text' />
           <div id='toc'>
             <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#config'
+                  class="">
+                  Config
+                  
+                </a>
+                
+                </li>
               
                 
                 <li><a
@@ -35,9 +45,9 @@
               
                 
                 <li><a
-                  href='#config'
+                  href='#authhandler'
                   class="">
-                  Config
+                  AuthHandler
                   
                 </a>
                 
@@ -68,6 +78,16 @@
                   
                   
                 </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#responseformatter'
+                  class="">
+                  ResponseFormatter
+                  
+                </a>
                 
                 </li>
               
@@ -189,6 +209,465 @@
         </div>
       </div>
       <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='config'>
+      Config
+    </h3>
+    
+    
+  </div>
+  
+
+  
+
+  <div class='pre p1 fill-light mt0'>Config</div>
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>allowedMethods</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]?
+            = <code>[&#39;GET&#39;,&#39;POST&#39;,&#39;OPTIONS&#39;,&#39;PUT&#39;,&#39;DELETE&#39;]</code>)</code>
+	    List of allowed HTTP methods, separated by comas.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>apiUrl</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    URL of the API instance to call.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>authPatterns</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>])</code>
+	    Set authentication plugin to be used with specific routes.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>authPatterns.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Regex string to match 1 or more routes.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>authPatterns.plugin</span> <code class='quiet'>Class</code>
+                  </td>
+                  <td class='break-word'><span>Auth plugin, must extend AuthHandler interface from udes-auth-plugins.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>authPatterns.sessionUrl</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  </td>
+                  <td class='break-word'><span>URL for getting session id.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>authPatterns.targetService</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  </td>
+                  <td class='break-word'><span>Custom target service. If none specified the target service in CAS config will be used.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>cas</span> <code class='quiet'>(<a href="#casconfig">CasConfig</a>)</code>
+	    <a href="https://github.com/UdeS-STI/connect-cas">CAS configuration</a>
+.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>cookies</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
+	    Cookie configuration.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.maxAge</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
+                  
+                    (default <code>14400000</code>)
+                  </td>
+                  <td class='break-word'><span>Time to live (TTL) for the cookie in ms.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.httpOnly</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>true</code>)
+                  </td>
+                  <td class='break-word'><span><a href="https://www.owasp.org/index.php/HttpOnly">HttpOnly flag</a>
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>udes-node-orchestrator</code>)
+                  </td>
+                  <td class='break-word'><span>Cookie name.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>/</code>)
+                  </td>
+                  <td class='break-word'><span>Path to store cookie.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.secret</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>S3CR3T</code>)
+                  </td>
+                  <td class='break-word'><span>Encryption key for cookie.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>cookies.secure</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>true</code>)
+                  </td>
+                  <td class='break-word'><span>Whether to encrypt cookie or not.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>customHeaders</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>]?
+            = <code>[]</code>)</code>
+	    Retrieve data from custom headers.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>customHeaders.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  </td>
+                  <td class='break-word'><span>The custom header to retrieve.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>customHeaders.property</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>??</code>
+                  </td>
+                  <td class='break-word'><span>The property name to give to data. Defaults to header if not defined.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>database</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    Couchbase configuration.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.cacheBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Cache bucket name.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.cacheBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Cache bucket password.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.couchbaseCluster</span> <code class='quiet'>[<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]</code>
+                  </td>
+                  <td class='break-word'><span>List of Couchbase cluster URLs.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.sessionBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Session bucket name.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>database.sessionBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+                  </td>
+                  <td class='break-word'><span>Session bucket password.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>debug</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
+            = <code>false</code>)</code>
+	    True to return debug data.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>enableAuth</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
+            = <code>true</code>)</code>
+	    Whether to enable CAS authentication or not.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>enableCORS</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
+            = <code>true</code>)</code>
+	    Whether to enable CORS or not.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>errorFormatter</span> <code class='quiet'>(Class??)</code>
+	    Class extending the ResponseFormatter interface. Format data on error.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>log</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
+	    Logger configuration.
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>log.logLevel</span> <code class='quiet'>(<code>"trace"</code> | <code>"info"</code> | <code>"debug"</code> | <code>"warn"</code> | <code>"error"</code> | <code>"silent"</code>)?</code>
+                  
+                    (default <code>error</code>)
+                  </td>
+                  <td class='break-word'><span>Log level.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>log.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+                  
+                    (default <code>udes-node-orchestrator</code>)
+                  </td>
+                  <td class='break-word'><span>Logger name.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>log.prettyPrint</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>true</code>)
+                  </td>
+                  <td class='break-word'><span>Whether to print pretty or raw.
+</span></td>
+                </tr>
+              
+                <tr>
+                  <td class='break-word'><span class='code bold'>log.showCredentialsAsClearText</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+                  
+                    (default <code>false</code>)
+                  </td>
+                  <td class='break-word'><span>If true credentials will be displayed as clear text in logs.
+</span></td>
+                </tr>
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>nocasPwd</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?
+            = <code>nocas</code>)</code>
+	    CAS default password when 
+<code>enableAuth</code>
+ is false.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>nocasUser</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?
+            = <code>nocas</code>)</code>
+	    CAS default username when 
+<code>enableAuth</code>
+ is false.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>responseFormatter</span> <code class='quiet'>(Class??)</code>
+	    Class extending the ResponseFormatter interface. Format response data.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>socket</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    Relative path to socket.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
         
           
             <section class='p2 mb2 clearfix bg-white minishadow'>
@@ -523,22 +1002,18 @@
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='config'>
-      Config
+    <h3 class='fl m0' id='authhandler'>
+      AuthHandler
     </h3>
     
     
   </div>
   
 
-  
+  <p>Interface for handling various types of authentication.</p>
 
-  <div class='pre p1 fill-light mt0'>Config</div>
-  
-    <p>
-      Type:
-      <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
-    </p>
+
+  <div class='pre p1 fill-light mt0'>new AuthHandler()</div>
   
   
 
@@ -549,333 +1024,6 @@
   
   
 
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>allowedMethods</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]?
-            = <code>[&#39;GET&#39;,&#39;POST&#39;,&#39;OPTIONS&#39;,&#39;PUT&#39;,&#39;DELETE&#39;]</code>)</code>
-	    List of allowed HTTP methods, separated by comas.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>apiUrl</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-	    URL of the API instance to call.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>cas</span> <code class='quiet'>(<a href="#casconfig">CasConfig</a>)</code>
-	    <a href="https://github.com/UdeS-STI/connect-cas">CAS configuration</a>
-.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>cookies</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
-	    Cookie configuration.
-
-          </div>
-          
-          <table class='mt1 mb2 fixed-table h5 col-12'>
-            <colgroup>
-              <col width='30%' />
-              <col width='70%' />
-            </colgroup>
-            <thead>
-              <tr class='bold fill-light'>
-                <th>Name</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody class='mt1'>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>cookies.maxAge</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
-                  
-                    (default <code>14400000</code>)
-                  </td>
-                  <td class='break-word'><span>Time to live (TTL) for the cookie in ms.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>cookies.httpOnly</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
-                  
-                    (default <code>true</code>)
-                  </td>
-                  <td class='break-word'><span><a href="https://www.owasp.org/index.php/HttpOnly">HttpOnly flag</a>
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>cookies.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>udes-node-orchestrator</code>)
-                  </td>
-                  <td class='break-word'><span>Cookie name.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>cookies.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>/</code>)
-                  </td>
-                  <td class='break-word'><span>Path to store cookie.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>cookies.secret</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>S3CR3T</code>)
-                  </td>
-                  <td class='break-word'><span>Encryption key for cookie.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>cookies.secure</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
-                  
-                    (default <code>true</code>)
-                  </td>
-                  <td class='break-word'><span>Whether to encrypt cookie or not.
-</span></td>
-                </tr>
-              
-            </tbody>
-          </table>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>customHeaders</span> <code class='quiet'>([<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>]?
-            = <code>[]</code>)</code>
-	    Retrieve data from custom headers.
-
-          </div>
-          
-          <table class='mt1 mb2 fixed-table h5 col-12'>
-            <colgroup>
-              <col width='30%' />
-              <col width='70%' />
-            </colgroup>
-            <thead>
-              <tr class='bold fill-light'>
-                <th>Name</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody class='mt1'>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>customHeaders.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  </td>
-                  <td class='break-word'><span>The custom header to retrieve.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>customHeaders.property</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>??</code>
-                  </td>
-                  <td class='break-word'><span>The property name to give to data. Defaults to header if not defined.
-</span></td>
-                </tr>
-              
-            </tbody>
-          </table>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>database</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-	    Couchbase configuration.
-
-          </div>
-          
-          <table class='mt1 mb2 fixed-table h5 col-12'>
-            <colgroup>
-              <col width='30%' />
-              <col width='70%' />
-            </colgroup>
-            <thead>
-              <tr class='bold fill-light'>
-                <th>Name</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody class='mt1'>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>database.cacheBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Cache bucket name.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>database.cacheBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Cache bucket password.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>database.couchbaseCluster</span> <code class='quiet'>[<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]</code>
-                  </td>
-                  <td class='break-word'><span>List of Couchbase cluster URLs.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>database.sessionBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Session bucket name.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>database.sessionBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Session bucket password.
-</span></td>
-                </tr>
-              
-            </tbody>
-          </table>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>enableAuth</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
-            = <code>true</code>)</code>
-	    Whether to enable CAS authentication or not.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>enableCORS</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?
-            = <code>true</code>)</code>
-	    Whether to enable CORS or not.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>log</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</code>
-	    Logger configuration.
-
-          </div>
-          
-          <table class='mt1 mb2 fixed-table h5 col-12'>
-            <colgroup>
-              <col width='30%' />
-              <col width='70%' />
-            </colgroup>
-            <thead>
-              <tr class='bold fill-light'>
-                <th>Name</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody class='mt1'>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>log.logLevel</span> <code class='quiet'>(<code>"trace"</code> | <code>"info"</code> | <code>"debug"</code> | <code>"warn"</code> | <code>"error"</code> | <code>"silent"</code>)?</code>
-                  
-                    (default <code>error</code>)
-                  </td>
-                  <td class='break-word'><span>Log level.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>log.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>udes-node-orchestrator</code>)
-                  </td>
-                  <td class='break-word'><span>Logger name.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>log.prettyPrint</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
-                  
-                    (default <code>true</code>)
-                  </td>
-                  <td class='break-word'><span>Whether to print pretty or raw.
-</span></td>
-                </tr>
-              
-                <tr>
-                  <td class='break-word'><span class='code bold'>log.showCredentialsAsClearText</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
-                  
-                    (default <code>false</code>)
-                  </td>
-                  <td class='break-word'><span>If true credentials will be displayed as clear text in logs.
-</span></td>
-                </tr>
-              
-            </tbody>
-          </table>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>nocasPwd</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?
-            = <code>nocas</code>)</code>
-	    CAS default password when 
-<code>enableAuth</code>
- is false.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>nocasUser</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?
-            = <code>nocas</code>)</code>
-	    CAS default username when 
-<code>enableAuth</code>
- is false.
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>socket</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-	    Relative path to socket.
-
-          </div>
-          
-        </div>
-      
-    </div>
   
 
   
@@ -1163,6 +1311,53 @@
   
   <div class='clearfix'>
     
+    <h3 class='fl m0' id='responseformatter'>
+      ResponseFormatter
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Interface for formatting HTTP response data.</p>
+
+
+  <div class='pre p1 fill-light mt0'>new ResponseFormatter()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
     <h3 class='fl m0' id='responsehelper'>
       ResponseHelper
     </h3>
@@ -1338,7 +1533,7 @@
           <div>
             <span class='code bold'>retry</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>
             = <code>true</code>)</code>
-	    True to renew PT and retry request on 401.
+	    True to renew auth and retry request on 401.
 
           </div>
           
@@ -1651,14 +1846,6 @@
 
   
 
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>null</code>:
-        Nothing.
-
-      
-    
   
 
   

@@ -8,6 +8,7 @@
     "start": "babel-node src/index.js"
   },
   "dependencies": {
+    "udes-auth-plugins": "0.0.1",
     "udes-node-orchestrator": "^1.0.0"
   },
   "devDependencies": {

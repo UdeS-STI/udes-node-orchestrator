@@ -65,7 +65,6 @@ export default class Orchestrator {
     }
 
     this.router = router()
-    routes.forEach(({ method, url, fn }) => this.router[method.toLowerCase()](url, fn))
 
     routes.forEach(({ method, url, fn }) => {
       this.router[method.toLowerCase()](url, (req, res) => {
