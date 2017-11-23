@@ -1,6 +1,6 @@
 {
   "name": "udes-node-orchestrator",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Orchestrator server. Handles routes and HTTP traffic.",
   "main": "src/index.js",
   "scripts": {
