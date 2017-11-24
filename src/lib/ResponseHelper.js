@@ -186,7 +186,7 @@ export class ResponseHelper {
             resolve(await this.fetch(options, false))
           } catch (err) {
             this.req.log.error(err, getLogHeader('error'))
-            reject(new RequestError(err, 500))
+            reject(err)
           }
         } else {
           this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
