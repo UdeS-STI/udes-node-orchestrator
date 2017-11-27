@@ -1,9 +1,9 @@
 {
   "name": "udes-node-orchestrator",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Orchestrator server. Handles routes and HTTP traffic.",
   "author": "Université de Sherbrooke",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "audit": "node_modules/.bin/nsp check",
     "build": "babel ./src --out-dir dist --ignore '**/*Test.js'",
