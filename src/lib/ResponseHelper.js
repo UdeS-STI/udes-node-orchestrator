@@ -155,10 +155,9 @@ export class ResponseHelper {
    * @param {('DELETE'|'GET'|'POST'|'PUT')} options.method - Request method.
    * @param {String} options.url - Request URL.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
-   * @param {Boolean} [retry=true] - True to renew auth and retry request on 401.
    * @returns {Promise} Promise object represents server response.
    */
-  fetch = (options, retry = true) => new Promise(async (resolve, reject) => {
+  fetch = (options) => new Promise(async (resolve, reject) => {
     const requestOptions = await this.formatRequestOptions(options)
 
     logRequest(this.req, this.config, requestOptions)
@@ -172,26 +171,13 @@ export class ResponseHelper {
       if (error) {
         this.req.log.error(error, getLogHeader('error'))
         reject(new RequestError(error, 500))
-        return
-      }
-
-      if (isStatusOk()) {
+      } else if (isStatusOk()) {
         const data = this.getResponseData(response)
         this.req.log.debug(data, getLogHeader('response'))
         resolve(data)
       } else if (isUnauthorized()) {
-        if (retry) {
-          try {
-            this.req.log.warn('Authentication failed, re-authenticating')
-            resolve(await this.fetch(options, false))
-          } catch (err) {
-            this.req.log.error(err, getLogHeader('error'))
-            reject(new RequestError(err, 500))
-          }
-        } else {
-          this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
-          reject(new RequestError('Unauthorized', 401))
-        }
+        this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
+        reject(new RequestError('Unauthorized', 401))
       } else {
         this.req.log.error(response.body || response, getLogHeader('error'))
         reject(new RequestError(response.body || response, response.statusCode || 500))
