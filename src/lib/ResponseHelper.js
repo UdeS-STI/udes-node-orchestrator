@@ -77,17 +77,19 @@ export class ResponseHelper {
    * Add auth information to HTTP request options based on auth method of the called URL.
    * @private
    * @param {Object} options - HTTP request options.
+   * @param {Boolean} isFirstAttempt - True if is first HTTP call.
    * @returns {Promise} Promise represents requests options with auth info.
    */
-  appendAuthOptions = async (options) => {
+  appendAuthOptions = async (options, isFirstAttempt) => {
     const authPattern = this.config.authPatterns.find(({ path }) => options.url.match(new RegExp(path)))
 
     if (authPattern) {
       this.req.session.apiSessionUrl = authPattern.sessionUrl
       this.req.session.path = authPattern.path
       this.req.session.targetService = authPattern.targetService
-      // eslint-disable-next-line new-cap
-      return (new authPattern.plugin()).authenticate(this.req.session, options)
+
+      const Plugin = authPattern.plugin
+      return (new Plugin()).authenticate(this.req.session, options, isFirstAttempt)
     }
 
     return options
@@ -98,16 +100,17 @@ export class ResponseHelper {
    * @private
    * @async
    * @param {Object} options - Request options.
+   * @param {Boolean} isFirstAttempt - True if is first HTTP call.
    * @returns {Promise} Promise object represents request options.
    */
-  formatRequestOptions = (options) => {
+  formatRequestOptions = (options, isFirstAttempt) => {
     const { body, headers = getHeaders(), url } = options
     return this.appendAuthOptions({
       ...options,
       body: body && typeof body === 'object' ? JSON.stringify(body) : body,
       headers,
       url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
-    })
+    }, isFirstAttempt)
   }
 
   /**
@@ -155,10 +158,11 @@ export class ResponseHelper {
    * @param {('DELETE'|'GET'|'POST'|'PUT')} options.method - Request method.
    * @param {String} options.url - Request URL.
    * @param {Object} [options.headers=getHeaders()] - Request headers.
+   * @param {Boolean} [isFirstAttempt=true] - True if is first HTTP call.
    * @returns {Promise} Promise object represents server response.
    */
-  fetch = (options) => new Promise(async (resolve, reject) => {
-    const requestOptions = await this.formatRequestOptions(options)
+  fetch = (options, isFirstAttempt = true) => new Promise(async (resolve, reject) => {
+    const requestOptions = await this.formatRequestOptions(options, isFirstAttempt)
 
     logRequest(this.req, this.config, requestOptions)
     this.callTimestamp = +(new Date())
@@ -176,8 +180,16 @@ export class ResponseHelper {
         this.req.log.debug(data, getLogHeader('response'))
         resolve(data)
       } else if (isUnauthorized()) {
-        this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
-        reject(new RequestError('Unauthorized', 401))
+        if (isFirstAttempt) {
+          try {
+            resolve(await this.fetch(options, false))
+          } catch (error) {
+            reject(error)
+          }
+        } else {
+          this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
+          reject(new RequestError('Unauthorized', 401))
+        }
       } else {
         this.req.log.error(response.body || response, getLogHeader('error'))
         reject(new RequestError(response.body || response, response.statusCode || 500))
