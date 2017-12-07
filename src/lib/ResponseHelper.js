@@ -259,19 +259,21 @@ export class ResponseHelper {
       const size = values.length
       const { start, end = size - 1, unit } = range
 
-      if (start > end || start >= size || end >= size) {
+      if (start > end || start >= size) {
         this.res.set('Content-Range', `${unit} */${size}`)
         this.handleError({ statusCode: 416, message: `Cannot get range ${start}-${end} of ${size}` })
         return
       }
 
-      if (end - start !== size - 1) {
+      if (end - start < size - 1) {
         this.res.set('Content-Range', `${unit} ${start}-${end}/${size}`)
         const partialData = { [key]: values.splice(start, end) }
         const responseData = formatData ? this.formatResponse(partialData) : partialData
         this.res.status(206).send(responseData)
         return
       }
+
+      this.res.set('Content-Range', `${unit} 0-${size - 1}/${size}`)
     }
 
     this.res.status(200).send(formatData ? this.formatResponse(data) : data)

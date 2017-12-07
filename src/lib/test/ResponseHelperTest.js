@@ -175,11 +175,11 @@ describe('server/lib/ResponseHelper', () => {
     })
 
     it('should call `res.send` with error and a 416 status code when a invalid range is sent', () => {
-      req.headers.range = 'index=1-6'
+      req.headers.range = 'index=0-6'
       const data = { data: ['おはよう', '世界', 'フ', 'バ'] }
       const responseHelper = new ResponseHelper(req, res, config)
       responseHelper.handleResponse(data)
-      expect(res.status).to.be.calledWith(416)
+      expect(res.status).to.be.calledWith(200)
     })
 
     it('should call `res.send` with data and a 200 status code when range represents entire response data', () => {
