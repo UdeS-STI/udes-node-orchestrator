@@ -265,13 +265,15 @@ export class ResponseHelper {
         return
       }
 
-      if (end - start > size) {
+      if (end - start < size - 1) {
         this.res.set('Content-Range', `${unit} ${start}-${end}/${size}`)
         const partialData = { [key]: values.splice(start, end) }
         const responseData = formatData ? this.formatResponse(partialData) : partialData
         this.res.status(206).send(responseData)
         return
       }
+
+      this.res.set('Content-Range', `${unit} 0-${size - 1}/${size}`)
     }
 
     this.res.status(200).send(formatData ? this.formatResponse(data) : data)
