@@ -28,7 +28,7 @@ export default {
     renew: false,
     slo: false,
     cache: {
-      enable: false,
+      enable: true,
       ttl: 300000,
       filter: [],
     },
