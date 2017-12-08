@@ -1,7 +1,7 @@
 /**
  * @typedef {Object} CasConfig
  * @param {Object?} cache - CAS cache configuration.
- * @param {Boolean?} [cache.enable=false] - Whether to enable CAS caching or not.
+ * @param {Boolean?} [cache.enable=true] - Whether to enable CAS caching or not.
  * @param {[String]?} [cache.filter=[]] - Filter service url for PT cache
  * @param {Number?} [cache.ttl=300000] - Time to live of cache in ms.
  * @param {Boolean?} [debug=false] - Whether to activate CAS debugging or not.
