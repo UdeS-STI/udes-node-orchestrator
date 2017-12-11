@@ -188,7 +188,8 @@ export class ResponseHelper {
           }
         } else {
           this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
-          reject(new RequestError('Unauthorized', 401))
+          // TODO: Add loginPath logic
+          reject(new RequestError({ loginPath: '' }, 401))
         }
       } else {
         this.req.log.error(response.body || response, getLogHeader('error'))
