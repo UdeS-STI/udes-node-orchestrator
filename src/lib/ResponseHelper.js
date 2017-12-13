@@ -59,6 +59,14 @@ const logRequest = (req, config, options) => {
 }
 
 /**
+ * @private
+ * Get login path information.
+ * @param {Object} config - Orchestrator config.
+ * @returns {String} Login url.
+ */
+const getLoginPath = config => `${config.loginPath}?service=${config.cas.servicePrefix}${config.cas.paths.validate}`
+
+/**
  * Handles response standardisation as well as http responses and requests.
  * @class
  * @param {Object} req - {@link https://expressjs.com/en/4x/api.html#req HTTP request}.
@@ -188,8 +196,7 @@ export class ResponseHelper {
           }
         } else {
           this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
-          // TODO: Add loginPath logic
-          reject(new RequestError({ loginPath: '' }, 401))
+          reject(new RequestError({ loginPath: getLoginPath(this.config) }, 401))
         }
       } else {
         this.req.log.error(response.body || response, getLogHeader('error'))
