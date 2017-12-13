@@ -90,6 +90,10 @@ export const configureExpress = (app, configuration, env) => {
   if (configuration.enableAuth) {
     debug('CAS client configuration and activation')
     const casConfig = configuration.cas
+    casConfig.cache = {
+      enable: false,
+    }
+
     app.use((req, res, next) => {
       casConfig.logger = req.log
       req.sn = uuidV4()
@@ -114,8 +118,8 @@ export const configureExpress = (app, configuration, env) => {
       req.session.apiSessionIds = {}
     }
 
-    req.session.getProxyTicket = (targetService = defaultTargetService, renew = false) => new Promise((resolve, reject) => {
-      req.getProxyTicket(targetService, { renew }, (err, pt) => {
+    req.session.getProxyTicket = (targetService = defaultTargetService) => new Promise((resolve, reject) => {
+      req.getProxyTicket(targetService, { renew: false }, (err, pt) => {
         if (err) {
           return reject(err)
         }
