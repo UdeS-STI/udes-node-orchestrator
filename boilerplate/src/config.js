@@ -3,6 +3,7 @@ import { BasicAuthProxyTicketPlugin } from 'udes-auth-plugins'
 
 export default {
   apiUrl: 'https://jsonplaceholder.typicode.com',
+  loginPath: 'https://myloginpage/.com',
   customHeaders: [
     { header: 'x-count', property: 'count' },
     { header: 'message' },
