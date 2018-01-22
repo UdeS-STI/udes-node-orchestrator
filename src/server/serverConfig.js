@@ -135,7 +135,7 @@ export const configureExpress = (app, configuration, env) => {
 
 export const setListeners = (app, server, config) => {
   server.listen(config.socket, () => {
-    fs.chmodSync(config.socket, '660');
+    fs.chmodSync(config.socket, '660')
     pino.info('UdeS Node Orchestrator listening on socket %s in %s mode', config.socket, app.settings.env)
   })
 
