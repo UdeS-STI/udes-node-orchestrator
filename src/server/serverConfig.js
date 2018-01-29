@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import CouchbaseConnector from 'connect-couchbase'
 import Debug from 'debug'
 import ExpressPinoLogger from 'express-pino-logger'
+import fs from 'fs'
 import methodOverride from 'method-override'
 import Pino from 'pino'
 import session from 'express-session'
@@ -90,6 +91,10 @@ export const configureExpress = (app, configuration, env) => {
   if (configuration.enableAuth) {
     debug('CAS client configuration and activation')
     const casConfig = configuration.cas
+    casConfig.cache = {
+      enable: false,
+    }
+
     app.use((req, res, next) => {
       casConfig.logger = req.log
       req.sn = uuidV4()
@@ -114,8 +119,8 @@ export const configureExpress = (app, configuration, env) => {
       req.session.apiSessionIds = {}
     }
 
-    req.session.getProxyTicket = (targetService = defaultTargetService, renew = false) => new Promise((resolve, reject) => {
-      req.getProxyTicket(targetService, { renew }, (err, pt) => {
+    req.session.getProxyTicket = (targetService = defaultTargetService) => new Promise((resolve, reject) => {
+      req.getProxyTicket(targetService, { renew: false }, (err, pt) => {
         if (err) {
           return reject(err)
         }
@@ -130,6 +135,7 @@ export const configureExpress = (app, configuration, env) => {
 
 export const setListeners = (app, server, config) => {
   server.listen(config.socket, () => {
+    fs.chmodSync(config.socket, '660')
     pino.info('UdeS Node Orchestrator listening on socket %s in %s mode', config.socket, app.settings.env)
   })
 

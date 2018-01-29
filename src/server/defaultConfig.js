@@ -27,11 +27,6 @@ export default {
     gateway: false,
     renew: false,
     slo: false,
-    cache: {
-      enable: true,
-      ttl: 300000,
-      filter: [],
-    },
     fromAjax: {
       header: 'x-client-ajax',
       status: 401,

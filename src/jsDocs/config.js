@@ -1,9 +1,5 @@
 /**
  * @typedef {Object} CasConfig
- * @param {Object?} cache - CAS cache configuration.
- * @param {Boolean?} [cache.enable=true] - Whether to enable CAS caching or not.
- * @param {[String]?} [cache.filter=[]] - Filter service url for PT cache
- * @param {Number?} [cache.ttl=300000] - Time to live of cache in ms.
  * @param {Boolean?} [debug=false] - Whether to activate CAS debugging or not.
  * @param {Object?} fromAjax - CAS from AJAX configuration.
  * @param {String?} [fromAjax.header=x-client-ajax] - Default response header for AJAX responses.
@@ -57,6 +53,7 @@
  * @param {Boolean?} [enableCORS=true] - Whether to enable CORS or not.
  * @param {Class?} [errorFormatter] - Class extending the ResponseFormatter interface. Format data on error.
  * @param {Object?} log - Logger configuration.
+ * @param {String} loginPath - Url to login page.
  * @param {('trace'|'info'|'debug'|'warn'|'error'|'silent')?} [log.logLevel=error] - Log level.
  * @param {String?} [log.name=udes-node-orchestrator] - Logger name.
  * @param {Boolean?} [log.prettyPrint=true] - Whether to print pretty or raw.
