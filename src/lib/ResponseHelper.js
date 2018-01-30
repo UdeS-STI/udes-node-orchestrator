@@ -35,7 +35,10 @@ export const getRange = (req, query) => {
  * @param {String} title - Log section title.
  * @returns {String} Formatted log header.
  */
-const getLogHeader = title => `\n=============== ${title.toUpperCase()} ===============\n`
+const getLogHeader = (title) => {
+  const header = `=============== ${title.toUpperCase()} ===============`
+  return process.env.isProduction ? header : `\n${header}\n`
+}
 
 /**
  * Log request options.
@@ -149,14 +152,26 @@ export class ResponseHelper {
    * @returns {Object} Response data.
    */
   getResponseData = (response) => {
-    const meta = this.getResponseMetaData(response)
+    let data
 
     try {
-      const data = JSON.parse(response.body)
-      return Array.isArray(data) ? { data, meta } : { ...data, meta }
-    } catch (err) {
-      return { data: response.body, meta }
+      data = JSON.parse(response.body)
+    } catch (error) {
+      data = response.body
     }
+
+    if (this.config.appendMetaData) {
+      const meta = this.getResponseMetaData(response)
+
+      // Array and primitives
+      if (Array.isArray(data) || !(data instanceof Object)) {
+        return { data, meta }
+      }
+
+      return { ...data, meta }
+    }
+
+    return data
   }
 
   /**

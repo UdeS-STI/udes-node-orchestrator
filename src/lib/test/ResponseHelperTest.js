@@ -10,24 +10,12 @@ import { getRange, ResponseHelper } from '../ResponseHelper'
 
 chai.use(sinonChai)
 
+let config
 let req
 const res = {
   send: sinon.spy(),
   set: sinon.spy(),
   status: sinon.spy(() => res),
-}
-const config = {
-  cas: {
-    targetService: 'targetService',
-  },
-  customHeaders: [
-    { header: 'foo-count', property: 'count' },
-    { header: 'foo-messages', property: 'messages' },
-  ],
-  log: {},
-  apiUrl: 'https://exemple.com',
-  sessionUrl: 'https://exemple.com/session',
-  debug: true,
 }
 
 describe('server/lib/ResponseHelper', () => {
@@ -58,6 +46,21 @@ describe('server/lib/ResponseHelper', () => {
         apiSessionId: 'apiSessionId',
       },
       url: 'http://exemple.com',
+    }
+
+    config = {
+      cas: {
+        targetService: 'targetService',
+      },
+      customHeaders: [
+        { header: 'foo-count', property: 'count' },
+        { header: 'foo-messages', property: 'messages' },
+      ],
+      log: {},
+      apiUrl: 'https://exemple.com',
+      sessionUrl: 'https://exemple.com/session',
+      debug: true,
+      appendMetaData: true,
     }
   })
 

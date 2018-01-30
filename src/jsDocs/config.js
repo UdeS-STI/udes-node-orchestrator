@@ -26,6 +26,7 @@
 /**
  * @typedef {Object} Config
  * @param {[String]?} [allowedMethods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']] - List of allowed HTTP methods, separated by comas.
+ * @param {Boolean?} [appendMetaData=true] - If true, collected metadata will be appended to response.
  * @param {String} apiUrl - URL of the API instance to call.
  * @param {[Object]} authPatterns - Set authentication plugin to be used with specific routes.
  * @param {String} authPatterns.path - Regex string to match 1 or more routes.

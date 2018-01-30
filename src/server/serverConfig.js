@@ -18,6 +18,7 @@ const debug = new Debug('orchestrator')
 const pino = new Pino()
 
 export const configureExpress = (app, configuration, env) => {
+  process.env.isProduction = env === 'production'
   debug.enabled = configuration.debug
 
   // Logging
