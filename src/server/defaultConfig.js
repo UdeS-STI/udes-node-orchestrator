@@ -1,4 +1,5 @@
 export default {
+  appendMetaData: true,
   cookies: {
     maxAge: 14400000,
     secret: 'S3CR3T',
