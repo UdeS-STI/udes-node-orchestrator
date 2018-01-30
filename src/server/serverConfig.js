@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import CouchbaseConnector from 'connect-couchbase'
 import Debug from 'debug'
 import ExpressPinoLogger from 'express-pino-logger'
+import fs from 'fs'
 import methodOverride from 'method-override'
 import Pino from 'pino'
 import session from 'express-session'
@@ -134,6 +135,7 @@ export const configureExpress = (app, configuration, env) => {
 
 export const setListeners = (app, server, config) => {
   server.listen(config.socket, () => {
+    fs.chmodSync(config.socket, '660')
     pino.info('UdeS Node Orchestrator listening on socket %s in %s mode', config.socket, app.settings.env)
   })
 

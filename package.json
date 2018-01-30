@@ -1,6 +1,6 @@
 {
   "name": "udes-node-orchestrator",
-  "version": "2.1.6",
+  "version": "2.1.8",
   "description": "Orchestrator server. Handles routes and HTTP traffic.",
   "author": "Université de Sherbrooke",
   "main": "dist/index.js",
@@ -31,7 +31,7 @@
     "method-override": "^2.3.10",
     "pino": "^4.8.2",
     "request": "^2.83.0",
-    "udes-connect-cas": "^1.0.2",
+    "udes-connect-cas": "^1.0.3",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
