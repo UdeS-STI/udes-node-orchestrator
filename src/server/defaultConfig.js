@@ -14,6 +14,7 @@ export default {
   cas: {
     debug: false,
     ignore: [],
+    logLevel: 'silent',
     match: [],
     paths: {
       validate: '/validate',
