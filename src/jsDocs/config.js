@@ -6,6 +6,7 @@
  * @param {Number?} [fromAjax.status=401] - Default status code for AJAX responses.
  * @param {Boolean?} [gateway=false] - Send all validation requests through the CAS gateway feature.
  * @param {[String]?} [ignore=[]] - Ignore CAS validation on these routes.
+ * @param {String?} [logLevel='silent'] - Log level used by connect-cas middleware
  * @param {[String]?} [match=[]] - Filter url for CAS authentication
  * @param {Object?} paths - CAS path configuration.
  * @param {String?} [paths.login=/login] - CAS login path.

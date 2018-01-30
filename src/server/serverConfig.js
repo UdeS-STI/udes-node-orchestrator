@@ -97,8 +97,23 @@ export const configureExpress = (app, configuration, env) => {
     }
 
     app.use((req, res, next) => {
-      casConfig.logger = req.log
+      const casPino = new Pino({ level: configuration.cas.logLevel })
+
       req.sn = uuidV4()
+      req.getLogger = (type = 'log', ...args) => {
+        let user = 'unknown'
+
+        try {
+          user = req.session.cas.user
+        } catch (e) {}
+
+        return casPino[type](`${req.sn}|${user}|${req.ip}|`, ...args)
+      }
+
+      casConfig.logger = (req, type) => {
+        return req.getLogger(type, '[CONNECT_CAS]: ')
+      }
+
       next()
     })
     const casClient = new Cas(casConfig)
