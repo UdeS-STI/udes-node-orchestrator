@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "udes-auth-plugins": "0.0.1",
-    "udes-node-orchestrator": "^1.0.0"
+    "udes-node-orchestrator": "^2.2.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
