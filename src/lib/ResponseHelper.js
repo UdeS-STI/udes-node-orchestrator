@@ -35,7 +35,7 @@ export const getRange = (req, query) => {
  * @param {String} title - Log section title.
  * @returns {String} Formatted log header.
  */
-const getLogHeader = title => {
+const getLogHeader = (title) => {
   const header = `=============== ${title.toUpperCase()} ===============`
   return process.env.isProduction ? header : `\n${header}\n`
 }
