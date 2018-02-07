@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>udes-node-orchestrator 2.2.0 | Documentation</title>
+  <title>udes-node-orchestrator 2.3.0 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>udes-node-orchestrator</h3>
-          <div class='mb1'><code>2.2.0</code></div>
+          <div class='mb1'><code>2.3.0</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -296,32 +296,40 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>authPatterns.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Regex string to match 1 or more routes.
+  <td class='break-word'><span class='code bold'>authPatterns.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>Regex string to match 1 or more routes.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>authPatterns.plugin</span> <code class='quiet'>Class</code>
-                  </td>
-                  <td class='break-word'><span>Auth plugin, must extend AuthHandler interface from udes-auth-plugins.
+  <td class='break-word'><span class='code bold'>authPatterns.plugin</span> <code class='quiet'>Class</code>
+  </td>
+  <td class='break-word'><span>Auth plugin, must extend AuthHandler interface from udes-auth-plugins.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>authPatterns.sessionUrl</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  </td>
-                  <td class='break-word'><span>URL for getting session id.
+  <td class='break-word'><span class='code bold'>authPatterns.sessionUrl</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  </td>
+  <td class='break-word'><span>URL for getting session id.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>authPatterns.targetService</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  </td>
-                  <td class='break-word'><span>Custom target service. If none specified the target service in CAS config will be used.
+  <td class='break-word'><span class='code bold'>authPatterns.targetService</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  </td>
+  <td class='break-word'><span>Custom target service. If none specified the target service in CAS config will be used.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -359,58 +367,70 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.maxAge</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
-                  
-                    (default <code>14400000</code>)
-                  </td>
-                  <td class='break-word'><span>Time to live (TTL) for the cookie in ms.
+  <td class='break-word'><span class='code bold'>cookies.maxAge</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
+  
+    (default <code>14400000</code>)
+  </td>
+  <td class='break-word'><span>Time to live (TTL) for the cookie in ms.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.httpOnly</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
-                  
-                    (default <code>true</code>)
-                  </td>
-                  <td class='break-word'><span><a href="https://www.owasp.org/index.php/HttpOnly">HttpOnly flag</a>
+  <td class='break-word'><span class='code bold'>cookies.httpOnly</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+  
+    (default <code>true</code>)
+  </td>
+  <td class='break-word'><span><a href="https://www.owasp.org/index.php/HttpOnly">HttpOnly flag</a>
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>udes-node-orchestrator</code>)
-                  </td>
-                  <td class='break-word'><span>Cookie name.
+  <td class='break-word'><span class='code bold'>cookies.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>udes-node-orchestrator</code>)
+  </td>
+  <td class='break-word'><span>Cookie name.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>/</code>)
-                  </td>
-                  <td class='break-word'><span>Path to store cookie.
+  <td class='break-word'><span class='code bold'>cookies.path</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>/</code>)
+  </td>
+  <td class='break-word'><span>Path to store cookie.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.secret</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>S3CR3T</code>)
-                  </td>
-                  <td class='break-word'><span>Encryption key for cookie.
+  <td class='break-word'><span class='code bold'>cookies.secret</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>S3CR3T</code>)
+  </td>
+  <td class='break-word'><span>Encryption key for cookie.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>cookies.secure</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
-                  
-                    (default <code>true</code>)
-                  </td>
-                  <td class='break-word'><span>Whether to encrypt cookie or not.
+  <td class='break-word'><span class='code bold'>cookies.secure</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+  
+    (default <code>true</code>)
+  </td>
+  <td class='break-word'><span>Whether to encrypt cookie or not.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -439,18 +459,22 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>customHeaders.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  </td>
-                  <td class='break-word'><span>The custom header to retrieve.
+  <td class='break-word'><span class='code bold'>customHeaders.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  </td>
+  <td class='break-word'><span>The custom header to retrieve.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>customHeaders.property</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>??</code>
-                  </td>
-                  <td class='break-word'><span>The property name to give to data. Defaults to header if not defined.
+  <td class='break-word'><span class='code bold'>customHeaders.property</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>??</code>
+  </td>
+  <td class='break-word'><span>The property name to give to data. Defaults to header if not defined.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -478,39 +502,49 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>database.cacheBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Cache bucket name.
+  <td class='break-word'><span class='code bold'>database.cacheBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>Cache bucket name.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>database.cacheBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Cache bucket password.
+  <td class='break-word'><span class='code bold'>database.cacheBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>Cache bucket password.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>database.couchbaseCluster</span> <code class='quiet'>[<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]</code>
-                  </td>
-                  <td class='break-word'><span>List of Couchbase cluster URLs.
+  <td class='break-word'><span class='code bold'>database.couchbaseCluster</span> <code class='quiet'>[<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>]</code>
+  </td>
+  <td class='break-word'><span>List of Couchbase cluster URLs.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>database.sessionBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Session bucket name.
+  <td class='break-word'><span class='code bold'>database.sessionBucketName</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>Session bucket name.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>database.sessionBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Session bucket password.
+  <td class='break-word'><span class='code bold'>database.sessionBucketPwd</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>Session bucket password.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -577,40 +611,48 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>log.logLevel</span> <code class='quiet'>(<code>"trace"</code> | <code>"info"</code> | <code>"debug"</code> | <code>"warn"</code> | <code>"error"</code> | <code>"silent"</code>)?</code>
-                  
-                    (default <code>error</code>)
-                  </td>
-                  <td class='break-word'><span>Log level.
+  <td class='break-word'><span class='code bold'>log.logLevel</span> <code class='quiet'>(<code>"trace"</code> | <code>"info"</code> | <code>"debug"</code> | <code>"warn"</code> | <code>"error"</code> | <code>"silent"</code>)?</code>
+  
+    (default <code>error</code>)
+  </td>
+  <td class='break-word'><span>Log level.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>log.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>udes-node-orchestrator</code>)
-                  </td>
-                  <td class='break-word'><span>Logger name.
+  <td class='break-word'><span class='code bold'>log.name</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>udes-node-orchestrator</code>)
+  </td>
+  <td class='break-word'><span>Logger name.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>log.prettyPrint</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
-                  
-                    (default <code>true</code>)
-                  </td>
-                  <td class='break-word'><span>Whether to print pretty or raw.
+  <td class='break-word'><span class='code bold'>log.prettyPrint</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+  
+    (default <code>true</code>)
+  </td>
+  <td class='break-word'><span>Whether to print pretty or raw.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>log.showCredentialsAsClearText</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
-                  
-                    (default <code>false</code>)
-                  </td>
-                  <td class='break-word'><span>If true credentials will be displayed as clear text in logs.
+  <td class='break-word'><span class='code bold'>log.showCredentialsAsClearText</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a>?</code>
+  
+    (default <code>false</code>)
+  </td>
+  <td class='break-word'><span>If true credentials will be displayed as clear text in logs.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -652,6 +694,15 @@
       
         <div class='space-bottom0'>
           <div>
+            <span class='code bold'>port</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?)</code>
+	    Port number for server to listen on. One of socket or port is required.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
             <span class='code bold'>responseFormatter</span> <code class='quiet'>(Class??)</code>
 	    Class extending the ResponseFormatter interface. Format response data.
 
@@ -661,8 +712,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>socket</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
-	    Relative path to socket.
+            <span class='code bold'>socket</span> <code class='quiet'>(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?)</code>
+	    Relative path to socket for server to listen on. One of socket or port is required.
 
           </div>
           
@@ -755,22 +806,26 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>fromAjax.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>x-client-ajax</code>)
-                  </td>
-                  <td class='break-word'><span>Default response header for AJAX responses.
+  <td class='break-word'><span class='code bold'>fromAjax.header</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>x-client-ajax</code>)
+  </td>
+  <td class='break-word'><span>Default response header for AJAX responses.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>fromAjax.status</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
-                  
-                    (default <code>401</code>)
-                  </td>
-                  <td class='break-word'><span>Default status code for AJAX responses.
+  <td class='break-word'><span class='code bold'>fromAjax.status</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>?</code>
+  
+    (default <code>401</code>)
+  </td>
+  <td class='break-word'><span>Default status code for AJAX responses.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -838,58 +893,70 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.login</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>/login</code>)
-                  </td>
-                  <td class='break-word'><span>CAS login path.
+  <td class='break-word'><span class='code bold'>paths.login</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>/login</code>)
+  </td>
+  <td class='break-word'><span>CAS login path.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.logout</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>/logout</code>)
-                  </td>
-                  <td class='break-word'><span>CAS logout path.
+  <td class='break-word'><span class='code bold'>paths.logout</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>/logout</code>)
+  </td>
+  <td class='break-word'><span>CAS logout path.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.proxy</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>/proxy</code>)
-                  </td>
-                  <td class='break-word'><span>Path to obtain proxy ticket.
+  <td class='break-word'><span class='code bold'>paths.proxy</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>/proxy</code>)
+  </td>
+  <td class='break-word'><span>Path to obtain proxy ticket.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.proxyCallback</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>/proxyCallback</code>)
-                  </td>
-                  <td class='break-word'><span>Path to call once proxy ticket is obtained.
+  <td class='break-word'><span class='code bold'>paths.proxyCallback</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>/proxyCallback</code>)
+  </td>
+  <td class='break-word'><span>Path to call once proxy ticket is obtained.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.serviceValidate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>/proxyValidate</code>)
-                  </td>
-                  <td class='break-word'><span>Path to validate TGT.
+  <td class='break-word'><span class='code bold'>paths.serviceValidate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>/proxyValidate</code>)
+  </td>
+  <td class='break-word'><span>Path to validate TGT.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>paths.validate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  
-                    (default <code>/validate</code>)
-                  </td>
-                  <td class='break-word'><span>Validation path.
+  <td class='break-word'><span class='code bold'>paths.validate</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  
+    (default <code>/validate</code>)
+  </td>
+  <td class='break-word'><span>Validation path.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -1082,25 +1149,31 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>routes[].method</span> <code class='quiet'>(<code>"DELETE"</code> | <code>"GET"</code> | <code>"POST"</code> | <code>"PUT"</code>)</code>
-                  </td>
-                  <td class='break-word'><span>The HTTP method of the route.
+  <td class='break-word'><span class='code bold'>routes[].method</span> <code class='quiet'>(<code>"DELETE"</code> | <code>"GET"</code> | <code>"POST"</code> | <code>"PUT"</code>)</code>
+  </td>
+  <td class='break-word'><span>The HTTP method of the route.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>routes[].url</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>The path from the base url.
+  <td class='break-word'><span class='code bold'>routes[].url</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>The path from the base url.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>routes[].fn</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a></code>
-                  </td>
-                  <td class='break-word'><span>the function to be called when route is accessed.
+  <td class='break-word'><span class='code bold'>routes[].fn</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a></code>
+  </td>
+  <td class='break-word'><span>the function to be called when route is accessed.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -1185,25 +1258,31 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>routes[].method</span> <code class='quiet'>(<code>"DELETE"</code> | <code>"GET"</code> | <code>"POST"</code> | <code>"PUT"</code>)</code>
-                  </td>
-                  <td class='break-word'><span>The HTTP method of the route.
+  <td class='break-word'><span class='code bold'>routes[].method</span> <code class='quiet'>(<code>"DELETE"</code> | <code>"GET"</code> | <code>"POST"</code> | <code>"PUT"</code>)</code>
+  </td>
+  <td class='break-word'><span>The HTTP method of the route.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>routes[].url</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>The path from the base url.
+  <td class='break-word'><span class='code bold'>routes[].url</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>The path from the base url.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>routes[].fn</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a></code>
-                  </td>
-                  <td class='break-word'><span>the function to be called when route is accessed.
+  <td class='break-word'><span class='code bold'>routes[].fn</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function">Function</a></code>
+  </td>
+  <td class='break-word'><span>the function to be called when route is accessed.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -1231,13 +1310,15 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.handle404</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
-                  
-                    (default <code>true</code>)
-                  </td>
-                  <td class='break-word'><span>Whether to handle 404 routes automatically or not.
+  <td class='break-word'><span class='code bold'>options.handle404</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+  
+    (default <code>true</code>)
+  </td>
+  <td class='break-word'><span>Whether to handle 404 routes automatically or not.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -1472,34 +1553,42 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.body</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
-                  </td>
-                  <td class='break-word'><span>Request body.
+  <td class='break-word'><span class='code bold'>options.body</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
+  </td>
+  <td class='break-word'><span>Request body.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.method</span> <code class='quiet'>(<code>"DELETE"</code> | <code>"GET"</code> | <code>"POST"</code> | <code>"PUT"</code>)</code>
-                  </td>
-                  <td class='break-word'><span>Request method.
+  <td class='break-word'><span class='code bold'>options.method</span> <code class='quiet'>(<code>"DELETE"</code> | <code>"GET"</code> | <code>"POST"</code> | <code>"PUT"</code>)</code>
+  </td>
+  <td class='break-word'><span>Request method.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.url</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>Request URL.
+  <td class='break-word'><span class='code bold'>options.url</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>Request URL.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.headers</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
-                  
-                    (default <code>getHeaders()</code>)
-                  </td>
-                  <td class='break-word'><span>Request headers.
+  <td class='break-word'><span class='code bold'>options.headers</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
+  
+    (default <code>getHeaders()</code>)
+  </td>
+  <td class='break-word'><span>Request headers.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -1596,20 +1685,24 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.url</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  </td>
-                  <td class='break-word'><span>URL to access the file.
+  <td class='break-word'><span class='code bold'>options.url</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>URL to access the file.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.headers</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
-                  
-                    (default <code>getHeaders()</code>)
-                  </td>
-                  <td class='break-word'><span>Request headers.
+  <td class='break-word'><span class='code bold'>options.headers</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
+  
+    (default <code>getHeaders()</code>)
+  </td>
+  <td class='break-word'><span>Request headers.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -1796,22 +1889,26 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>error.statusCode</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>
-                  
-                    (default <code>500</code>)
-                  </td>
-                  <td class='break-word'><span>Error status code (3xx-5xx).
+  <td class='break-word'><span class='code bold'>error.statusCode</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>
+  
+    (default <code>500</code>)
+  </td>
+  <td class='break-word'><span>Error status code (3xx-5xx).
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>error.message</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
-                  
-                    (default <code>error</code>)
-                  </td>
-                  <td class='break-word'><span>Error message. Value of error if it's a string.
+  <td class='break-word'><span class='code bold'>error.message</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  
+    (default <code>error</code>)
+  </td>
+  <td class='break-word'><span>Error message. Value of error if it's a string.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -1900,22 +1997,26 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.headers</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
-                  
-                    (default <code>{}</code>)
-                  </td>
-                  <td class='break-word'><span>Response headers.
+  <td class='break-word'><span class='code bold'>options.headers</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
+  
+    (default <code>{}</code>)
+  </td>
+  <td class='break-word'><span>Response headers.
 </span></td>
-                </tr>
+</tr>
+
+
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.formatData</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
-                  
-                    (default <code>true</code>)
-                  </td>
-                  <td class='break-word'><span>True to standardise response format.
+  <td class='break-word'><span class='code bold'>options.formatData</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>
+  
+    (default <code>true</code>)
+  </td>
+  <td class='break-word'><span>True to standardise response format.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
@@ -2278,11 +2379,13 @@
             <tbody class='mt1'>
               
                 <tr>
-                  <td class='break-word'><span class='code bold'>options.filename</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
-                  </td>
-                  <td class='break-word'><span>Filename for Content-Disposition, without extension.
+  <td class='break-word'><span class='code bold'>options.filename</span> <code class='quiet'><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>?</code>
+  </td>
+  <td class='break-word'><span>Filename for Content-Disposition, without extension.
 </span></td>
-                </tr>
+</tr>
+
+
               
             </tbody>
           </table>
