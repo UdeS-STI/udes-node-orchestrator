@@ -45,7 +45,7 @@
     "chai-http": "^3.0.0",
     "chai-integer": "^0.1.0",
     "documentation": "^5.3.2",
-    "eslint-config-udes": "^0.1.6",
+    "eslint-config-udes": "^0.2.0",
     "mocha": "^4.0.1",
     "nsp": "^3.1.0",
     "nyc": "^11.2.1",
