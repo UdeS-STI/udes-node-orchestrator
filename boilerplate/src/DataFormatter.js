@@ -1,4 +1,4 @@
-import { ResponseFormatter } from 'udes-node-orchestrator'
+import { ResponseFormatter } from 'udes-node-orchestrator';
 
 /**
  * Handles response data formatting.
@@ -11,13 +11,13 @@ export default class DataFormatter extends ResponseFormatter {
    */
   format = (data) => {
     if (!Object.keys(data).length) {
-      return {}
+      return {};
     }
 
     return Object.keys(data).reduce((acc, cur) => {
-      const currentData = data[cur]
-      const { meta } = currentData
-      delete currentData.meta
+      const currentData = data[cur];
+      const { meta } = currentData;
+      delete currentData.meta;
 
       return {
         ...acc,
@@ -25,7 +25,7 @@ export default class DataFormatter extends ResponseFormatter {
           ...meta,
           data: currentData.data || currentData,
         },
-      }
-    }, {})
+      };
+    }, {});
   }
 }

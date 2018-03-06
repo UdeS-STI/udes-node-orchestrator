@@ -1,10 +1,10 @@
-import url from 'url'
+import url from 'url';
 
-import Utils from './Utils'
-import { request } from '../dependencies/request'
-import RequestError from './RequestError'
+import Utils from './Utils';
+import { request } from '../dependencies/request';
+import RequestError from './RequestError';
 
-const { getHeaders } = Utils
+const { getHeaders } = Utils;
 
 /**
  * Get range information from either request headers or query parameters.
@@ -14,21 +14,21 @@ const { getHeaders } = Utils
  * @returns {Object} Range information or null if none.
  */
 export const getRange = (req, query) => {
-  const { headers } = req
-  const range = headers.range || query.range
+  const { headers } = req;
+  const range = headers.range || query.range;
 
   if (!range) {
-    return null
+    return null;
   }
 
-  const rangeInfo = /([a-z]+)+\W*(\d*)-(\d*)/gi.exec(range)
+  const rangeInfo = /([a-z]+)+\W*(\d*)-(\d*)/gi.exec(range);
 
   return {
     unit: rangeInfo[1],
     start: +rangeInfo[2] || 0,
     end: +rangeInfo[3] || undefined,
-  }
-}
+  };
+};
 
 /**
  * @private
@@ -36,9 +36,9 @@ export const getRange = (req, query) => {
  * @returns {String} Formatted log header.
  */
 const getLogHeader = (title) => {
-  const header = `=============== ${title.toUpperCase()} ===============`
-  return process.env.isProduction ? header : `\n${header}\n`
-}
+  const header = `=============== ${title.toUpperCase()} ===============`;
+  return process.env.isProduction ? header : `\n${header}\n`;
+};
 
 /**
  * Log request options.
@@ -49,7 +49,7 @@ const getLogHeader = (title) => {
  */
 const logRequest = (req, config, options) => {
   if (config.log.showCredentialsAsClearText) {
-    req.log.info(options, getLogHeader('request'))
+    req.log.info(options, getLogHeader('request'));
   } else {
     req.log.info({
       ...options,
@@ -57,9 +57,9 @@ const logRequest = (req, config, options) => {
         user: '********',
         pass: '********',
       },
-    }, getLogHeader('request'))
+    }, getLogHeader('request'));
   }
-}
+};
 
 /**
  * @private
@@ -67,7 +67,7 @@ const logRequest = (req, config, options) => {
  * @param {Object} config - Orchestrator config.
  * @returns {String} Login url.
  */
-const getLoginPath = config => `${config.loginPath}?service=${config.cas.servicePrefix}${config.cas.paths.validate}`
+const getLoginPath = config => `${config.loginPath}?service=${config.cas.servicePrefix}${config.cas.paths.validate}`;
 
 /**
  * Handles response standardisation as well as http responses and requests.
@@ -78,10 +78,10 @@ const getLoginPath = config => `${config.loginPath}?service=${config.cas.service
  * @throws {Error} If `req`, `res` or `config` argument is null.
  */
 export class ResponseHelper {
-  constructor (req, res, config) {
-    this.req = req
-    this.res = res
-    this.config = config
+  constructor(req, res, config) {
+    this.req = req;
+    this.res = res;
+    this.config = config;
   }
 
   /**
@@ -92,18 +92,18 @@ export class ResponseHelper {
    * @returns {Promise} Promise represents requests options with auth info.
    */
   appendAuthOptions = async (options, isFirstAttempt) => {
-    const authPattern = this.config.authPatterns.find(({ path }) => options.url.match(new RegExp(path)))
+    const authPattern = this.config.authPatterns.find(({ path }) => options.url.match(new RegExp(path)));
 
     if (authPattern) {
-      this.req.session.apiSessionUrl = authPattern.sessionUrl
-      this.req.session.path = authPattern.path
-      this.req.session.targetService = authPattern.targetService
+      this.req.session.apiSessionUrl = authPattern.sessionUrl;
+      this.req.session.path = authPattern.path;
+      this.req.session.targetService = authPattern.targetService;
 
-      const Plugin = authPattern.plugin
-      return (new Plugin()).authenticate(this.req.session, options, isFirstAttempt)
+      const Plugin = authPattern.plugin;
+      return (new Plugin()).authenticate(this.req.session, options, isFirstAttempt);
     }
 
-    return options
+    return options;
   }
 
   /**
@@ -115,13 +115,13 @@ export class ResponseHelper {
    * @returns {Promise} Promise object represents request options.
    */
   formatRequestOptions = (options, isFirstAttempt) => {
-    const { body, headers = getHeaders(), url } = options
+    const { body, headers = getHeaders(), url } = options;
     return this.appendAuthOptions({
       ...options,
       body: body && typeof body === 'object' ? JSON.stringify(body) : body,
       headers,
       url: /^.+:\/\//.test(url) ? url : `${this.config.apiUrl}${url}`,
-    }, isFirstAttempt)
+    }, isFirstAttempt);
   }
 
   /**
@@ -136,13 +136,13 @@ export class ResponseHelper {
         'x-TempsMs': this.callDuration,
       },
       status: response.statusCode,
-    }
+    };
 
     this.config.customHeaders.forEach(({ header, property }) => {
-      meta[property || header] = response.headers[header]
-    })
+      meta[property || header] = response.headers[header];
+    });
 
-    return meta
+    return meta;
   }
 
   /**
@@ -152,26 +152,26 @@ export class ResponseHelper {
    * @returns {Object} Response data.
    */
   getResponseData = (response) => {
-    let data
+    let data;
 
     try {
-      data = JSON.parse(response.body)
+      data = JSON.parse(response.body);
     } catch (error) {
-      data = response.body
+      data = response.body;
     }
 
     if (this.config.appendMetaData) {
-      const meta = this.getResponseMetaData(response)
+      const meta = this.getResponseMetaData(response);
 
       // Array and primitives
       if (Array.isArray(data) || !(data instanceof Object)) {
-        return { data, meta }
+        return { data, meta };
       }
 
-      return { ...data, meta }
+      return { ...data, meta };
     }
 
-    return data
+    return data;
   }
 
   /**
@@ -185,39 +185,39 @@ export class ResponseHelper {
    * @returns {Promise} Promise object represents server response.
    */
   fetch = (options, isFirstAttempt = true) => new Promise(async (resolve, reject) => {
-    const requestOptions = await this.formatRequestOptions(options, isFirstAttempt)
+    const requestOptions = await this.formatRequestOptions(options, isFirstAttempt);
 
-    logRequest(this.req, this.config, requestOptions)
-    this.callTimestamp = +(new Date())
+    logRequest(this.req, this.config, requestOptions);
+    this.callTimestamp = +(new Date());
 
     request(requestOptions, async (error, response) => {
-      this.callDuration = +(new Date()) - this.callTimestamp
-      const isUnauthorized = () => response.statusCode === 401
-      const isStatusOk = () => response.statusCode >= 200 && response.statusCode < 300
+      this.callDuration = +(new Date()) - this.callTimestamp;
+      const isUnauthorized = () => response.statusCode === 401;
+      const isStatusOk = () => response.statusCode >= 200 && response.statusCode < 300;
 
       if (error) {
-        this.req.log.error(error, getLogHeader('error'))
-        reject(new RequestError(error, 500))
+        this.req.log.error(error, getLogHeader('error'));
+        reject(new RequestError(error, 500));
       } else if (isStatusOk()) {
-        const data = this.getResponseData(response)
-        this.req.log.debug(data, getLogHeader('response'))
-        resolve(data)
+        const data = this.getResponseData(response);
+        this.req.log.debug(data, getLogHeader('response'));
+        resolve(data);
       } else if (isUnauthorized()) {
         if (isFirstAttempt) {
           try {
-            resolve(await this.fetch(options, false))
+            resolve(await this.fetch(options, false));
           } catch (error) {
-            reject(error)
+            reject(error);
           }
         } else {
-          this.req.log.error('401 - Unauthorized access', getLogHeader('error'))
-          reject(new RequestError({ loginPath: getLoginPath(this.config) }, 401))
+          this.req.log.error('401 - Unauthorized access', getLogHeader('error'));
+          reject(new RequestError({ loginPath: getLoginPath(this.config) }, 401));
         }
       } else {
-        this.req.log.error(response.body || response, getLogHeader('error'))
-        reject(new RequestError(response.body || response, response.statusCode || 500))
+        this.req.log.error(response.body || response, getLogHeader('error'));
+        reject(new RequestError(response.body || response, response.statusCode || 500));
       }
-    })
+    });
   })
 
   /**
@@ -228,11 +228,11 @@ export class ResponseHelper {
    * @param {Object} [options.headers=getHeaders()] - Request headers.
    */
   getFile = async (options) => {
-    const requestOptions = await this.formatRequestOptions(options)
+    const requestOptions = await this.formatRequestOptions(options);
 
-    logRequest(this.req, this.config, requestOptions)
-    Object.keys(requestOptions.headers).forEach(key => this.res.set(key, requestOptions.headers[key]))
-    request.get(requestOptions).pipe(this.res)
+    logRequest(this.req, this.config, requestOptions);
+    Object.keys(requestOptions.headers).forEach(key => this.res.set(key, requestOptions.headers[key]));
+    request.get(requestOptions).pipe(this.res);
   }
 
   /**
@@ -257,10 +257,10 @@ export class ResponseHelper {
    * @param {String} [error.message=error] - Error message. Value of error if it's a string.
    */
   handleError = (error) => {
-    const ErrorFormatter = this.config.errorFormatter
-    const errorData = ErrorFormatter ? (new ErrorFormatter()).format(error) : error.message || error
+    const ErrorFormatter = this.config.errorFormatter;
+    const errorData = ErrorFormatter ? (new ErrorFormatter()).format(error) : error.message || error;
 
-    this.res.status(error.statusCode || 500).send(errorData)
+    this.res.status(error.statusCode || 500).send(errorData);
   }
 
   /**
@@ -271,35 +271,35 @@ export class ResponseHelper {
    * @param {Boolean} [options.formatData=true] - True to standardise response format.
    */
   handleResponse = (data, options = {}) => {
-    const { formatData = true, headers = {} } = options
-    const range = getRange(this.req, this.getQueryParameters())
+    const { formatData = true, headers = {} } = options;
+    const range = getRange(this.req, this.getQueryParameters());
 
-    Object.keys(headers).forEach(key => this.res.set(key, headers[key]))
+    Object.keys(headers).forEach(key => this.res.set(key, headers[key]));
 
     if (range) {
-      const key = Object.keys(data)[0]
-      const values = Object.values(data)[0]
-      const size = values.length
-      const { start, end = size - 1, unit } = range
+      const key = Object.keys(data)[0];
+      const values = Object.values(data)[0];
+      const size = values.length;
+      const { start, end = size - 1, unit } = range;
 
       if (start > end || start >= size) {
-        this.res.set('Content-Range', `${unit} */${size}`)
-        this.handleError({ statusCode: 416, message: `Cannot get range ${start}-${end} of ${size}` })
-        return
+        this.res.set('Content-Range', `${unit} */${size}`);
+        this.handleError({ statusCode: 416, message: `Cannot get range ${start}-${end} of ${size}` });
+        return;
       }
 
       if (end - start < size - 1) {
-        this.res.set('Content-Range', `${unit} ${start}-${end}/${size}`)
-        const partialData = { [key]: values.splice(start, end) }
-        const responseData = formatData ? this.formatResponse(partialData) : partialData
-        this.res.status(206).send(responseData)
-        return
+        this.res.set('Content-Range', `${unit} ${start}-${end}/${size}`);
+        const partialData = { [key]: values.splice(start, end) };
+        const responseData = formatData ? this.formatResponse(partialData) : partialData;
+        this.res.status(206).send(responseData);
+        return;
       }
 
-      this.res.set('Content-Range', `${unit} 0-${size - 1}/${size}`)
+      this.res.set('Content-Range', `${unit} 0-${size - 1}/${size}`);
     }
 
-    this.res.status(200).send(formatData ? this.formatResponse(data) : data)
+    this.res.status(200).send(formatData ? this.formatResponse(data) : data);
   }
 
   /**
@@ -309,12 +309,12 @@ export class ResponseHelper {
    * @returns {Object} Formatted response data.
    */
   formatResponse = (data = {}) => {
-    const ResponseFormatter = this.config.responseFormatter
+    const ResponseFormatter = this.config.responseFormatter;
 
     if (ResponseFormatter) {
-      return (new ResponseFormatter()).format(data)
+      return (new ResponseFormatter()).format(data);
     }
 
-    return data
+    return data;
   }
 }
