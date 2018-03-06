@@ -3,16 +3,16 @@
  * @interface
  */
 export default class ResponseFormatter {
-  constructor () {
+  constructor() {
     if (this.constructor.name === 'ResponseFormatter') {
-      throw Error('Cannot instantiate an interface')
+      throw Error('Cannot instantiate an interface');
     }
 
     if (!this.format) {
-      throw Error('Missing interface method `format`')
+      throw Error('Missing interface method `format`');
     }
 
-    const formatFn = this.format
-    this.format = data => formatFn(data)
+    const formatFn = this.format;
+    this.format = data => formatFn(data);
   }
 }

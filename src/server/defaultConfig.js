@@ -42,4 +42,4 @@ export default {
     prettyPrint: true,
     showCredentialsAsClearText: false,
   },
-}
+};

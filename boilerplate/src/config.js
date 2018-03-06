@@ -1,5 +1,5 @@
-import DataFormatter from './DataFormatter'
-import { BasicAuthProxyTicketPlugin } from 'udes-auth-plugins'
+import DataFormatter from './DataFormatter';
+import { BasicAuthProxyTicketPlugin } from 'udes-auth-plugins';
 
 export default {
   apiUrl: 'https://jsonplaceholder.typicode.com',
@@ -28,4 +28,4 @@ export default {
     serverPath: 'https://exemple.ca',
   },
   responseFormatter: DataFormatter,
-}
+};

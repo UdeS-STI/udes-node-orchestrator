@@ -25,14 +25,15 @@
 
 /**
  * @typedef {Object} Config
- * @param {[String]?} [allowedMethods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']] - List of allowed HTTP methods, separated by comas.
+ * @param {[String]?} [allowedMethods=['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']] - List of allowed HTTP methods.
  * @param {Boolean?} [appendMetaData=true] - If true, collected metadata will be appended to response.
  * @param {String} apiUrl - URL of the API instance to call.
  * @param {[Object]} authPatterns - Set authentication plugin to be used with specific routes.
  * @param {String} authPatterns.path - Regex string to match 1 or more routes.
  * @param {Class} authPatterns.plugin - Auth plugin, must extend AuthHandler interface from udes-auth-plugins.
  * @param {String} [authPatterns.sessionUrl] - URL for getting session id.
- * @param {String} [authPatterns.targetService] - Custom target service. If none specified the target service in CAS config will be used.
+ * @param {String} [authPatterns.targetService] - Custom target service.
+ *                                                If none specified the target service in CAS config will be used.
  * @param {CasConfig} cas - {@link https://github.com/UdeS-STI/connect-cas CAS configuration}.
  * @param {Object?} cookies - Cookie configuration.
  * @param {Number?} [cookies.maxAge=14400000] - Time to live (TTL) for the cookie in ms.
@@ -59,7 +60,8 @@
  * @param {('trace'|'info'|'debug'|'warn'|'error'|'silent')?} [log.logLevel=error] - Log level.
  * @param {String?} [log.name=udes-node-orchestrator] - Logger name.
  * @param {Boolean?} [log.prettyPrint=true] - Whether to print pretty or raw.
- * @param {Boolean?} [log.showCredentialsAsClearText=false] - If true credentials will be displayed as clear text in logs.
+ * @param {Boolean?} [log.showCredentialsAsClearText=false] - If true credentials will be displayed as clear text in
+ *                                                            logs.
  * @param {String?} [nocasPwd=nocas] - CAS default password when `enableAuth` is false.
  * @param {String?} [nocasUser=nocas] - CAS default username when `enableAuth` is false.
  * @param {Number?} port - Port number for server to listen on. One of socket or port is required.

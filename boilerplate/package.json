@@ -8,14 +8,14 @@
     "start": "babel-node src/index.js"
   },
   "dependencies": {
-    "udes-auth-plugins": "0.0.1",
-    "udes-node-orchestrator": "^2.2.0"
+    "udes-auth-plugins": "0.1.4",
+    "udes-node-orchestrator": "^2.3.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
-    "babel-eslint": "8.0.0",
+    "babel-eslint": "8.2.2",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-stage-2": "6.24.1",
-    "eslint-config-udes": "^0.1.5"
+    "eslint-config-udes": "^0.2.1"
   }
 }
