@@ -31,7 +31,7 @@
     "method-override": "^2.3.10",
     "pino": "^4.8.2",
     "request": "^2.83.0",
-    "udes-connect-cas": "^1.0.3",
+    "udes-connect-cas": "^1.0.5",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
