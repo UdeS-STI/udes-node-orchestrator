@@ -3,16 +3,16 @@
  * @interface
  */
 export default class AuthHandler {
-  constructor () {
+  constructor() {
     if (this.constructor.name === 'AuthHandler') {
-      throw Error('Cannot instantiate an interface')
+      throw Error('Cannot instantiate an interface');
     }
 
     if (!this.authenticate) {
-      throw Error('Missing interface method `authenticate`')
+      throw Error('Missing interface method `authenticate`');
     }
 
-    const authFn = this.authenticate
-    this.authenticate = (session, options, retry = true) => authFn(session, options, retry)
+    const authFn = this.authenticate;
+    this.authenticate = (session, options, retry = true) => authFn(session, options, retry);
   }
 }

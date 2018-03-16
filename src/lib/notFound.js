@@ -1,5 +1,5 @@
 /* eslint import/prefer-default-export: 0 */
-import boom from 'boom'
+import boom from 'boom';
 
 /**
  * Return 404 through HTTP response.
@@ -13,5 +13,5 @@ export const notFound = (responseHelper, { method, url }) => {
   responseHelper.handleError({
     statusCode: 404,
     message: boom.notFound(`Undefined route - ${method}:${url}`),
-  })
-}
+  });
+};

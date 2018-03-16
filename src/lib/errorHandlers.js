@@ -1,4 +1,4 @@
-import boom from 'boom'
+import boom from 'boom';
 
 /**
  * Middleware - Error logging.
@@ -9,9 +9,9 @@ import boom from 'boom'
  * @param {Function} next - Callback function.
  */
 export const logErrors = (err, req, res, next) => {
-  req.log.error(new Error(err))
-  next(err)
-}
+  req.log.error(new Error(err));
+  next(err);
+};
 
 /**
  * Middleware - Client/API error handling.
@@ -23,11 +23,11 @@ export const logErrors = (err, req, res, next) => {
  */
 export const clientErrorHandler = (err, req, res, next) => {
   if (req.xhr) {
-    res.send(boom.badRequest(`An error occurred with the XHR request: ${err}`))
+    res.send(boom.badRequest(`An error occurred with the XHR request: ${err}`));
   } else {
-    next(err)
+    next(err);
   }
-}
+};
 
 /**
  * Middleware - Server error handling.
@@ -37,5 +37,5 @@ export const clientErrorHandler = (err, req, res, next) => {
  * @param {Object} res - HTTP response.
  */
 export const errorHandler = (err, req, res) => {
-  res.send(boom.badImplementation(`A server error occurred: ${err}`))
-}
+  res.send(boom.badImplementation(`A server error occurred: ${err}`));
+};

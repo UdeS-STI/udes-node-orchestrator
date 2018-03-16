@@ -1,8 +1,8 @@
-import { request } from '../dependencies/request'
-import RequestError from './RequestError'
-import Utils from './Utils'
+import { request } from '../dependencies/request';
+import RequestError from './RequestError';
+import Utils from './Utils';
 
-const { getHeaders } = Utils
+const { getHeaders } = Utils;
 
 /**
  * Get current user information from CAS.
@@ -12,11 +12,11 @@ const { getHeaders } = Utils
  */
 export const getUser = (req) => {
   if (req && req.session && req.session.cas && req.session.cas.user) {
-    return req.session.cas.user
+    return req.session.cas.user;
   }
 
-  return {}
-}
+  return {};
+};
 
 /**
  * Get CAS attributes.
@@ -26,20 +26,20 @@ export const getUser = (req) => {
  */
 export const getAttributes = (req) => {
   if (req && req.session && req.session.cas && req.session.cas.attributes) {
-    const { attributes } = req.session.cas
+    const { attributes } = req.session.cas;
     return Object.keys(attributes).reduce((acc, key) => {
-      const accumulation = acc
-      const attribute = attributes[key]
-      const getValue = Array.isArray(attribute) && attribute.length === 1
+      const accumulation = acc;
+      const attribute = attributes[key];
+      const getValue = Array.isArray(attribute) && attribute.length === 1;
 
-      accumulation[key] = getValue ? attribute[0] : attribute
+      accumulation[key] = getValue ? attribute[0] : attribute;
 
-      return accumulation
-    }, {})
+      return accumulation;
+    }, {});
   }
 
-  return {}
-}
+  return {};
+};
 
 /**
  * Obtain proxy ticket for CAS authentication.
@@ -50,15 +50,15 @@ export const getAttributes = (req) => {
  * @returns {Promise} Promise object represents proxy ticket.
  */
 export const getProxyTicket = (req, config, renew = false) => new Promise((resolve, reject) => {
-  const { targetService } = config.cas
+  const { targetService } = config.cas;
   req.getProxyTicket(targetService, { renew }, (err, pt) => {
     if (err) {
-      return reject(err)
+      return reject(err);
     }
 
-    return resolve(pt)
-  })
-})
+    return resolve(pt);
+  });
+});
 
 /**
  * Obtain session id from API.
@@ -69,12 +69,12 @@ export const getProxyTicket = (req, config, renew = false) => new Promise((resol
  * @returns {Promise} Promise object represents session id.
  */
 export const getSessionId = (req, config, retry = true) => new Promise(async (resolve, reject) => {
-  let pt
+  let pt;
 
   try {
-    pt = await getProxyTicket(req, config, !retry)
+    pt = await getProxyTicket(req, config, !retry);
   } catch (error) {
-    reject(error)
+    reject(error);
   }
 
   const options = {
@@ -84,29 +84,29 @@ export const getSessionId = (req, config, retry = true) => new Promise(async (re
       ...getHeaders(),
       'x-proxy-ticket': pt,
     },
-  }
+  };
 
   request(options, async (error, response) => {
     if (error || response.statusCode === 401) {
       if (retry) {
         try {
-          resolve(await getSessionId(req, config, false))
+          resolve(await getSessionId(req, config, false));
         } catch (err) {
-          reject(err)
+          reject(err);
         }
       } else {
-        reject(new RequestError('Invalid proxy ticket', 401))
+        reject(new RequestError('Invalid proxy ticket', 401));
       }
 
-      return
+      return;
     }
 
     try {
-      const { sessionId } = JSON.parse(response.body)
-      req.session.apiSessionId = sessionId
-      resolve(sessionId)
+      const { sessionId } = JSON.parse(response.body);
+      req.session.apiSessionId = sessionId;
+      resolve(sessionId);
     } catch (err) {
-      reject(new RequestError('Cannot get session id', 500))
+      reject(new RequestError('Cannot get session id', 500));
     }
-  })
-})
+  });
+});

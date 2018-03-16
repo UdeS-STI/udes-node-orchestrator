@@ -6,13 +6,13 @@
  * @param {Number} statusCode - Error status code.
  */
 export default class ResquestError {
-  constructor (message, statusCode) {
-    this.statusCode = statusCode
+  constructor(message, statusCode) {
+    this.statusCode = statusCode;
 
     try {
-      this.message = JSON.parse(message)
+      this.message = JSON.parse(message);
     } catch (err) {
-      this.message = message
+      this.message = message;
     }
   }
 }
