@@ -1,6 +1,6 @@
 {
   "name": "udes-node-orchestrator",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "description": "Orchestrator server. Handles routes and HTTP traffic.",
   "author": "Université de Sherbrooke",
   "main": "dist/index.js",
