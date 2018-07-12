@@ -28,7 +28,7 @@
     "express-pino-logger": "^3.0.1",
     "express-session": "^1.15.6",
     "lodash": "^4.17.5",
-    "method-override": "^2.3.10",
+    "method-override": "^3.0.0",
     "pino": "^4.13.0",
     "request": "^2.83.0",
     "udes-connect-cas": "^1.0.4",
