@@ -22,7 +22,7 @@
     "connect-couchbase": "^0.2.10",
     "cookie-parser": "^1.4.3",
     "couchbase": "^2.4.5",
-    "debug": "^3.1.0",
+    "debug": "^4.0.0",
     "dotenv": "^5.0.1",
     "express": "^4.16.2",
     "express-pino-logger": "^3.0.1",
