@@ -25,9 +25,6 @@ describe('server/lib/ResponseHelper', () => {
 
   beforeEach(() => {
     HTTP.request.reset();
-    res.send.reset();
-    res.set.reset();
-    res.status.reset();
 
     req = {
       headers: {
