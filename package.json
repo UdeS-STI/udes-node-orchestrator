@@ -44,7 +44,7 @@
     "chai-http": "^4.2.0",
     "chai-integer": "^0.1.0",
     "cross-env": "^5.2.0",
-    "documentation": "^8.1.2",
+    "documentation": "^9.3.0",
     "eslint-config-udes": "^0.2.1",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
