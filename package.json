@@ -28,7 +28,7 @@
     "express-session": "^1.15.6",
     "lodash": "^4.17.11",
     "method-override": "^3.0.0",
-    "pino": "^5.7.0",
+    "pino": "5.11.1",
     "request": "^2.88.0",
     "udes-connect-cas": "^2.0.0",
     "uuid": "^3.3.2"
